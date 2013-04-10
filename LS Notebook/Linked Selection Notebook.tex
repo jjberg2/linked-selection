@@ -1,0 +1,298 @@
+\documentclass[reqno]{amsart}
+\usepackage{geometry} 
+\usepackage{amsmath}
+\usepackage[super,sort&compress, comma]{natbib}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\begin{document}
+
+\title{Environmental Correlations Notebook}
+\author{Jeremy Berg}
+\date{}
+\maketitle
+
+
+
+\section*{Running Notes}
+
+\begin{flushright}
+	\textbf{November 20, 2012}
+\end{flushright}
+
+A sweep occurs yesterday $l$ base pairs away from a neutral site of interest. The probability that two randomly chosen lineages are forced to coalesce by the sweep is
+
+
+$$\frac{1}{1 + \theta_b}e^{-\frac{1}{2}lr_{BP}T_{fix}}$$
+
+where $r_{BP}$ is the recombination rate per base pair, $\theta_b$ is the population scaled mutation rate of beneficial mutations at the selected site, and $T_{fix}$ is the duration of the sweep in generations\cite{Pennings2006}. The $\frac{1}{1 + \theta_b}$ term is the probability neither lineage mutates off the selected background before coalescing, while $e^{-\frac{1}{2}lr_{BP}T_{fix}}$ is the probability that neither lineage recombines off the selected background during the course of the sweep.
+
+Now, imagine that sweeps can occur at any base pair along the chromosome, and that they occur homogeneously along the chromosome, and through time, at a rate $\nu_{BP}$. Once again examining a single neutral locus, the rate at which recurrent, full, homogeneous soft sweeps force two lineages at the locus to coalesce is equal to
+
+
+\begin{align}
+	\lambda &= \nu_{BP}\frac{1}{1+\theta_b}\int_0^\infty e^{-\frac{1}{2}lr_{BP}T_{fix}}\mathrm d l\\
+	& = \nu_{BP}\frac{1}{1+\theta_b}\left[\frac{1}{-\frac{1}{2}r_{BP}T_{fix}}e^{-\frac{1}{2}lr_{BP}T_{fix}}\right]_0^\infty \\
+	&= \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}
+\end{align}
+
+The expectation of $\pi$ under this model is
+\begin{align}
+	\mathbb{E}\left[\pi\right] &= \frac{2\mu_n}{\frac{1}{2N} +  \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}} \\
+	&= \frac{\theta_n}{1 + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}} \\
+	& = \frac{r_{BP}\theta_n}{r_{BP} + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)T_{fix}}}.
+\end{align}
+So $\frac{4N\nu_{BP}}{\left(1+\theta_b\right)T_{fix}}$ appears to be a big, messy, difficult to interpret compound parameter.
+
+\newpage
+\section*{Soft Sweeps from Mutation-Selection-Drift Balance.} 
+
+\begin{flushright}
+	\textbf{November 22, 2012}
+\end{flushright}
+To start, we'll just consider standing variation in a deterministic limit. We're interested in diversity at some neutral locus, which is some distance $l$ away from a selectively significant locus. Prior to some environmental change, mutations are deleterious with selection coefficient $s_d$, occur at rate $\mu_d$. Assuming $s_d>>\mu_d$, the frequency of deleterious alleles in the population is $\sim \frac{\mu_d}{s_d}$. As some point in time, a change in the environment occurs, causing this previously deleterious locus to become advantageous, and to sweep through the population. We are interested in the probability that this sweep forces two randomly chosen lineages at our neutral locus, $l$ base pairs away, to coalesce.
+
+As with the recurrent mutation case above, the probability that the two lineages are forced to coalesce by a sweep that happened yesterday is
+	$$Pr(\text{no recombination off sweep})Pr(\text{choose the same mutation class}).$$
+
+\begin{flushright}
+	\textbf{November 24, 2012}
+\end{flushright}
+
+Just as in the recurrent beneficial mutation example, 
+\begin{equation}
+	Pr(\text{no recombination off sweep}) = e^{-\frac{1}{2}lr_{BP}T_{fix}}
+\end{equation}
+where here I assume that the difference in $T_{fix}$ that results from the fact that the sweep begins at $\frac{\mu_d}{s_d}$ instead of $\frac{1}{2N}$ is negligible (and of course, sweep-like behavior doesn't actually begin at $\frac{1}{2N}$, but only once it gets to higher enough frequency to begin stochastic loss; probably, this all doesn't matter too much, but it'll be worth coming back to before publication). It conveniently turns out that, the sampling distribution for deleterious mutations at mutation-selection-drift balance is the Ewens sampling distribution,\cite{Ewens1972} where the $N$ in $\theta$ is replaced by $Nq$, where $q$ is the frequency of deleterious mutations in the population\cite{Hartl1982,Slatkin1997,Wakeley2008} (in this case $\frac{\mu_d}{s_d}$). Thus, 
+\begin{equation}
+	Pr(\text{choose the same mutation class}) = \frac{1}{1+\theta_{d,q}}
+\end{equation}
+where $\theta_{d,q} = 4N\frac{\mu_d}{s_d}\mu_d.$ As such,
+\begin{align}
+	Pr(\text{sweep forces coalescence}) = \frac{1}{1+\theta_{d,q}}e^{-\frac{1}{2}lr_{BP}T_{fix}}.
+\end{align} 
+
+Once again, envisioning a scenario where sweeps occur homogeneously across a chromosome of infinite length at rate $\nu_{BP}$, the total rate of coalescence at a site is
+
+\begin{align}
+	\lambda &= \frac{1}{2N}+\frac{\nu_{BP}}{1+\theta_{d,q}}\int_0^\infty e^{-\frac{1}{2}lr_{BP}T_{fix}}\mathrm d l\\
+	&= \frac{1}{2N} + \frac{2\nu_{BP}}{\left(1+\theta_{d,q}\right)r_{BP}T_{fix}}.
+\end{align}
+
+The expectation of $\pi$ is thus
+\begin{equation}
+	\mathbb{E}\left[\pi\right] = \frac{r_{BP}\theta_n}{r_{BP} + \frac{4N\nu_{BP}}{\left(1+\theta_{d,q}\right)T_{fix}}}.
+\end{equation}
+The important insight is that, at least under certain assumptions, the effect of sweeps from standing, deleterious mutation on linked neutral diversity is essentially the same as that for sweeps from new, recurrent mutations, with the only different being the magnitude of the population scaled mutation rate parameter at the linked, non-neutral sites.
+
+\begin{flushright}
+	\textbf{November 25, 2012}
+\end{flushright}
+
+It seems like $\theta_{d,q}$ ought to be smaller than $\theta_b$ in most cases, and thus sweeps from recurrent beneficial mutation during the progress of the sweep ought to have a smaller effect on diversity than sweeps from standing deleterious variation.
+
+\begin{flushright}
+	\textbf{December 3, 2012}
+\end{flushright}
+
+It's been too long since my last entry. Need to get better about that.
+
+First, it seems that my initial reading of the Hartl and Campbell paper\cite{Hartl1982} was a bit off. Their equations (2) and (9) together suggest that if one samples two lineages in the deleterious class, the probability that they are of the same type is
+\begin{equation}
+	Pr(k=1\mid n = 2 ) = \frac{1}{1+\theta_a}
+\end{equation}
+where $\theta_a = 4N\mu_a q_{eq}$. What I neglected was that their $\mu_a$ is not the same as the general mutation rate to a alleles. They define $\mu_a$ as follows:
+
+\begin{equation}
+	\mu_a = \frac{p\mu_{Aa} + q\mu_{aa}}{p\mu_{Aa} + q(1-\mu_{aA})}
+\end{equation}
+where $\mu_{ij}$ is the mutation rate from state i to state j. Roughly in parallel to the argument they put forward, if
+
+\begin{align}
+	\mu_{Aa}&=\mu_{aa}=\mu \\
+	\mu_{aA} &= 0 \\ 
+	&\text{and}, \notag\\
+	q &= \frac{\mu}{s} \\
+	&\text{then}, \notag\\
+	\mu_a& = \frac{1}{1+\frac{1}{s}}	.
+\end{align}
+
+As 
+\begin{equation}
+	\theta_a = 4N\frac{\mu}{s}\frac{1}{1+\frac{1}{s}} = 4N\frac{\mu}{1+s}.
+\end{equation}
+Equations (13) and (19) together thus give us our probability of sampling two of the same type under mutation-selection drift balance. Of course, it turns out that for small $s$ this yields essentially the same value as the Hermisson and Pennings result\cite{Hermisson2005}. As $s$ grows larger, the Hartl and Campbell result returns a lower probability than the Hermisson and Pennings result. However, for most biologically plausible parameters, it seems like the results should be fairly close.
+
+In the mean time, I've managed to write up a single locus Wright-Fisher simulation of an infinite alleles model for arbitrary mutation, selection, and population size parameters. It produces figures like this
+
+
+\begin{flushleft}
+	\includegraphics[width = \textwidth]{LSFigure1}
+\end{flushleft}
+
+This is a cumulative frequency plot, where each partition is a different independent mutation. Blue denotes the ancestral, neutral allele. Red and green mutations are selectively equivalent, the only difference being that the frequency trajectories of mutations that end up being members of the fixing class are colored green, while those that are lost before fixation are colored red. The dashed line denotes the point at which the mutation switches from being deleterious to beneficial.
+
+These figures are pretty, but the real purpose is to use this simulation as a method of double checking my theoretical predictions.
+\begin{flushright}
+	\textbf{December 12, 2012}
+\end{flushright}
+In the past week or so we've managed to sort through some of this stuff and discover that my initial intuition, (which didn't even make it into the notebook because we got sidetracked by the Hartl and Campbell stuff) was correct. That is, as long as mutation continues during the course of the sweep (which is really the only biologically reasonable case, as there's no reason for mutation to stop once the sweep starts), then the Hermisson and Pennings result holds even if adaptation occurs from recurrent mutation to standing variation instead.
+
+I had a chance to present the basic recurrent model at CoopIbarra this past Monday (and to chat with Michael yesterday morning), and folks who hadn't seen it yet seemed fairly receptive, and also pointed to working out the effect on linkage disequilibrium, or some other summary of haplotype structure. These results already exist for individual hard\cite{Stephan2006, McVean2007, Pfaffelhuber2008} and soft\cite{Pokalyuk2012} sweeps, so it seems like putting it into the recurrent model shouldn't be too hard.
+
+\section*{Sweeps From IBD Standing Variation} 
+\begin{flushright}
+	\textbf{December 12, 2012}
+\end{flushright}
+
+It also seems like we might relatively easily be able to make progress on the hard sweep from IBD standing variation case, and that once this is done we should be able to include these sort of sweeps in a general recurrent model. Graham sent me a few papers about the conditional genealogy of a sample in which a subset of chromosomes are observed to carry a particular mutation, notably one from Griffiths and Tavar{\'e}\cite{GriffithsTavare:2003}, and this seems significant enough, with enough of a clear way forward that I'm going to create a separate entry here.
+
+Another really useful thing to do might be to work out the sampling formula for the number of haplotypes as a function of the recombination distance from the sweeping locus (which we suspect should have a roughly Ewens like distribution, with the $\theta$ parameter given by something like $2Nrf$, where $r$ is the recombination rate, while $f$ is the frequency from which the sweep started), and then develop a likelihood framework to infer $f$ from the haplotype structure on either side of the sweep.
+
+In addition to this analytical work, another objective is going to be writing out a structured coalescent simulation on a sweeping background, probably using Graham and Molly's trick from 2005\cite{Przeworski2005} to simulate the trajectory of the sweeping allele, and then just run coalescent simulations under that background.
+
+\begin{flushright}
+	\textbf{February 4, 2012}
+\end{flushright}
+
+The simulation is pretty much written. More on that later hopefully. At present, the problem is this: 
+
+Assuming a sample of three lineages, what is the probability that there are 2 different haplotypes at a distance from the selected site of $l_1$, given that there is only one haplotype at a distance of $l_1-1$. If $b_1$, $b_2$ and $b_3$ are the external branches of the tree, and $b_4$ is the one internal branch, then
+\begin{align}
+	& P(\text{2 haplotypes at } l_1 \mid  \text{1 haplotype at } l_1-1) = \\
+	& P(\text{rec before } \tau \text{ and no rec on other two lineages before they coalesce}) + \\
+	& P(\text{no rec before }\tau \text{, then rec after } \tau \text{ but before coalescence})
+\end{align}
+where $\tau$ is the point in time at which the other two lineages coalesce with one another (conditional on previous base assumed and dropped from here out).
+
+First recognize that
+\begin{align}
+	& P(\text{rec before } \tau \text{, then no rec on other two lineages before they coalesce}) = \\
+	& P(\text{rec before } \tau)P(\text{no rec on other two lineages before they coalesce})
+\end{align}
+\begin{align}
+	P(\text{rec before } \tau)&= \int_0^\infty 3r (1-f) \mathrm{e}^{-3tr(1-f)}\mathrm{e}^{-\frac{t\binom{3}{2}}{2N_ef}}\, \mathrm{d} t \\
+	& = \frac{3r (1-f)}{3r(1-f) + \frac{3}{2N_ef}} \\
+	& = \frac{6N_e r (1 -f )}{6N_e r f (1 -f ) + 3} \\
+	& = \frac{4N_e r f (1 -f )}{4N_e r f (1 -f ) + 2}
+\end{align}
+\begin{align}
+	P(\text{no rec on other two lineages before they coalesce}) & = \int_0^\infty\frac{1}{2N_ef}\mathrm{e}^{-2tr(1-f)}\mathrm{e}^{-\frac{t}{2N_e f}}\, \mathrm{d}t \\ 
+	& = \frac{\frac{1}{2N_ef}}{2r(1-f) + \frac{1}{2N_e f}} \\
+	& = \frac{1}{4Nrf(1-f) + 1}
+\end{align}
+So,
+\begin{align}
+	P(\text{rec before } \tau \text{, then no rec on other two lineages before they coalesce}) = \\
+	\left(\frac{1}{4Nrf(1-f) + 1}\right)\left(\frac{4N_e r f (1 -f )}{4N_e r f (1 -f ) + 2}\right)
+\end{align}
+Next
+\begin{align}
+	 P(\text{no rec before }\tau \text{, then rec after } \tau \text{ but before coalescence})= \\
+	 P(\text{rec after } \tau \text{ but before coalescence} \mid \text{no rec before }\tau)P(\text{no rec before }\tau )
+\end{align}
+\begin{align}
+P(\text{no rec before }\tau ) & = \int_0^\infty\frac{\binom{3}{2}}{2N_e f}\mathrm{e}^{-3r(1-f)}\mathrm{e}^{-\frac{t\binom{3}{2}}{2N_e f}}\, \mathrm{d} t\\
+	& =\frac{\frac{3}{2N_e f}}{3r(1-f) + \frac{3}{2N_e f}} \\
+	& = \frac{3}{6N_erf(1-f) + 3} \\
+	& = \frac{2}{4N_erf(1-f) + 2}
+\end{align}
+\begin{align}
+	P(\text{rec after } \tau &\text{ but before coalescence} \mid \text{no rec before }\tau) = \\
+	& = \int_0^\infty2r(1-f)\mathrm{e}^{-2r(1-f)}\mathrm{e}^{-\frac{-t}{2N_ef}}\, \mathrm{d}t \\
+	& = \frac{2r(1-f)}{2r(1-f)+\frac{1}{2N_e f}} \\
+	& = \frac{4N_e r f (1-f)}{4N_e r f (1-f) + 1}
+\end{align}
+So,
+\begin{align}
+	P(\text{no rec before }\tau \text{, then rec after } \tau \text{ but before coalescence}) = \\
+	\left(\frac{2}{4N_erf(1-f) + 2}\right)\left(\frac{4N_e r f (1-f)}{4N_e r f (1-f) + 1}\right)
+\end{align}
+Letting $R_f = 4N_e r f (1-f)$, then
+\begin{align}
+	P(\text{2 haplotypes at } l_1 \mid  \text{1 haplotype at } l_1-1) = \\
+	\frac{R_f}{R_f+2}\frac{1}{R_f+1} + \frac{2}{R_f + 2}\frac{R_f}{R_f+1} \\
+	= \frac{3R_f}{(R_f+2)(R_f+1)}
+\end{align}
+which is the Ewens Sampling result for $P(k=2\mid n=3,R_f)$, where $R_f$ is filling the role of $\theta$.
+
+\newpage
+\begin{flushright}
+	\textbf{February 5, 2012}
+\end{flushright}
+
+Now I'm going to move on to thinking about the probability of having a recombination event that increased the number of haplotypes from 1 to 2 at $l_1$, followed by a recombination event that increases the number of haplotypes from 2 to 3 at $l_2$, where $l_1 < l_2$ are distances in base pairs from the selected site. In other words
+
+\begin{align}
+	& P(\{3\} \rightarrow \{2,1\} \text{ at } l_1 \text{ and } \{2,1\} \rightarrow \{1,1,1\} \text{ at } l_2) = \\
+	& P(\{l_1b_3\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) + \\
+	& P(\{l_1b_4\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) + \\
+	& P(\{l_1b_5\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) + \\
+	& P(\{l_2b_3\} \text{ and} \left\{\{l_1b_1\} \text{ or } \{l_1b_2\}\right\}) + \\
+	& P(\{l_2b_4\} \text{ and} \left\{\{l_1b_1\} \text{ or } \{l_1b_2\}\right\}) + \\
+	& P(\{l_2b_5\} \text{ and} \left\{\{l_1b_1\} \text{ or } \{l_1b_2\}\right\})
+\end{align}
+where $b_1$ and $b_2$ are the branches connecting two of the tips to the first coalescent event, which occurs at $\tau_2$ (the first moment when there are two ancestors of the sample), $b_3$ is the branch from the third tip leading back to time $\tau_2$, $b_4$ is contiguous with $b_3$ and leads from $\tau_2$ back to $\tau_1$, where it coalesces with $b_5$, which is the branch subtending $b_1$ and $b_2$; $l_ib_j$ is a recombination event occurring at sequence location $i$ on branch $j$. Moving forward
+\begin{align}
+	& P(\{l_1b_3\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) = \\
+	& P(\{l_1 b_3\}, \text{then} \left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then } \{b_1\text{ and } b_2 \text{ coalesce}\}, \text{then } \{b_4 \text{ and } b_5 \text{ coalesce}\}) + \\
+	& P(\left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then } \{l_1 b_3\}, \text{then } \{b_1\text{ and } b_2 \text{ coalesce}\}, \text{then } \{b_4 \text{ and } b_5 \text{ coalesce}\})
+\end{align}
+These two events have equal probability and thus
+\begin{align}
+		& P(\{l_1b_3\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) = \\
+		& 2P(\{l_1 b_3\}, \text{then} \left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then } \{b_1\text{ and } b_2 \text{ coalesce}\}, \text{then } \{b_4 \text{ and } b_5 \text{ coalesce}\})
+\end{align}
+\begin{align}
+& P(\{l_1 b_3\}, \text{then} \left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then } \{b_1\text{ and } b_2 \text{ coalesce}\}, \text{then } \{b_4 \text{ and } b_5 \text{ coalesce}\})  = \\
+& r(1-f)\int_0^\infty \mathrm{e}^{-t r l_1 ( 1-f )} \mathrm{e}^{ -2 t r l_2 ( 1-f ) } \mathrm{e}^{-\frac{t\binom{3}{2}}{2 N_e f}}\, \mathrm{d}t \\
+	& 2 r (1-f) \int_0^\infty \mathrm{e}^{-t r l_1 ( 1-f )} \mathrm{e}^{ -2 t r l_2 ( 1-f ) } \mathrm{e}^{-\frac{t\binom{3}{2}}{2 N_e f}}\, \mathrm{d}t \\ 
+	& \frac{1}{2 N_e f}\int_0^\infty \mathrm{e}^{-t r l_1 ( 1-f )} \mathrm{e}^{ -2 t r l_2 ( 1-f ) } \mathrm{e}^{-\frac{t\binom{3}{2}}{2 N_e f}}\, \mathrm{d}t \\
+	& \frac{1}{2 N_e f}\int_0^\infty \mathrm{e}^{-t r l_1 ( 1-f )} \mathrm{e}^{ - t r l_2 ( 1-f ) } \mathrm{e}^{-\frac{t}{2 N_e f}}\, \mathrm{d}t = \\
+	& \frac{\left[2N_erf(1-f)\right]\left[4N_erf(1-f)\right]\left[1\right]\left[1\right]}{\left[2N_erf(1-f)l_1 + 2N_erf(1-f)l_2+3\right]^3\left[2N_erf(1-f)l_1 + 2N_erf(1-f)l_2 + 1\right]}
+\end{align}
+
+Letting $R_f = 2N_erf(1-f)$, we can write down
+\begin{equation}
+P(l_1b_3,l_2b_1 \text{ or } l_2b_2) = \frac{4R_f^2}{\left(R_f l_1 + 2R_f l_2 + 3\right)^3\left(R_f\left(l_1 + l_2\right) + 1 \right)}
+\end{equation}
+
+Next
+\begin{align}
+	& P(\{l_1b_4\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) = \\
+	& P(\left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then} \left\{b_1 \text{ and } b_2 \text{ coalesce}\right\}, \text {then } \{l_1b_4\}, \text{then} \left\{b_4 \text{ and } b_5 \text{ coalesce} \right\}) = \\
+	& 2r(1-f) \int_0^\infty \mathrm{e}^{-trl_1(1-f)}\mathrm{e}^{-2trl_2(1-f)}\mathrm{e}^{-\frac{t\binom{3}{2}}{2N_ef}}\mathrm{d}t \\
+	& \frac{1}{2N_ef} \int_0^\infty \mathrm{e}^{-trl_1(1-f)}\mathrm{e}^{-2trl_2(1-f)}\mathrm{e}^{-\frac{t\binom{3}{2}}{2N_ef}}\mathrm{d}t \\
+	& r(1-f) \int_0^\infty \mathrm{e}^{-trl_1(1-f)}\mathrm{e}^{-trl_2(1-f)}\mathrm{e}^{-\frac{t}{2N_ef}}\mathrm{d}t \\
+	& \frac{1}{2N_ef} \int_0^\infty \mathrm{e}^{-trl_1(1-f)}\mathrm{e}^{-trl_2(1-f)}\mathrm{e}^{-\frac{t}{2N_ef}}\mathrm{d}t = \\
+	& \frac{\left[2r(1-f)\right]\left[\frac{1}{2N_ef}\right]^2\left[r(1-f)\right]}{\left[rl_1 (1-f) + 2r l_2 (1-f) + \frac{3}{2N_ef}\right]^2\left[r l_1 (1-f) + r l_2 (1-f) + \frac{1}{2N_e f} \right]^2}
+\end{align}
+Again, multiplying top and bottom by $\left(2N_ef\right)^4$, and letting $R_f = 2N_erf(1-f)$
+\begin{equation}
+	P(\{l_1b_4\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) = \frac{2R_f^2}{\left(R_f l_1 + 2R_f l_2 + 3\right)^2\left(R_f l_1 + R_f l_2 + 1\right)^2}
+\end{equation}
+
+Next (now omitting the integrals for brevity's sake)
+\begin{align}
+	& P(\{l_1b_5\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\}) = \\
+	& P(\left\{\{l_2 b_1\} \text{ or } \{l_2 b_2\}\right\}, \text{then} \left\{b_1 \text{ and } b_2 \text{ coalesce}\right\}, \text {then } \{l_1b_5\}, \text{then} \left\{b_4 \text{ and } b_5 \text{ coalesce} \right\}) = \\
+	& \left[\frac{2r(1-f)}{3rl_2(1-f) + \frac{3}{2N_ef}}\right] \left[\frac{\frac{1}{2N_ef}}{3rl_2(1-f) + \frac{3}{2N_ef}}\right] \left[\frac{r(1-f)}{2rl_2(1-f) + \frac{1}{2N_ef}}\right] \left[\frac{\frac{1}{2N_ef}}{2rl_2(1-f) + \frac{1}{2N_ef}}\right] = \\
+	& \frac{2R_f^2}{\left(3R_f l_2 + 3\right)^2\left(2R_f l_2 + 1 \right)^2}
+\end{align}
+and if we carry out the same calculation for $P(\left\{\{l_1b_1\} \text{ or } \{l_1b_2\}\right\} \text{ and} \{l_2b_5\})$, we find that it is equivalent to the calculation we just carried out for $P(\{l_1b_5\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\})$ (which makes sense if you squint at the tree a bit).
+
+\bibliography{/usr/local/texlive/texmf-local/bibtex/bib/local/library}
+\bibliographystyle{plain}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
