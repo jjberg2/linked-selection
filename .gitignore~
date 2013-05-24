@@ -1,5 +1,0 @@
-#Ignore latexian temporary files.
-*LatexianTemp*
-
-#For now, don't need to track random figures.
-Figures/*
