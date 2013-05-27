@@ -276,7 +276,7 @@ BuildTrees <- function ( coal.times ){
 # }
 
 RecombinationEvents <- function ( trees , coal.times , r , sim.distance , n.tips ) {
-	#recover()
+	recover()
 	if ( n.tips > 2 ) {
 		internodes <- matrix ( nrow = nrow ( coal.times ) , ncol = n.tips - 1 )
 		internodes [ , 1 ] <- coal.times [ , 1 ]
@@ -337,7 +337,7 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 		## build right side haplotype ##
 		event.order <- order ( rec.right [ , 3 ] , decreasing = TRUE )
 		right.sequence.temp <- matrix ( 0 , nrow = n.tips , ncol = nrow ( rec.right ) + 1 )
-		sub.trees <- prop.part( trees [[ j ]]$tree )
+		sub.trees <- prop.part ( trees [[ j ]]$tree )
 		to.remove <- numeric ( )
 		h = 1
 		l = 2
@@ -347,7 +347,7 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 				if ( this.event$rec.depth == 0 ) {
 					break
 				} else {
-					my.freq <- rev ( trees [[ j ]] [[ 3 ]] ) [ this.event$rec.depth ]
+					my.freq <- trees [[ j ]] [[ 3 ]] [ this.event$rec.depth ]
 				}
 				rec.roll <- runif ( 1 )
 				if ( rec.roll < ( 1 - my.freq ) ) {
@@ -585,7 +585,7 @@ MakeHapsPretty <- function ( seqs ) {
 	new.seqs <- matrix ( 0 , nrow = nrow ( seqs ) , ncol = ncol ( seqs ) )
 	for ( i in 2 : ncol ( seqs ) ) {	
 		j <- i - 1
-		new.ids <- unique (seqs [ seqs [ , i ] %in% seqs [ , i - 1 ] == FALSE , i ])
+		new.ids <- unique ( seqs [ seqs [ , i ] %in% seqs [ , i - 1 ] == FALSE , i ])
 		for ( x in new.ids ){
 			last.hap <- unique ( seqs [ seqs [ , i ] == x , i - 1 ] )
 			if ( sum ( seqs [ , i ] == x ) != sum ( seqs [ , i - 1 ] == last.hap ) ) {
@@ -603,7 +603,7 @@ MakeHapsPretty <- function ( seqs ) {
 
 
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.03 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.08 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
 
 
 # Let's think about inference
