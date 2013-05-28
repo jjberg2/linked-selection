@@ -88,7 +88,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 
 	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , s = s , reps = reps , N = N , n.tips = n.tips )
 	
-	return ( list ( coal.times = coal.times , new.freqs = new.freqs , coal.times = coal.times , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total ) )
+	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total ) )
 }
 
 SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) {
@@ -127,7 +127,7 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) 
 			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )
 			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	
 			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )
-			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , 0, sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ) , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
 			update [ neutral.not.fixed ] <- drift.neutral
 			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update
 			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
@@ -143,14 +143,14 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) 
 				cat ( "p = " , my.freq , ",  " , sep = "" )
 				cat ( lineages.remaining , "not fixed \n")
 		}		
-		if ( i == 8 * N ){
+		if ( i == 16 * N ){
 			break
 		}
 		i = i + 1
 	}
 	sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
 	neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
-
+	recover()
 	# if ( constant.freq == FALSE ) {
 		# # if ( reps == 1 ) {
 			# # freq.trajectories <- c ( neutral.freq.matrix [ length ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ 1 : length ( sweep.freq.matrix ) ] )
@@ -603,7 +603,11 @@ MakeHapsPretty <- function ( seqs ) {
 
 
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.03 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.08 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.02 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
+
+
+
+
 
 
 # Let's think about inference
