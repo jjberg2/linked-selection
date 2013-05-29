@@ -1,3 +1,9 @@
+##install.packages("randtoolbox")
+##install.packages("ape")
+library("randtoolbox")
+library("ape")
+turn.on.recovers=FALSE
+
 StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE ) {
 	options ( error = recover )
 	#recover()
@@ -150,7 +156,7 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) 
 	}
 	sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
 	neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
-	recover()
+if(turn.on.recovers)	recover()
 	# if ( constant.freq == FALSE ) {
 		# # if ( reps == 1 ) {
 			# # freq.trajectories <- c ( neutral.freq.matrix [ length ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ 1 : length ( sweep.freq.matrix ) ] )
@@ -276,7 +282,7 @@ BuildTrees <- function ( coal.times ){
 # }
 
 RecombinationEvents <- function ( trees , coal.times , r , sim.distance , n.tips ) {
-	recover()
+if(turn.on.recovers)	recover()
 	if ( n.tips > 2 ) {
 		internodes <- matrix ( nrow = nrow ( coal.times ) , ncol = n.tips - 1 )
 		internodes [ , 1 ] <- coal.times [ , 1 ]
@@ -601,7 +607,7 @@ MakeHapsPretty <- function ( seqs ) {
 }
 
 
-
+if(FALSE){
 
 temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.02 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
 
@@ -615,7 +621,7 @@ my.seqs <- temp[["trees"]][[1]][["sequence.structure"]]$right.seq
 
 InferenceFunction <- function ( seqs ) {
 	
-	recover()
+if(turn.on.recovers)	recover()
 	hap.partitions <- apply ( seqs , 2 , function ( x ) table ( factor ( x , levels = 0 : ( nrow ( seqs ) - 1 ) ) ) )
 	tree <- BuildTrees ( 1 : ( nrow ( seqs ) - 1 ) )
 	
@@ -632,3 +638,4 @@ plot ( temp$trees[[i]]$freqs , type = "l" , xlim = c ( length ( temp$trees[[i]][
 plot ( temp$trees[[i]][[1]] , x.lim = c ( 0 , max ( temp$trees[[i]][[2]] ) ) )
 temp$trees[[i]][[5]]; i = i + 1
 
+}
