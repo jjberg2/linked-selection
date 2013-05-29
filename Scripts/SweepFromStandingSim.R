@@ -5,7 +5,7 @@ library("ape")
 turn.on.recovers=FALSE
 
 StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE ) {
-	options ( error = recover )
+	options ( error = NULL )
 	#recover()
 	
 	
@@ -92,7 +92,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	#recover()
 	trees <- BuildOnOffHaps ( trees = trees , freqs = new.freqs , sim.distance = sim.distance , r = r , n.tips = n.tips , f = f , fixation.time = fixation.time )
 
-	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , s = s , reps = reps , N = N , n.tips = n.tips )
+	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N )
 	
 	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total ) )
 }
@@ -295,6 +295,8 @@ if(turn.on.recovers)	recover()
 	
 	T.total <- numeric ( length ( trees ) )
 	#recover()
+	cat ( "Laying down recombination events. \n \n")
+	pb <- txtProgressBar ( min = 0 , max = length ( trees ) , style = 3 )
 	for ( j in 1 : length ( trees ) ) {
 		T.total [ j ] <- sum ( ( n.tips : 2 ) * internodes [ j , ] )
 		sim.distance.bp <- sim.distance/r
@@ -324,9 +326,10 @@ if(turn.on.recovers)	recover()
 		#recover()
 		trees [[ j ]] [[ "T.total" ]] <- T.total [ j ]
 		trees [[ j ]] [[ "rec.events" ]] <- recombination <-  list ( rec.right = rec.right.temp [ -c ( 1 , nrow ( rec.right.temp ) ), ] , rec.left = rec.left.temp [ -c ( 1 , nrow ( rec.left.temp ) ) , ] )
-
+		setTxtProgressBar ( pb, j )
 	}
-		
+	close ( pb )	
+	
 	return ( list ( trees, T.total ) )
 
 }
@@ -335,6 +338,8 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 	
 	sim.distance.bp <- sim.distance / r
 	#recover()
+	cat ( "Building Haplotypes. \n \n")
+	pb <- txtProgressBar ( min = 0 , max = length ( trees ) , style = 3 )
 	for ( j in 1 : length ( trees ) ) {
 		rec.right <- trees [[ j ]]$rec.events$rec.right
 		rec.left <- trees[[ j ]]$rec.events$rec.left
@@ -433,25 +438,30 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 			rec.left.off.background <- rec.left
 		}
 
-		
+		setTxtProgressBar ( pb, j )
 		trees [[ j ]] [[ "sequence.structure" ]] <- list ( right.seq = right.sequence , left.seq = left.sequence )
 		trees [[ j ]] [[ "rec.events.off.background" ]] <- list ( rec.right.off.background = rec.right.off.background , rec.left.off.background = rec.left.off.background )
 	}
-	
+	close ( pb )
 	return ( trees )
 }
 
 
-HapCountDistribution <- function ( input , r , sim.distance , interval.width , f , s , reps , N , n.tips ) {
+HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.width = 1000 , f , N ) {
 	
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
-	
+	n.tips <- length ( input [[ 1 ]]$tree$tip.label )
+	reps <- length ( input )
 	# number of rows in "sequence" matrix = number of samples
-
+	if ( turn.on.recovers ) {
+		recover()
+	}
 	
 	n.haps.right <- n.haps.left <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
 	#recover()
+	cat ( "Counting up haplotypes. \n \n")
+	pb <- txtProgressBar ( min = 0 , max = length ( intervals ) , style = 3 )
 	for ( i in 1 : length ( intervals ) ) {
 		
 		k <- intervals [ i ]
@@ -488,7 +498,11 @@ HapCountDistribution <- function ( input , r , sim.distance , interval.width , f
 			
 			}	
 		}	
+	
+		setTxtProgressBar(pb, i)
+		
 	}
+	close(pb)
 
 	#recover()
 	n.haps <- rbind ( n.haps.right , n.haps.left )
@@ -496,12 +510,79 @@ HapCountDistribution <- function ( input , r , sim.distance , interval.width , f
 	hap.counts.by.interval <- apply ( n.haps , 2 , function ( x ) table ( factor ( x , 1 : n.tips ) ) )
 	hap.count.freqs.by.interval <- apply ( hap.counts.by.interval , 2 , function ( x ) x / nrow ( n.haps ) )
 	
-	cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )
-#	par ( mfrow = c ( 2 , 1 ) )
+	MakeHapPlots ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 )
+	
+	
+	# cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )
+# #	par ( mfrow = c ( 2 , 1 ) )
+	# #matplot ( t ( cum.probs ) , type = "l" , lty = 1 , lwd = 0.7 , col = "black" , ylab = "Cumulative Probability" , xlab = "kb" , main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , bty = "n")
+	
+	
+	
+	# ewens.dist.matrix <- matrix ( nrow = n.tips , ncol = length ( intervals ) )
+	
+	# stirling.numbers <- StirlingNumbers ( n = n.tips ) [ n.tips , ]
+	# for ( i in 1 : length ( intervals ) ) {
+		
+		# if ( i == 1 & intervals [ 1 ] == 0 ) {
+			
+			# ewens.dist.matrix [ , i ] <- c ( 1 , rep ( 0 , n.tips - 1 ) )
+			
+		# } else { 
+		
+			# ewens.dist.matrix [ , i ] <- EwensDist ( n = n.tips , N = N , r = r , distance = intervals [ i ] , f = f , stirling.numbers = stirling.numbers )
+			
+		# }
+		
+	# }
+	# #recover()
+	# ewens.cum.probs <-  apply ( ewens.dist.matrix , 2 , cumsum )
+	# matplot ( 
+		# t ( ewens.cum.probs ) , 
+		# type = "n" , 
+		# lty = 1 , 
+		# lwd = 0.7 , 
+		# col = "black" , 
+		# ylab = "Cumulative Probability" , 
+		# xlab = "kb" , 
+		# #main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , 
+		# bty = "n"
+	# )
+	
+	
+	# #recover()
+	# col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
+	# for ( i in 1 : ( nrow ( cum.probs ) - 1 ) ) {
+			# #i = i + 1
+			# X.ax <- 1:ncol ( cum.probs ) #which ( cum.probs [ i , ] != cum.probs [ i + 1 , ] )
+			# Y.ax1 <- cum.probs [ i , X.ax ]
+			# Y.ax2 <- cum.probs [ i + 1 , X.ax ]
+			# polygon ( x = c ( X.ax , rev ( X.ax ) ) , y = c ( Y.ax1 , rev ( Y.ax2 ) ) , lty = 0 , col = col.vect [ i ] )					
+	# }
+	# ewens.cum.probs <- ewens.cum.probs [ - nrow ( ewens.cum.probs ) , ]
+	# apply ( ewens.cum.probs , 1 , function ( x ) lines ( x , lty = 1 , lwd = 0.8 ) )
+	
+	# #recover()
+	
+	# expected.num.haps <- colSums ( apply ( hap.counts.by.interval , 2 , function ( x ) x * 1 : n.tips ) / (2 * length ( input ) ) , 2 )
+		
+	# #plot ( expected.num.haps , type = "l" , lty = 1 , lwd = 1.5 , xlab = "kb" , ylab = "Expected Number of Haplotypes" , bty = "n")
+	
+	return ( list ( hap.count.freqs.by.interval = hap.count.freqs.by.interval , n.haps = n.haps ) )
+	
+}
+
+
+
+
+MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 ) {
+	
+	#par ( mfrow = c ( 2 , 1 ) )
 	#matplot ( t ( cum.probs ) , type = "l" , lty = 1 , lwd = 0.7 , col = "black" , ylab = "Cumulative Probability" , xlab = "kb" , main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , bty = "n")
-	#recover()
-	
-	
+	sim.distance.bp <- sim.distance / r 
+	intervals <- seq ( 0 , sim.distance.bp , interval.width )
+	n.tips <- nrow ( hap.count.freqs.by.interval )
+	cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )
 	ewens.dist.matrix <- matrix ( nrow = n.tips , ncol = length ( intervals ) )
 	
 	stirling.numbers <- StirlingNumbers ( n = n.tips ) [ n.tips , ]
@@ -544,16 +625,11 @@ HapCountDistribution <- function ( input , r , sim.distance , interval.width , f
 	}
 	ewens.cum.probs <- ewens.cum.probs [ - nrow ( ewens.cum.probs ) , ]
 	apply ( ewens.cum.probs , 1 , function ( x ) lines ( x , lty = 1 , lwd = 0.8 ) )
-	
-	#recover()
-	
-	expected.num.haps <- colSums ( apply ( hap.counts.by.interval , 2 , function ( x ) x * 1 : n.tips ) / (2 * reps ) , 2 )
-		
-	#plot ( expected.num.haps , type = "l" , lty = 1 , lwd = 1.5 , xlab = "kb" , ylab = "Expected Number of Haplotypes" , bty = "n")
-	
-	return ( list ( hap.count.freq.by.interval = hap.count.freqs.by.interval , n.haps = n.haps ) )
-	
+
+
 }
+
+
 
 StirlingNumbers <- function ( n ) {
 	
@@ -607,35 +683,35 @@ MakeHapsPretty <- function ( seqs ) {
 }
 
 
-if(FALSE){
-
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.02 , reps = 400 , n.tips = 12 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
 
 
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 200 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
 
 
 
 
-# Let's think about inference
-my.seqs <- temp[["trees"]][[1]][["sequence.structure"]]$right.seq
 
-InferenceFunction <- function ( seqs ) {
+# # 
+# # Let's think about inference
+# my.seqs <- temp[["trees"]][[1]][["sequence.structure"]]$right.seq
+
+# # InferenceFunction <- function ( seqs ) {
 	
-if(turn.on.recovers)	recover()
-	hap.partitions <- apply ( seqs , 2 , function ( x ) table ( factor ( x , levels = 0 : ( nrow ( seqs ) - 1 ) ) ) )
-	tree <- BuildTrees ( 1 : ( nrow ( seqs ) - 1 ) )
+# # if(turn.on.recovers)	recover()
+	# # hap.partitions <- apply ( seqs , 2 , function ( x ) table ( factor ( x , levels = 0 : ( nrow ( seqs ) - 1 ) ) ) )
+	# # tree <- BuildTrees ( 1 : ( nrow ( seqs ) - 1 ) )
 	
 	
-}
+# # }
 
 
-InferenceFunction ( seqs = my.seqs )
+# InferenceFunction ( seqs = my.seqs )
 
 
-i = 1
-par(mfrow=c(2,1))
-plot ( temp$trees[[i]]$freqs , type = "l" , xlim = c ( length ( temp$trees[[i]][[3]] ) - max ( temp$trees[[i]][[2]] ) , length ( temp$trees[[i]][[3]] ) ) )
-plot ( temp$trees[[i]][[1]] , x.lim = c ( 0 , max ( temp$trees[[i]][[2]] ) ) )
-temp$trees[[i]][[5]]; i = i + 1
+# i = 1
+# par(mfrow=c(2,1))
+# plot ( temp$trees[[i]]$freqs , type = "l" , xlim = c ( length ( temp$trees[[i]][[3]] ) - max ( temp$trees[[i]][[2]] ) , length ( temp$trees[[i]][[3]] ) ) )
+# plot ( temp$trees[[i]][[1]] , x.lim = c ( 0 , max ( temp$trees[[i]][[2]] ) ) )
+# temp$trees[[i]][[5]]; i = i + 1
 
-}
+# }
