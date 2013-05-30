@@ -4,7 +4,7 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE ) {
+StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE) {
 	options ( error = NULL )
 	#recover()
 	
@@ -13,7 +13,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	
 	if ( constant.freq == FALSE ) {
 	
-		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep )
+		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss )
 		frequencies <- temp [[ 1 ]]
 	
 		if ( no.sweep == FALSE ) {	
@@ -97,7 +97,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total ) )
 }
 
-SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) {
+SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, cond.on.loss) {
 	
 	delta.T <- 1 / ( 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
@@ -133,7 +133,12 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep ) 
 			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )
 			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	
 			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )
-			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ) , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
+			
+			 cond.mean <- ifelse(cond.on.loss,
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ),
+			 				0)
+			
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
 			update [ neutral.not.fixed ] <- drift.neutral
 			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update
 			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
@@ -575,16 +580,18 @@ HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.w
 
 
 
-MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 ) {
+MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE) {
 	
 	#par ( mfrow = c ( 2 , 1 ) )
 	#matplot ( t ( cum.probs ) , type = "l" , lty = 1 , lwd = 0.7 , col = "black" , ylab = "Cumulative Probability" , xlab = "kb" , main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , bty = "n")
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
 	n.tips <- nrow ( hap.count.freqs.by.interval )
-	cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )
+	if(plot.cumulative){	cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )}
+	if(!plot.cumulative){ cum.probs <- rbind ( 0 ,hap.count.freqs.by.interval)}
+
 	ewens.dist.matrix <- matrix ( nrow = n.tips , ncol = length ( intervals ) )
-	
+
 	stirling.numbers <- StirlingNumbers ( n = n.tips ) [ n.tips , ]
 	for ( i in 1 : length ( intervals ) ) {
 		
@@ -600,7 +607,10 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 		
 	}
 	#recover()
-	ewens.cum.probs <-  apply ( ewens.dist.matrix , 2 , cumsum )
+
+	if(plot.cumulative){ ewens.cum.probs <-  apply ( ewens.dist.matrix , 2 , cumsum )}
+	if(!plot.cumulative){ewens.cum.probs <-ewens.dist.matrix; }
+		
 	matplot ( 
 		t ( ewens.cum.probs ) , 
 		type = "n" , 
@@ -616,15 +626,26 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	
 	#recover()
 	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-	for ( i in 1 : ( nrow ( cum.probs ) - 1 ) ) {
+
+
+	for ( i in  ( nrow ( cum.probs ) - 1 ):1 ) {
 			#i = i + 1
 			X.ax <- 1:ncol ( cum.probs ) #which ( cum.probs [ i , ] != cum.probs [ i + 1 , ] )
-			Y.ax1 <- cum.probs [ i , X.ax ]
+	if(plot.cumulative){	Y.ax1 <- cum.probs [ i , X.ax ]}
+	if(!plot.cumulative){ Y.ax1 <- rep(0,ncol ( cum.probs ) )	}
+			if(!plot.cumulative){ 
+				lines(X.ax,cum.probs [ i + 1 , X.ax ], col = col.vect [ i ],lwd=2 )
+				lines (ewens.cum.probs[i,], col = col.vect [ i ],lwd=2,lty=2 ) 
+				}
 			Y.ax2 <- cum.probs [ i + 1 , X.ax ]
-			polygon ( x = c ( X.ax , rev ( X.ax ) ) , y = c ( Y.ax1 , rev ( Y.ax2 ) ) , lty = 0 , col = col.vect [ i ] )					
+			if(plot.cumulative) polygon ( x = c ( X.ax , rev ( X.ax ) ) , y = c ( Y.ax1 , rev ( Y.ax2 ) ) , lty = 0 , col = col.vect [ i ] )					
 	}
-	ewens.cum.probs <- ewens.cum.probs [ - nrow ( ewens.cum.probs ) , ]
-	apply ( ewens.cum.probs , 1 , function ( x ) lines ( x , lty = 1 , lwd = 0.8 ) )
+
+	
+	if(plot.cumulative){ 
+		ewens.cum.probs <- ewens.cum.probs [ - nrow ( ewens.cum.probs ) , ]
+		apply ( ewens.cum.probs , 1 , function ( x ) lines ( x , lty = 1 , lwd = 0.8 ) )
+	}
 
 
 }
@@ -683,13 +704,13 @@ MakeHapsPretty <- function ( seqs ) {
 }
 
 
+if(FALSE){
 
-
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 200 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 200 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE)
 
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
-
+}
 
 
 # # 
