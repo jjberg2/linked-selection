@@ -608,7 +608,7 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 		
 	}
 	#recover()
-
+#recover()
 	if(plot.cumulative){ ewens.cum.probs <-  apply ( ewens.dist.matrix , 2 , cumsum )}
 	if(!plot.cumulative){ewens.cum.probs <-ewens.dist.matrix; }
 		
@@ -627,7 +627,7 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	
 	#recover()
 	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-
+legend("topright", legend=paste("j=",1:n.tips), lty=1,col= col.vect,lwd=2)
 
 	for ( i in  ( nrow ( cum.probs ) - 1 ):1 ) {
 			#i = i + 1
@@ -714,6 +714,7 @@ MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, 
 }
 
 
+
 # # 
 # # Let's think about inference
 # my.seqs <- temp[["trees"]][[1]][["sequence.structure"]]$right.seq
@@ -727,9 +728,7 @@ MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, 
 	
 # # }
 
-
 # InferenceFunction ( seqs = my.seqs )
-
 
 # i = 1
 # par(mfrow=c(2,1))
