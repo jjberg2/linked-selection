@@ -707,7 +707,7 @@ MakeHapsPretty <- function ( seqs ) {
 
 if(FALSE){
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.1 , reps = 400 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.1 , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE )
 
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
