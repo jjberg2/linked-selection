@@ -5,7 +5,7 @@ library("ape")
 turn.on.recovers=FALSE
 
 StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE) {
-	options ( error = NULL )
+	options ( error = recover )
 	#recover()
 	
 	
@@ -142,8 +142,10 @@ if(turn.on.recovers)	recover()
 			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
 			update [ neutral.not.fixed ] <- drift.neutral
 			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update
-			# neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
-			# neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1
+			if ( !cond.on.loss ) {
+				neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
+				neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1
+			}
 			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )
 			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	
 			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )
@@ -707,10 +709,10 @@ MakeHapsPretty <- function ( seqs ) {
 
 if(FALSE){
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.1 , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.1 , reps = 2000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = FALSE )
 
 #function to get haplotype distribution plots from function output
-MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
+MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.1, sim.distance = 0.02 , plot.cumulative=FALSE)
 }
 
 
