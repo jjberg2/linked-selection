@@ -4,5 +4,8 @@
 #For now, don't need to track random figures.
 Figures/*
 
+#Don't need to track mssel
+Scripts/msseldir/*
+
 #Or autosaved files
 *(Autosaved)*
