@@ -5,7 +5,7 @@ library("ape")
 turn.on.recovers=FALSE
 
 StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE) {
-	options ( error = recover )
+	options ( error = NULL )
 	#recover()
 	
 	
@@ -133,19 +133,16 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, c
 			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )
 			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	
 			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )
-if(turn.on.recovers)	recover()
 			
-			cond.mean <- ifelse( rep ( cond.on.loss , sum ( neutral.not.fixed ) ),
+			 cond.mean <- ifelse(cond.on.loss,
 			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ),
 			 				0)
 			
 			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
 			update [ neutral.not.fixed ] <- drift.neutral
 			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update
-			if ( !cond.on.loss ) {
-				neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
-				neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1
-			}
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1
 			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )
 			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	
 			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )
@@ -200,7 +197,7 @@ if(turn.on.recovers)	recover()
 
 BuildTrees <- function ( coal.times ){
 	#recover()
-	# library ( ape )
+	library ( ape )
 	if ( is.matrix ( coal.times ) == FALSE ) {
 		n.trees <- 1
 		n.tips <- length ( coal.times ) + 1
@@ -345,7 +342,7 @@ if(turn.on.recovers)	recover()
 BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fixation.time ) {
 	
 	sim.distance.bp <- sim.distance / r
-if ( turn.on.recovers == TRUE ) recover()
+	#recover()
 	cat ( "Building Haplotypes. \n \n")
 	pb <- txtProgressBar ( min = 0 , max = length ( trees ) , style = 3 )
 	for ( j in 1 : length ( trees ) ) {
@@ -414,7 +411,7 @@ if ( turn.on.recovers == TRUE ) recover()
 				if ( this.event$rec.depth == 0 ) {
 					break
 				} else {
-					my.freq <- trees [[ j ]] [[ 3 ]] [ this.event$rec.depth ]
+					my.freq <- rev ( trees [[ j ]] [[ 3 ]] ) [ this.event$rec.depth ]
 				}
 				rec.roll <- runif ( 1 )
 				if ( rec.roll < ( 1 - my.freq ) ) {
@@ -709,10 +706,10 @@ MakeHapsPretty <- function ( seqs ) {
 
 if(FALSE){
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.1 , reps = 2000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = FALSE )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 200 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE)
 
 #function to get haplotype distribution plots from function output
-MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.1, sim.distance = 0.02 , plot.cumulative=FALSE)
+MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
 }
 
 
