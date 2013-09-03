@@ -1,0 +1,925 @@
+not.all.sweeps.fixed
+update <- rep ( 0 , reps )
+update
+neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0
+neutral.not.fixed
+neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0
+neutral.fixed
+cond.mean <- ifelse(cond.on.loss,
+cond.mean
+cond.mean <- ifelse(cond.on.loss,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ),#
+			 				0)
+cond.mean
+rep ( cond.on.loss , reps )
+cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ),#
+			 				0)
+cond.mean
+cond.on.fix = TRUE
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+cond.on.fix
+cond.on.fix=FALSE
+<- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]
+sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]<-0.1
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]
+2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]
+tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,
+tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]
+sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]<-0.001
+tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+cond.on.fix
+2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+2^10
+2^20
+2^30
+mu.S
+cond.on.fix
+cond.on.fix=T
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+sweep.not.fixed
+sum ( sweep.not.fixed )
+sel
+sel <- mu.S * delta.T
+sel
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+sel <- mu.S * delta.T
+sel
+cond.on.fix=F
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+sel <- mu.S * delta.T
+sel
+cond.on.fix=T
+mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)
+mu.S
+sel <- mu.S * delta.T
+sel
+drift.neutral <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * 1 / ( 2 * N ) ) )
+sel <- mu.S * delta.T
+drift.sweep <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * 1 / ( 2 * N ) ) )
+drift.sweep
+sweep.not.fixed
+update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * 1 / ( 2 * N ) ) )
+update
+update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * 1 / ( 2 * N ) ) )
+update
+sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update
+sweep.freq.matrix [[ i + 1 ]]
+sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
+sweep.fixed.one
+sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1
+sweep.freq.matrix [[ i + 1 ]]
+sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )
+sweep.fixed.zero
+sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0
+sweep.freq.matrix [[ i + 1 ]]
+not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )
+not.all.sweeps.fixed
+1/20000
+Q
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE ) )
+source ("SweepFromStandingSim.R")
+my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			my.times<-my.times / (4*10e3)#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+		}#
+	}#
+}#
+#
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE ) )
+my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			my.times<-my.times / (4*10e3)#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+		}#
+	}#
+}
+run.ms.f<-function(f.index,n.sam=2){#
+#
+	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			my.times<-my.times / (4*10e3)#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+		}#
+	}#
+}
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE ) )
+length(my.runs[[1]])
+length(my.runs[[1]][[1]])
+nrow(my.runs[[1]][[1]])
+nrow(my.runs[[2]][[1]])
+source ("SweepFromStandingSim.R")
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE ) )
+delta.T
+delta.T=1/(4*N)
+delta.T
+i = 1
+f
+while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 * N ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.freq.matrix
+seq ( 1 : ncol ( sweep.freq.matrix ) , 2)
+seq ( 1 , ncol ( sweep.freq.matrix ) , by=2)
+delta.T
+delta.T/N
+delta.T*N
+delta.T*2*N
+1/(delta.T*2*N)
+seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) )
+sweep.freq.matrix [ , seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) ) ]
+neutral.freq.matrix [ , seq ( 1 , ncol ( neutral.freq.matrix ) , by = 1/(delta.T*2*N) )]
+neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
+neutral.freq.matrix [ , seq ( 1 , ncol ( neutral.freq.matrix ) , by = 1/(delta.T*2*N) )]
+neutral.freq.matrix
+1/(delta.T*2*N)
+16 * N * 1 / ( delta.T * 2 * N )
+16 * 1 / ( delta.T * 2 )
+16 / ( delta.T * 2 )
+neutral.freq.matrix[,1]
+neutral.freq.matrix[,2]
+neutral.freq.matrix[,3]
+neutral.freq.matrix <- cbind ( neutral.freq.matrix [ , seq ( 1 , ncol ( neutral.freq.matrix ) , by = 1/(delta.T*2*N) )] , 0 )
+neutral.freq.matrix
+cbind ( sweep.freq.matrix [ , seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) ) ] , 1 )
+sweep.freq.matrix
+neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
+neutral.freq.matrix
+i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.freq.matrix
+sweep.freq.matrix[,3649]
+delta.T=1/(8*N)
+delta.T
+sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.freq.matrix
+sweep.freq.matrix <- cbind ( sweep.freq.matrix [ , seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) ) ] , 1 )
+sweep.freq.matrix
+sweep.freq.matrix[,1602]
+neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
+neutral.freq.matrix <- cbind ( neutral.freq.matrix [ , seq ( 1 , ncol ( neutral.freq.matrix ) , by = 1/(delta.T*2*N) )] , 0 )
+neutral.freq.matrix
+if ( no.sweep == FALSE ) {#
+		freq.trajectories <- cbind ( neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ] )#
+	} else {#
+		freq.trajectories <- neutral.freq.matrix [ , 1 : ncol ( neutral.freq.matrix ) ]#
+		return ( list ( freq.trajectories , 0 ) )#
+	}
+freq.trajectories
+freq.trajectories[1,]
+keep.these <- freq.trajectories [ , ncol ( freq.trajectories ) - 1 ] == 1
+keep.these
+keep.these <- freq.trajectories [ , ncol ( freq.trajectories ) ] == 1
+keep.these
+sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.freq.matrix
+seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) )
+sweep.keep <- seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) )
+ncol ( sweep.freq.matrix )
+ncol ( sweep.freq.matrix ) %in% sweep.keep
+sweep.freq.matrix
+ifelse ( ncol ( sweep.freq.matrix ) %in% sweep.keep ,#
+				sweep.freq.matrix <- sweep.freq.matrix [ , seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) ) ] ,#
+				sweep.freq.matrix <- cbind ( sweep.freq.matrix [ , seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) ) ] , 1 )#
+				)
+sweep.freq.matrix
+sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix
+source ("SweepFromStandingSim.R")
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE ) )
+real.fs <- c ( 0.001 , seq ( 0.01 , 0.1 , length = 10 ) )
+real.fs
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE ) )
+source ("SweepFromStandingSim.R")
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE ) )
+sweep.freq.matrix <- list ( rep ( f , reps ) )
+neutral.freq.matrix <- list ( rep ( f , reps ) )
+not.all.sweeps.fixed <- TRUE
+not.all.neutral.fixed <- TRUE
+i = 1
+while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+time.factor
+Q
+source ("SweepFromStandingSim.R")
+source ("SweepFromStandingSim.R")
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 4 ) )
+time.factor
+not.all.neutral.fixed
+i
+i = 1
+delta.T
+i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == 16 / ( delta.T * 2 ) ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.keep <- seq ( 1 , ncol ( sweep.freq.matrix ) , by = 1/(delta.T*2*N) )
+sweep.keep
+ncol ( sweep.freq.matrix )
+1/(delta.T*2*N)
+delta.T
+16 * N
+time.factor * 16 * N
+dim(sweep.freq.matrix)
+sweep.keep
+ncol ( sweep.freq.matrix ) %in% sweep.keep
+sweep.keep
+sweep.freq.matrix [ , sweep.keep ]
+cbind ( sweep.freq.matrix [ , sweep.keep ] , 1
+)
+sweep.freq.matrix
+sweep.freq.matrix <- ifelse ( ncol ( sweep.freq.matrix ) %in% sweep.keep ,#
+				sweep.freq.matrix [ , sweep.keep ] ,#
+			 	cbind ( sweep.freq.matrix [ , sweep.keep ] , 1 )#
+				)
+sweep.freq.matrix
+ncol ( sweep.freq.matrix ) %in% sweep.keep
+delta.T <- 1 / ( time.factor * 2 * N )#
+	sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == time.factor * 16 * N ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+ncol ( sweep.freq.matrix ) %in% sweep.keep
+ncol ( sweep.freq.matrix )
+sweep.keep
+if ( ncol ( sweep.freq.matrix ) %in% sweep.keep ) {#
+ 		sweep.freq.matrix <- sweep.freq.matrix [ , sweep.keep ]#
+ 	} else {#
+	 	sweep.freq.matrix <- cbind ( sweep.freq.matrix [ , sweep.keep ] , 1 ) 		#
+ 	}
+sweep.freq.matrix
+sweep.freq.matrix [ 46,]
+delta.T <- 1 / ( time.factor * 2 * N )#
+	sweep.freq.matrix <- list ( rep ( f , reps ) )#
+	neutral.freq.matrix <- list ( rep ( f , reps ) )#
+	not.all.sweeps.fixed <- TRUE#
+	not.all.neutral.fixed <- TRUE#
+	#recover()#
+	i = 1#
+	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {#
+		if ( not.all.sweeps.fixed ) {#
+			update <- rep ( 0 , reps )#
+			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0#
+			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0#
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,#
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )#
+									)#
+			sel <- mu.S * delta.T#
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )#
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)#
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )#
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )#
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			#
+			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update#
+			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1#
+			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 1 / ( 2 * N )#
+			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+		}#
+		if ( not.all.neutral.fixed ) {	#
+			update <- rep ( 0 , reps )#
+			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0#
+			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0#
+			#neutral.drift.mag <- sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T )#
+			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	#
+			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )#
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,#
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,#
+			 				0)#
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )#
+			update [ neutral.not.fixed ] <- drift.neutral#
+			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update#
+			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.one ] <- 1#
+			neutral.fixed.zero <- neutral.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )#
+			neutral.freq.matrix [[ i + 1 ]] [ neutral.fixed.zero ] <- 0	#
+			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )#
+		}#
+		if ( i %% 5000 == 0 ) {#
+				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )#
+				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )#
+				cat ( "p = " , my.freq , ",  " , sep = "" )#
+				cat ( lineages.remaining , "not fixed \n")#
+		}		#
+		if ( i == time.factor * 16 * N ){#
+			break#
+		}#
+		i = i + 1#
+	}
+sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+sweep.freq.matrix
+sweep.keep <- seq ( 1 , ncol ( sweep.freq.matrix ) , by = time.factor )
+sweep.keep
+if ( ncol ( sweep.freq.matrix ) %in% sweep.keep ) {#
+ 		sweep.freq.matrix <- sweep.freq.matrix [ , sweep.keep ]#
+ 	} else {#
+	 	sweep.freq.matrix <- cbind ( sweep.freq.matrix [ , sweep.keep ] , 1 ) 		#
+ 	}
+ncol ( sweep.freq.matrix )
+sweep.keep
+ncol ( sweep.freq.matrix )
+sweep.freq.matrix
+neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
+neutral.freq.matrix
+neutral.keep <- sweep.keep <- seq ( 1 , ncol ( neutral.freq.matrix ) , by = time.factor )
+neutral.keep
+neutral.keep
+neutral.keep
+neutral.keep
+neutral.keep
+ncol ( neutral.freq.matrix ) %in% neutral.keep
+neutral.freq.matrix [ , neutral.keep ]
+neutral.freq.matrix
+if ( ncol ( neutral.freq.matrix ) %in% neutral.keep ) {#
+		neutral.freq.matrix <- neutral.freq.matrix [ , neutral.keep ]#
+	} else {#
+		neutral.freq.matrix <- cbind ( neutral.freq.matrix [ , neutral.keep ] , 0 )#
+	}
+neutral.freq.matrix
+neutral.freq.matrix
+if ( no.sweep == FALSE ) {#
+		freq.trajectories <- cbind ( neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ] )#
+	} else {#
+		freq.trajectories <- neutral.freq.matrix [ , 1 : ncol ( neutral.freq.matrix ) ]#
+		return ( list ( freq.trajectories , 0 ) )#
+	}
+freq.trajectories
+temp <- apply ( freq.trajectories , 1 , function ( x ) rev ( x ) )
+temp
+freq.trajectories
+temp
+temp <- apply ( freq.trajectories , 1 , function ( x ) recover() rev ( x ) )
+temp <- apply ( freq.trajectories , 1 , function ( x ) x[x !=1] )
+temp

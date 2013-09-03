@@ -4,7 +4,7 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE) {
+StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , make.plot = FALSE ) {
 	options ( error = NULL )
 	#recover()
 	
@@ -92,14 +92,14 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	#recover()
 	trees <- BuildOnOffHaps ( trees = trees , freqs = new.freqs , sim.distance = sim.distance , r = r , n.tips = n.tips , f = f , fixation.time = fixation.time )
 
-	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N )
+	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
 	
-	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total ) )
+	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total , sim.distance.bp = sim.distance/r) )
 }
 
-SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, cond.on.loss) {
+SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , time.factor = 1  ) {
 	
-	delta.T <- 1 / ( 2 * N )
+	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
 	neutral.freq.matrix <- list ( rep ( f , reps ) )
 	not.all.sweeps.fixed <- TRUE
@@ -111,17 +111,21 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, c
 			update <- rep ( 0 , reps )
 			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0
 			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0
-			mu.S <- 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,
+									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+									)
 			sel <- mu.S * delta.T
-			sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)
-			plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )
-			drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )
-			update [ sweep.not.fixed ] <- sel + drift.sweep			
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )
+		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)
+		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )
+		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )
+		#	update [ sweep.not.fixed ] <- sel + drift.sweep			
 			sweep.freq.matrix [[ i + 1 ]] <- sweep.freq.matrix [[ i ]] + update
 			sweep.fixed.one <- sweep.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
 			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.one ] <- 1
 			sweep.fixed.zero <- sweep.freq.matrix [[ i + 1 ]] < 1 / ( 2 * N )
-			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 0
+			sweep.freq.matrix [[ i + 1 ]] [ sweep.fixed.zero ] <- 1 / ( 2 * N )
 			not.all.sweeps.fixed <- any ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )
 
 		
@@ -134,11 +138,11 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, c
 			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	
 			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )
 			
-			 cond.mean <- ifelse(cond.on.loss,
-			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * 1 / ( 2 * N ),
+			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,
+			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,
 			 				0)
 			
-			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * 1 / ( 2 * N ) ) )
+			drift.neutral <- rnorm ( sum ( neutral.not.fixed ) , cond.mean , sd = sqrt ( neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * ( 1 - neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] ) * delta.T ) )
 			update [ neutral.not.fixed ] <- drift.neutral
 			neutral.freq.matrix [[ i + 1 ]] <- neutral.freq.matrix [[ i ]] + update
 			neutral.fixed.one <- neutral.freq.matrix [[ i + 1 ]] > ( 1 - ( 1 / ( 2 * N ) ) )
@@ -154,13 +158,26 @@ SweepFromStandingSim <- function ( N , s , f , time.factor ,  reps , no.sweep, c
 				cat ( "p = " , my.freq , ",  " , sep = "" )
 				cat ( lineages.remaining , "not fixed \n")
 		}		
-		if ( i == 16 * N ){
+		if ( i == time.factor * 16 * N ){
 			break
 		}
 		i = i + 1
 	}
 	sweep.freq.matrix <- matrix ( unlist ( sweep.freq.matrix ) , nrow = reps )
+	sweep.keep <- seq ( 1 , ncol ( sweep.freq.matrix ) , by = time.factor )
+	if ( ncol ( sweep.freq.matrix ) %in% sweep.keep ) {
+ 		sweep.freq.matrix <- sweep.freq.matrix [ , sweep.keep ]
+ 	} else {
+	 	sweep.freq.matrix <- cbind ( sweep.freq.matrix [ , sweep.keep ] , 1 ) 		
+ 	}
+							
 	neutral.freq.matrix <- matrix ( unlist ( neutral.freq.matrix ) , nrow = reps )
+	neutral.keep <- seq ( 1 , ncol ( neutral.freq.matrix ) , by = time.factor )
+	if ( ncol ( neutral.freq.matrix ) %in% neutral.keep ) {
+		neutral.freq.matrix <- neutral.freq.matrix [ , neutral.keep ]
+	} else {
+		neutral.freq.matrix <- cbind ( neutral.freq.matrix [ , neutral.keep ] , 0 )
+	}
 if(turn.on.recovers)	recover()
 	# if ( constant.freq == FALSE ) {
 		# # if ( reps == 1 ) {
@@ -180,18 +197,22 @@ if(turn.on.recovers)	recover()
 	if ( no.sweep == FALSE ) {
 		freq.trajectories <- cbind ( neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ] )
 	} else {
-		freq.trajectories <- neutral.freq.matrix [ , 1 : ncol ( neutral.freq.matrix ) ]
+		freq.trajectories <- neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 1 ]
 		return ( list ( freq.trajectories , 0 ) )
 	}
+	temp1 <- apply ( freq.trajectories , 1 , function ( x ) rev ( x[x !=1] ) )
+	add.zeros <- max ( unlist ( lapply ( temp1 , length) ) ) - unlist ( lapply ( temp1 , length) )
+	temp2 <- mapply ( function ( x , y ) c ( rev ( c ( x , rep ( 0 , y ) ) ) , 1 ) , x = temp1 , y = add.zeros , SIMPLIFY = FALSE )
+	freq.trajectories <- do.call ( rbind , temp2 )
 		# }
 	# } else {
 		# freq.trajectories <- sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ]
 	# }
 	#recover()
-	keep.these <- freq.trajectories [ , ncol ( freq.trajectories ) ] == 1		
-	conditional.freq.trajectories <- freq.trajectories [ keep.these , ]
+	#keep.these <- freq.trajectories [ , ncol ( freq.trajectories ) ] == 1		
+	#conditional.freq.trajectories <- freq.trajectories [ keep.these , ]
 	sweep.start <- ncol ( sweep.freq.matrix ) #/ time.factor
-	return ( list ( conditional.freq.trajectories , sweep.start ) )	
+	return ( list ( freq.trajectories , sweep.start ) )	
 }
 
 
@@ -411,7 +432,7 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 				if ( this.event$rec.depth == 0 ) {
 					break
 				} else {
-					my.freq <- rev ( trees [[ j ]] [[ 3 ]] ) [ this.event$rec.depth ]
+					my.freq <- trees [[ j ]] [[ 3 ]] [ this.event$rec.depth ]
 				}
 				rec.roll <- runif ( 1 )
 				if ( rec.roll < ( 1 - my.freq ) ) {
@@ -446,13 +467,14 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 		setTxtProgressBar ( pb, j )
 		trees [[ j ]] [[ "sequence.structure" ]] <- list ( right.seq = right.sequence , left.seq = left.sequence )
 		trees [[ j ]] [[ "rec.events.off.background" ]] <- list ( rec.right.off.background = rec.right.off.background , rec.left.off.background = rec.left.off.background )
+		trees [[ j ]] [[ "sim.distance.bp" ]] <- sim.distance.bp
 	}
 	close ( pb )
 	return ( trees )
 }
 
 
-HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.width = 1000 , f , N ) {
+HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.width = 1000 , f , N , make.plot ) {
 	
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
@@ -515,8 +537,9 @@ HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.w
 	hap.counts.by.interval <- apply ( n.haps , 2 , function ( x ) table ( factor ( x , 1 : n.tips ) ) )
 	hap.count.freqs.by.interval <- apply ( hap.counts.by.interval , 2 , function ( x ) x / nrow ( n.haps ) )
 	
-	MakeHapPlots ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 )
-	
+	if ( make.plot ) {
+		MakeHapPlots ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 )
+	}
 	
 	# cum.probs <- rbind ( 0 , apply ( hap.count.freqs.by.interval , 2 , cumsum ) )
 # #	par ( mfrow = c ( 2 , 1 ) )
@@ -601,7 +624,7 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 			
 		} else { 
 		
-			ewens.dist.matrix [ , i ] <- EwensDist ( n = n.tips , N = N , r = r , distance = intervals [ i ] , f = f , stirling.numbers = stirling.numbers )
+			ewens.dist.matrix [ , i ] <- EwensDist ( n = n.tips , N = N , r = r , distance = intervals [ i ] , f = f  ) [ n.tips , ]
 			
 		}
 		
@@ -672,19 +695,19 @@ StirlingNumbers <- function ( n ) {
 	
 }
 
-EwensDist <- function ( n , N , r , distance , f , stirling.numbers ) {
+EwensDist <- function ( n , N , r , distance , f ) {
 	#recover()	
 	param <- 4 * N * r * distance * f * ( 1- f )
-	denom  <- prod ( param + 0 : ( n - 1 ) )
-	#stirling.numbers <- StirlingNumbers ( n ) [ n , ]
-	ewens.dist <- param^(1:n) * stirling.numbers / denom
+	denom  <- cumprod ( param + 0 : ( n - 1 ) )
+	stirling.numbers <- StirlingNumbers ( n )
+	ewens.dist <- t ( param^(1:n) * t ( stirling.numbers / denom ) )
 	return ( ewens.dist ) 
 
 }
 
 
 MakeHapsPretty <- function ( seqs ) {
-	
+	if ( !is.numeric ( nrow ( seqs ) ) | !is.numeric ( ncol ( seqs ) ) ) recover()
 	new.seqs <- matrix ( 0 , nrow = nrow ( seqs ) , ncol = ncol ( seqs ) )
 	for ( i in 2 : ncol ( seqs ) ) {	
 		j <- i - 1

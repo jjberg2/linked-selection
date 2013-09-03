@@ -5,7 +5,15 @@
 Figures/*
 
 #Don't need to track mssel
-Scripts/msseldir/*
+Scripts/mssel*
 
 #Or autosaved files
 *(Autosaved)*
+
+#or generated trajectories
+Scripts/my.standing*
+Scripts/seedms
+
+#Don't need to track Maize Data
+MaizeData/
+Scripts/Objects

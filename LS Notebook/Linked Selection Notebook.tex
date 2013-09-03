@@ -7,7 +7,7 @@
 
 \begin{document}
 
-\title{Environmental Correlations Notebook}
+\title{Linked Selection Notebook}
 \author{Jeremy Berg}
 \date{}
 \maketitle
@@ -218,7 +218,7 @@ which is the Ewens Sampling result for $P(k=2\mid n=3,R_f)$, where $R_f$ is fill
 
 \newpage
 \begin{flushright}
-	\textbf{February 5, 2012}
+	\textbf{February 5, 2013}
 \end{flushright}
 
 Now I'm going to move on to thinking about the probability of having a recombination event that increased the number of haplotypes from 1 to 2 at $l_1$, followed by a recombination event that increases the number of haplotypes from 2 to 3 at $l_2$, where $l_1 < l_2$ are distances in base pairs from the selected site. In other words
@@ -281,7 +281,44 @@ Next (now omitting the integrals for brevity's sake)
 \end{align}
 and if we carry out the same calculation for $P(\left\{\{l_1b_1\} \text{ or } \{l_1b_2\}\right\} \text{ and} \{l_2b_5\})$, we find that it is equivalent to the calculation we just carried out for $P(\{l_1b_5\} \text{ and} \left\{\{l_2b_1\} \text{ or } \{l_2b_2\}\right\})$ (which makes sense if you squint at the tree a bit).
 
-\bibliography{/usr/local/texlive/texmf-local/bibtex/bib/local/library}
+\begin{flushright}
+	\textbf{September 3, 2013}
+\end{flushright}
+
+Ok! Been a while since I've written anything here. Polygenic selection paper is up on arXiv and submitted to PLoS Genetics, so time to get back to sweep work. While variations of the above can in principle be used to infer the frequency parameter, we now live in a world where direct inference of the distribution of ARGs from sequence data seems to be possible\cite{Rasmussen:2013wv}, and thus it may be worth considering how to do this inference problem if we get to know the coalescent times at the selected site.
+
+Imagine we have an allele that begins at frequency $f$ (having been neutral before that), and sweeps with strength $s$ in a population of size $N$. Consider then sampling $n$ lineages at $t=0$ (the present), and following them backward in time. To a first approximation, no coalescence occurs during the sweep, and thus we might imagine that we could write down a likelihood function that looks like
+
+\begin{align}
+	\mathcal{L}(s,f\mid \vec{\tau}) = \left(\frac{1}{Nf}\right)^{n-1} e^{-\frac{\binom{n}{2}}{Nf}\left(\tau_1 - \tau_s\right)}\prod_{i=2}^{n-i+1}e^{-\frac{\binom{n-i+1}{2}}{Nf}\left(\tau_i-\tau_{i-1}\right)}
+\end{align}
+where $\tau_s = \frac{ln(N\frac{1-f}{f})}{s}$ is the number of generations (backward in time) that it take for the sweep to go from fixation down to frequency $f$.
+
+Unfortunately, coalescence can occur during the sweep, and thus by completely prohibiting it in our likelihood function, we could find ourselves in situations where we have no choice but to infer totally ridiculous selection coefficients, simply because that's the only way that we can have $\tau_s<\tau_1$.
+
+Alternatively, if we allow coalescence during the sweep, we can make the assumption that the frequency path is deterministic, and thus use that to get coalescence probabilities in each generation. We take the number of beneficial alleles present in generation $t$ (before the present) to be a deterministic function of $s$ and $t$
+\begin{align}
+	N(t) = N_0 - \frac{N_0 e^{st}}{N_0-1+e^{st}} 
+\end{align}
+where $N_0$ is the population size. If, for example, we have a single coalescent event that occurs at $t=\tau_1<\tau_s$, then we can calculate the probability of that coalescent event occurring during the sweep as 
+\begin{align}
+	\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{1}{N(t)}dt}
+\end{align}
+where
+\begin{align}
+	\int\frac{1}{N(t)}dt = \int\frac{1}{N_0 - \frac{N_0e^{st}}{N_0 - 1 + e^{st}}}dt = \frac{\left(N_0-1\right)st + e^{st}}{\left(N_0-1\right)N_0s} + C.
+\end{align}
+We then need to prohibit coalescence from $\tau_1$ to $\tau_s$, and then start running the standard coalescent at rate $\frac{1}{Nf}$
+\begin{align}
+	\left(\frac{1}{Nf}\right)^{n-2}e^{-\binom{n-1}{2}\left(\int_{\tau_1}^{\tau_s}\frac{1}{N(t)}dt-\frac{1}{Nf}\left(\tau_2-\tau_{s}\right)\right)}\prod_{i=3}^{n-i+1}e^{-\frac{\binom{n-i+1}{2}}{Nf}\left(\tau_i-\tau_{i-1}\right)}
+\end{align}
+and thus the full likelihood can be written as
+\begin{align}
+	\mathcal{L}(s,f\mid \vec{\tau})=\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{1}{N(t)}dt}\left(\frac{1}{Nf}\right)^{n-2}e^{-\binom{n-1}{2}\left(\int_{\tau_1}^{\tau_s}\frac{1}{N(t)}dt-\frac{1}{Nf}\left(\tau_2-\tau_{s}\right)\right)}\prod_{i=3}^{n-i+1}e^{-\frac{\binom{n-i+1}{2}}{Nf}\left(\tau_i-\tau_{i-1}\right)}.
+\end{align}
+
+In this example, we've imagined that only one coalescent event occurs during the sweep, but in practice it is possible that more than one could (particularly if we are evaluating the likelihood for a fairly small $s$), in which case we simply include terms such as $\frac{1}{N(\tau_2)}e^{-\binom{n-1}{2}\int_{\tau_1}^{\tau_2}\frac{1}{N(t)}dt}$, and take the product for the neutral phase starting with $i=4$, etc.
+\bibliography{library}
 \bibliographystyle{plain}
 \end{document}
 
