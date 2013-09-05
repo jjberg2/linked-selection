@@ -23,24 +23,24 @@
 A sweep occurs yesterday $l$ base pairs away from a neutral site of interest. The probability that two randomly chosen lineages are forced to coalesce by the sweep is
 
 
-$$\frac{1}{1 + \theta_b}e^{-\frac{1}{2}lr_{BP}T_{fix}}$$
+$$\frac{1}{1 + \theta_b}e^{-\frac{1}{2}lr_{bp}T_{fix}}$$
 
-where $r_{BP}$ is the recombination rate per base pair, $\theta_b$ is the population scaled mutation rate of beneficial mutations at the selected site, and $T_{fix}$ is the duration of the sweep in generations\cite{Pennings2006}. The $\frac{1}{1 + \theta_b}$ term is the probability neither lineage mutates off the selected background before coalescing, while $e^{-\frac{1}{2}lr_{BP}T_{fix}}$ is the probability that neither lineage recombines off the selected background during the course of the sweep.
+where $r_{bp}$ is the recombination rate per base pair, $\theta_b$ is the population scaled mutation rate of beneficial mutations at the selected site, and $T_{fix}$ is the duration of the sweep in generations\cite{Pennings2006}. The $\frac{1}{1 + \theta_b}$ term is the probability neither lineage mutates off the selected background before coalescing, while $e^{-\frac{1}{2}lr_{bp}T_{fix}}$ is the probability that neither lineage recombines off the selected background during the course of the sweep.
 
 Now, imagine that sweeps can occur at any base pair along the chromosome, and that they occur homogeneously along the chromosome, and through time, at a rate $\nu_{BP}$. Once again examining a single neutral locus, the rate at which recurrent, full, homogeneous soft sweeps force two lineages at the locus to coalesce is equal to
 
 
 \begin{align}
-	\lambda &= \nu_{BP}\frac{1}{1+\theta_b}\int_0^\infty e^{-\frac{1}{2}lr_{BP}T_{fix}}\mathrm d l\\
-	& = \nu_{BP}\frac{1}{1+\theta_b}\left[\frac{1}{-\frac{1}{2}r_{BP}T_{fix}}e^{-\frac{1}{2}lr_{BP}T_{fix}}\right]_0^\infty \\
-	&= \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}
+	\lambda &= \nu_{BP}\frac{1}{1+\theta_b}\int_0^\infty e^{-\frac{1}{2}lr_{bp}T_{fix}}\mathrm d l\\
+	& = \nu_{BP}\frac{1}{1+\theta_b}\left[\frac{1}{-\frac{1}{2}r_{bp}T_{fix}}e^{-\frac{1}{2}lr_{bp}T_{fix}}\right]_0^\infty \\
+	&= \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{bp}T_{fix}}
 \end{align}
 
 The expectation of $\pi$ under this model is
 \begin{align}
-	\mathbb{E}\left[\pi\right] &= \frac{2\mu_n}{\frac{1}{2N} +  \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}} \\
-	&= \frac{\theta_n}{1 + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)r_{BP}T_{fix}}} \\
-	& = \frac{r_{BP}\theta_n}{r_{BP} + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)T_{fix}}}.
+	\mathbb{E}\left[\pi\right] &= \frac{2\mu_n}{\frac{1}{2N} +  \frac{2\nu_{BP}}{\left(1+\theta_b\right)r_{bp}T_{fix}}} \\
+	&= \frac{\theta_n}{1 + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)r_{bp}T_{fix}}} \\
+	& = \frac{r_{bp}\theta_n}{r_{bp} + \frac{4N\nu_{BP}}{\left(1+\theta_b\right)T_{fix}}}.
 \end{align}
 So $\frac{4N\nu_{BP}}{\left(1+\theta_b\right)T_{fix}}$ appears to be a big, messy, difficult to interpret compound parameter.
 
@@ -61,7 +61,7 @@ As with the recurrent mutation case above, the probability that the two lineages
 
 Just as in the recurrent beneficial mutation example, 
 \begin{equation}
-	Pr(\text{no recombination off sweep}) = e^{-\frac{1}{2}lr_{BP}T_{fix}}
+	Pr(\text{no recombination off sweep}) = e^{-\frac{1}{2}lr_{bp}T_{fix}}
 \end{equation}
 where here I assume that the difference in $T_{fix}$ that results from the fact that the sweep begins at $\frac{\mu_d}{s_d}$ instead of $\frac{1}{2N}$ is negligible (and of course, sweep-like behavior doesn't actually begin at $\frac{1}{2N}$, but only once it gets to higher enough frequency to begin stochastic loss; probably, this all doesn't matter too much, but it'll be worth coming back to before publication). It conveniently turns out that, the sampling distribution for deleterious mutations at mutation-selection-drift balance is the Ewens sampling distribution,\cite{Ewens1972} where the $N$ in $\theta$ is replaced by $Nq$, where $q$ is the frequency of deleterious mutations in the population\cite{Hartl1982,Slatkin1997,Wakeley2008} (in this case $\frac{\mu_d}{s_d}$). Thus, 
 \begin{equation}
@@ -69,19 +69,19 @@ where here I assume that the difference in $T_{fix}$ that results from the fact 
 \end{equation}
 where $\theta_{d,q} = 4N\frac{\mu_d}{s_d}\mu_d.$ As such,
 \begin{align}
-	Pr(\text{sweep forces coalescence}) = \frac{1}{1+\theta_{d,q}}e^{-\frac{1}{2}lr_{BP}T_{fix}}.
+	Pr(\text{sweep forces coalescence}) = \frac{1}{1+\theta_{d,q}}e^{-\frac{1}{2}lr_{bp}T_{fix}}.
 \end{align} 
 
 Once again, envisioning a scenario where sweeps occur homogeneously across a chromosome of infinite length at rate $\nu_{BP}$, the total rate of coalescence at a site is
 
 \begin{align}
-	\lambda &= \frac{1}{2N}+\frac{\nu_{BP}}{1+\theta_{d,q}}\int_0^\infty e^{-\frac{1}{2}lr_{BP}T_{fix}}\mathrm d l\\
-	&= \frac{1}{2N} + \frac{2\nu_{BP}}{\left(1+\theta_{d,q}\right)r_{BP}T_{fix}}.
+	\lambda &= \frac{1}{2N}+\frac{\nu_{BP}}{1+\theta_{d,q}}\int_0^\infty e^{-\frac{1}{2}lr_{bp}T_{fix}}\mathrm d l\\
+	&= \frac{1}{2N} + \frac{2\nu_{BP}}{\left(1+\theta_{d,q}\right)r_{bp}T_{fix}}.
 \end{align}
 
 The expectation of $\pi$ is thus
 \begin{equation}
-	\mathbb{E}\left[\pi\right] = \frac{r_{BP}\theta_n}{r_{BP} + \frac{4N\nu_{BP}}{\left(1+\theta_{d,q}\right)T_{fix}}}.
+	\mathbb{E}\left[\pi\right] = \frac{r_{bp}\theta_n}{r_{bp} + \frac{4N\nu_{BP}}{\left(1+\theta_{d,q}\right)T_{fix}}}.
 \end{equation}
 The important insight is that, at least under certain assumptions, the effect of sweeps from standing, deleterious mutation on linked neutral diversity is essentially the same as that for sweeps from new, recurrent mutations, with the only different being the magnitude of the population scaled mutation rate parameter at the linked, non-neutral sites.
 
@@ -139,6 +139,75 @@ These figures are pretty, but the real purpose is to use this simulation as a me
 In the past week or so we've managed to sort through some of this stuff and discover that my initial intuition, (which didn't even make it into the notebook because we got sidetracked by the Hartl and Campbell stuff) was correct. That is, as long as mutation continues during the course of the sweep (which is really the only biologically reasonable case, as there's no reason for mutation to stop once the sweep starts), then the Hermisson and Pennings result holds even if adaptation occurs from recurrent mutation to standing variation instead.
 
 I had a chance to present the basic recurrent model at CoopIbarra this past Monday (and to chat with Michael yesterday morning), and folks who hadn't seen it yet seemed fairly receptive, and also pointed to working out the effect on linkage disequilibrium, or some other summary of haplotype structure. These results already exist for individual hard\cite{Stephan2006, McVean2007, Pfaffelhuber2008} and soft\cite{Pokalyuk2012} sweeps, so it seems like putting it into the recurrent model shouldn't be too hard.
+
+\section*{The Relationship between Diversity and Population Size} 
+
+\begin{flushright}
+	\textbf{September 4, 2013}
+\end{flushright}
+We'll begin from the recurrent soft sweep result above, namely the observation that
+\begin{align}
+	\lambda = \frac{1}{2N} + \frac{2\nu}{\left(1+\theta_b\right)r_{bp}T_{fix}}.
+\end{align}
+Next, assume $N$ is very large, such that $\theta_b = 4N\mu_b>>1$, and thus we can safely ignore the 1 and let
+\begin{align}
+	\lambda = \frac{1}{2N} + \frac{2\nu}{4N\mu_br_{bp}T_{fix}}.\label{coal.rate}
+\end{align}
+We want to consider the effect of recurrent soft sweeps on neutral genetic diversity, but we don't want to land in the Desai/Neher (fitness class coalescent) world, where new beneficial mutations occur on the background of the last beneficial mutation before it has managed to fix. We need the rate of sweeps to be slow enough that the previous sweep has managed to fix before the next comes along. We can ensure that we are in this parameter range by considering that the waiting time until the next sweep (starting from the beginning of the last one) can be written as
+\begin{align}
+	\frac{1}{\nu} = \frac{1}{\alpha} + \frac{1}{2N\mu_b s}
+\end{align}
+where $\alpha$ describes the rate of ecological necessity (i.e. the rate at which the environment changes such that new mutations will be beneficial (they are assumed deleterious or neutral in the intervening time). We can then solve for 
+\begin{align}
+	\nu = \frac{2N\mu_b s \alpha}{2N\mu_bs + \alpha}
+\end{align}
+
+Because the population size is large enough to be generating predominantly soft sweeps, but the environment changes rather infrequently, we can assume $2N\mu_bs >> \alpha$, and thus simply take $\nu=\alpha$. It is also worth noting that because $s = \frac{log(2Ns)}{T}$, we can rewrite our assumption as 
+\begin{align}
+	\frac{2N\mu_b log(2Ns)}{T} >> \alpha
+\end{align}
+and then multiple both sides be $\frac{1}{T}$ to get
+\begin{align}
+	\frac{2N\mu_b log(2Ns)}{T^2} >> \frac{\alpha}{T}.
+\end{align}
+This sets an upper bound on the value of $\frac{\alpha}{T}$, but we can do one better. To make things easy, assume that the rate of ecological change is sufficiently slow relative to the duration of the sweeps, such that the next sweep cannot begin until the previous one has fixed
+\begin{align}
+	\frac{1}{\alpha} > T
+\end{align}
+which we can rewrite as
+\begin{align}
+	\frac{1}{T^2}>\frac{\alpha}{T}
+\end{align}
+thus setting an upper bound on $\frac{\alpha}{T}$.
+
+Now, we rewrite \eqref{coal.rate} as 
+\begin{align}
+	\lambda = \frac{1}{2N} + \frac{2\alpha}{4N\mu_br_{bp}T}
+\end{align}
+and therefore note that
+\begin{align}
+	\pi &= \frac{2\mu_n}{\frac{1}{2N} + \frac{2\alpha}{4N\mu_br_{bp}T}}\\
+	&= \frac{4N\mu_n}{1 + \frac{\alpha}{\mu_b r T}}\\
+	&= \frac{4N\mu_n}{1 + \frac{\alpha}{T}\frac{1}{\mu_b r}}.
+\end{align}
+We can restate our assumption $\frac{1}{T^2} > \frac{\alpha}{T}$ as
+\begin{align}
+	\frac{T}{\alpha} > T^2.
+\end{align}
+
+We find that coalescence is dominated by drift when $\frac{1}{\mu_b r} << \frac{T}{\alpha} \approx T^2$ (resulting in $\pi \approx 4N\mu_n$), and by sweeps when
+\begin{align}
+	\frac{1}{\mu_b r} >> \frac{T}{\alpha} \approx T^2
+\end{align}
+in which case 
+\begin{align}
+	\pi \approx \frac{4NT\mu_n\mu_b r_{bp}}{\alpha}
+\end{align}
+and the transition between the two parameter regimes occurs roughly when $\frac{1}{\mu_b r} \approx T^2$. 
+
+Just to get a rough sense of where this puts us, if sweeps are occurring in a population of $N = 1,000,000$ with $s=10^{-5}$ ($2Ns = 20$), and $r_{bp} = 10^{-8}$, then drift dominates if $\mu_{b}>>10^{-3}$ (because sweeps are so soft that they hardly force any coalescence), while draft dominates if $\mu_b<<10^{-3}$. If instead $s=10^{-4}$, then $\mu_b>>10^{-2}$ in order for drift to dominate, while at $s=10^{-3}$ the mutation rate would have to be greater than one in order for drift to dominate. 
+
+These calculations assume that $\alpha$ is near its maximum value of $\sim\frac{1}{T}$. As $\alpha$ decreases, so too must $\mu_b$ in order for sweeps to continue to dominate coalescence. Eventually, of course, this approximation breaks down because the sweeps start to become predominantly hard (i.e. $4N\mu_b < 1$). Many things seem to happen at once here, as we also reach the point at which $\nu = \alpha$ is no longer a valid approximation either (because the waiting time for a new mutation becomes non-negligible). It seems like these should happen at roughly the same time, but I haven't worked through that yet.
 
 \section*{Sweeps From IBD Standing Variation} 
 \begin{flushright}
@@ -298,15 +367,15 @@ Unfortunately, coalescence can occur during the sweep, and thus by completely pr
 
 Alternatively, if we allow coalescence during the sweep, we can make the assumption that the frequency path is deterministic, and thus use that to get coalescence probabilities in each generation. We take the number of beneficial alleles present in generation $t$ (before the present) to be a deterministic function of $s$ and $t$
 \begin{align}
-	N(t) = N_0 - \frac{N_0 e^{st}}{N_0-1+e^{st}} 
+	N(t) = N - \frac{N e^{st}}{N-1+e^{st}} 
 \end{align}
-where $N_0$ is the population size. If, for example, we have a single coalescent event that occurs at $t=\tau_1<\tau_s$, then we can calculate the probability of that coalescent event occurring during the sweep as 
+where $N$ is the population size. If, for example, we have a single coalescent event that occurs at $t=\tau_1<\tau_s$, then we can calculate the probability of that coalescent event occurring during the sweep as 
 \begin{align}
-	\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{1}{N(t)}dt}
+	\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{t}{N(t)}dt}
 \end{align}
 where
 \begin{align}
-	\int\frac{1}{N(t)}dt = \int\frac{1}{N_0 - \frac{N_0e^{st}}{N_0 - 1 + e^{st}}}dt = \frac{\left(N_0-1\right)st + e^{st}}{\left(N_0-1\right)N_0s} + C.
+	\int\frac{t}{N(t)}dt = \int\frac{t}{N - \frac{Ne^{st}}{N - 1 + e^{st}}}dt = \frac{e^{st}}{\left(N-1\right)Ns} + \frac{t}{N} + C.
 \end{align}
 We then need to prohibit coalescence from $\tau_1$ to $\tau_s$, and then start running the standard coalescent at rate $\frac{1}{Nf}$
 \begin{align}

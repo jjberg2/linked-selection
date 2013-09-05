@@ -4,7 +4,7 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , make.plot = FALSE ) {
+StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , time.factor = 1 ) {
 	options ( error = NULL )
 	#recover()
 	
@@ -13,7 +13,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	
 	if ( constant.freq == FALSE ) {
 	
-		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss )
+		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix )
 		frequencies <- temp [[ 1 ]]
 	
 		if ( no.sweep == FALSE ) {	
@@ -83,17 +83,17 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 		trees [[ i ]] [[ "freqs" ]] <- new.freqs[i,new.freqs[i,] != 0 ]
 	}
 
-	
+	if ( build.seq == TRUE ) {
 	#recover()
-	temp <- RecombinationEvents ( trees = trees , coal.times = coal.times , r = r , sim.distance = sim.distance , n.tips = n.tips )
-	trees <- temp [[ 1 ]]
-	T.total <- temp [[ 2 ]]
-
-	#recover()
-	trees <- BuildOnOffHaps ( trees = trees , freqs = new.freqs , sim.distance = sim.distance , r = r , n.tips = n.tips , f = f , fixation.time = fixation.time )
-
-	hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
+		temp <- RecombinationEvents ( trees = trees , coal.times = coal.times , r = r , sim.distance = sim.distance , n.tips = n.tips )
+		trees <- temp [[ 1 ]]
+		T.total <- temp [[ 2 ]]
 	
+		#recover()
+		trees <- BuildOnOffHaps ( trees = trees , freqs = new.freqs , sim.distance = sim.distance , r = r , n.tips = n.tips , f = f , fixation.time = fixation.time )
+	
+		hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
+	}
 	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total , sim.distance.bp = sim.distance/r) )
 }
 
@@ -728,28 +728,72 @@ MakeHapsPretty <- function ( seqs ) {
 
 
 if(FALSE){
-
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = 0.01 , reps = 200 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE)
+fs <- c ( 0.001 , 0.01 , 0.05 , 0.1 )
+temp <- lapply ( fs , function ( x ) StructuredCoalescentSweep ( N = 10000 , s = 0.05 , f = x , reps = 200 , n.tips = 12 , r = 10^-8 , sim.distance = 0.01 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , time.factor = 1 ) )
 
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
-}
+
 
 
 
 # # 
-# # Let's think about inference
-# my.seqs <- temp[["trees"]][[1]][["sequence.structure"]]$right.seq
+# # Let's think about inference w/ genealogies
 
-# # InferenceFunction <- function ( seqs ) {
-	
-# # if(turn.on.recovers)	recover()
-	# # hap.partitions <- apply ( seqs , 2 , function ( x ) table ( factor ( x , levels = 0 : ( nrow ( seqs ) - 1 ) ) ) )
-	# # tree <- BuildTrees ( 1 : ( nrow ( seqs ) - 1 ) )
-	
-	
-# # }
+coal.times <- lapply ( 1 : length ( fs ) , function ( x ) temp[[x]]$coal.times )
 
+
+LikelihoodFunction <- function ( my.times , s.f , N ) {
+	
+	s <- as.numeric ( s.f [ 1 ] )
+	f <- as.numeric ( s.f [ 2 ] )
+	
+	#recover()	
+	tau_s <- log ( ( N * (1-f) + ( 1 - f ) ) / f ) / s
+	n.sam <- length ( my.times ) + 1
+	
+	# likelihood for sweep portion 
+	coals.in.sweep <-  my.times [ my.times<tau_s ]
+	n.sam.end.sweep <- n.sam - length ( coals.in.sweep )
+	sweep.event.times <- c ( 0 , coals.in.sweep , tau_s )
+	inv.Nt.Int <- exp (s*sweep.event.times) / ((N - 1)*N*s ) + sweep.event.times/N
+	exponents <- diff ( inv.Nt.Int )
+	sweep.log.likelihood.prohibit.coals = -choose ( n.sam:n.sam.end.sweep , 2 )*exponents
+	sweep.log.likelihood.coals = log ( 1 / (N - (N*exp ( s * coals.in.sweep)/(N-1+exp(s*coals.in.sweep)))) )
+	sweep.log.likelihood = sum ( sweep.log.likelihood.prohibit.coals , sweep.log.likelihood.coals )
+	
+	#likelihood for neutral portion
+	lin.remaining <- n.sam - which ( my.times>=tau_s ) + 1
+	coals.in.neutral <- my.times [ my.times>=tau_s ]
+	neutral.event.times <- c ( tau_s , coals.in.neutral )
+	neutral.wait.times <- diff ( neutral.event.times )
+	neutral.log.likelihood.prohibit.coals =  - choose ( lin.remaining , 2 ) * neutral.wait.times / ( N*f )
+	neutral.log.likelihood.coals = length ( lin.remaining ) * log ( 1 / (N*f) )
+	neutral.log.likelihood = sum ( neutral.log.likelihood.coals , neutral.log.likelihood.prohibit.coals )
+	
+	log.like <- sum ( sweep.log.likelihood , neutral.log.likelihood )
+	return ( c ( s.f , log.like ) )
+}
+
+s.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
+f.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
+fs.grid <- expand.grid ( s.vect , f.vect )
+log.likes <- lapply ( 1:nrow(coal.times [[ 1 ]]) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( coal.times [[ 1 ]] [ y , ] , x , 20000 ) ) )
+temp <- lapply ( log.likes , function ( x ) x [ 1:2 , which.max ( x [3,] ) ] )
+max.like <- do.call ( rbind , temp )
+my.means <- colMeans ( max.like )
+
+LikelihoodFunction ( my.times , c ( 0.05, 0.05) , 20000 )
+plot ( NA , xlim = c ( 0,0.2),ylim = c ( 0, 0.2),type ="n",bty="n")
+lapply ( 1:200 , function ( x ) points ( temp[[x]][1] , temp[[x]][2] , cex=0.7,pch=20))
+points (my.means[1] , my.means[2] , pch = 3 , col = "red" )
+
+InferenceFunction <- function ( coal.times ) {
+		
+	recover()	
+	
+}
+}
 # InferenceFunction ( seqs = my.seqs )
 
 # i = 1
