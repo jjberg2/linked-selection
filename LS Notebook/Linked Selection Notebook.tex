@@ -371,11 +371,11 @@ Alternatively, if we allow coalescence during the sweep, we can make the assumpt
 \end{align}
 where $N$ is the population size. If, for example, we have a single coalescent event that occurs at $t=\tau_1<\tau_s$, then we can calculate the probability of that coalescent event occurring during the sweep as 
 \begin{align}
-	\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{t}{N(t)}dt}
+	\frac{1}{N(\tau_1)}e^{-\binom{n}{2}\int_0^{\tau_1}\frac{1}{N(t)}dt}
 \end{align}
 where
 \begin{align}
-	\int\frac{t}{N(t)}dt = \int\frac{t}{N - \frac{Ne^{st}}{N - 1 + e^{st}}}dt = \frac{e^{st}}{\left(N-1\right)Ns} + \frac{t}{N} + C.
+	\int\frac{1}{N(t)}dt = \int\frac{1}{N - \frac{Ne^{st}}{N - 1 + e^{st}}}dt = \frac{e^{st}}{\left(N-1\right)Ns} + \frac{t}{N} + C.
 \end{align}
 We then need to prohibit coalescence from $\tau_1$ to $\tau_s$, and then start running the standard coalescent at rate $\frac{1}{Nf}$
 \begin{align}
