@@ -153,11 +153,11 @@ Next, assume $N$ is very large, such that $\theta_b = 4N\mu_b>>1$, and thus we c
 \begin{align}
 	\lambda = \frac{1}{2N} + \frac{2\nu}{4N\mu_br_{bp}T_{fix}}.\label{coal.rate}
 \end{align}
-We want to consider the effect of recurrent soft sweeps on neutral genetic diversity, but we don't want to land in the Desai/Neher (fitness class coalescent) world, where new beneficial mutations occur on the background of the last beneficial mutation before it has managed to fix. We need the rate of sweeps to be slow enough that the previous sweep has managed to fix before the next comes along. We can ensure that we are in this parameter range by considering that the waiting time until the next sweep (starting from the beginning of the last one) can be written as
+We want to consider the effect of recurrent soft sweeps on neutral genetic diversity, but we don't want to land in the Desai/Neher (fitness class coalescent) world\cite{Desai:2007fh,Desai:2013tk,Neher:2013wu,Neher:2013il}, where new beneficial mutations occur on the background of the last beneficial mutation before it has managed to fix. We need the rate of sweeps to be slow enough that the previous sweep has managed to fix before the next comes along. We can ensure that we are in this parameter range by considering that the waiting time until the next sweep (starting from the beginning of the last one) can be written as
 \begin{align}
 	\frac{1}{\nu} = \frac{1}{\alpha} + \frac{1}{2N\mu_b s}
 \end{align}
-where $\alpha$ describes the rate of ecological necessity (i.e. the rate at which the environment changes such that new mutations will be beneficial (they are assumed deleterious or neutral in the intervening time). We can then solve for 
+where $\alpha$ describes the rate of ecological necessity (i.e. the rate at which the environment changes such that new mutations will be beneficial; they are assumed deleterious or neutral in the intervening time). We can then solve for 
 \begin{align}
 	\nu = \frac{2N\mu_b s \alpha}{2N\mu_bs + \alpha}
 \end{align}
@@ -166,7 +166,7 @@ Because the population size is large enough to be generating predominantly soft 
 \begin{align}
 	\frac{2N\mu_b log(2Ns)}{T} >> \alpha
 \end{align}
-and then multiple both sides be $\frac{1}{T}$ to get
+and then multiple both sides by $\frac{1}{T}$ to get
 \begin{align}
 	\frac{2N\mu_b log(2Ns)}{T^2} >> \frac{\alpha}{T}.
 \end{align}
@@ -195,11 +195,7 @@ We can restate our assumption $\frac{1}{T^2} > \frac{\alpha}{T}$ as
 	\frac{T}{\alpha} > T^2.
 \end{align}
 
-We find that coalescence is dominated by drift when $\frac{1}{\mu_b r} << \frac{T}{\alpha} \approx T^2$ (resulting in $\pi \approx 4N\mu_n$), and by sweeps when
-\begin{align}
-	\frac{1}{\mu_b r} >> \frac{T}{\alpha} \approx T^2
-\end{align}
-in which case 
+We find that coalescence is dominated by drift when $\frac{1}{\mu_b r} << \frac{T}{\alpha} \approx T^2$ (resulting in $\pi \approx 4N\mu_n$), and by sweeps when $\frac{1}{\mu_b r} >> \frac{T}{\alpha} \approx T^2$ in which case 
 \begin{align}
 	\pi \approx \frac{4NT\mu_n\mu_b r_{bp}}{\alpha}
 \end{align}
@@ -387,6 +383,67 @@ and thus the full likelihood can be written as
 \end{align}
 
 In this example, we've imagined that only one coalescent event occurs during the sweep, but in practice it is possible that more than one could (particularly if we are evaluating the likelihood for a fairly small $s$), in which case we simply include terms such as $\frac{1}{N(\tau_2)}e^{-\binom{n-1}{2}\int_{\tau_1}^{\tau_2}\frac{1}{N(t)}dt}$, and take the product for the neutral phase starting with $i=4$, etc.
+
+\begin{flushright}
+	\textbf{September 13, 2013}
+\end{flushright}
+
+Consider now a case where a selectively neutral allele arises in some ancestral population and drifts up to some frequency $f$. Individuals from this ancestral population then go on to found multiple independent populations in some new environment. A bottleneck occurs for some number of generations during the founding event, after which the previously neutral mutation is becomes beneficial in all of the new environments. The biological model one should have in mind is something like Sticklebacks colonizing lakes and streams in British Columbia, or Mimulus on heavy metal soils in California.
+
+We'll generally focus on pairwise quantities here, although thinking about the joint AFS later on may be interesting. One useful thing to consider is the expectation of $F_{ST}$ between two of the founder populations as we move away from the selected site. Consider that $F_{ST}$ can be expressed as
+\begin{align}
+	F_{ST} = \frac{T_T - T_S}{T_T}
+\end{align}
+where $T_T$ is the average pairwise coalescence time of a pair of lineages sampled randomly from the two founder populations, and $T_S$ is the average pairwise coalescence time of two lineages sampled from the same population.
+
+If $T_D$ is the average pairwise coalescence time of two lineages sampled from different populations, then because sampling two lineages randomly from the total population results in a $50\%$ chance of sampling lineages from the same population, and $50\%$ chance of sampling from different populations, $T_T = \frac{T_D + T_S}{2}$. Therefore
+\begin{align}
+	F_{ST} = \frac{\frac{T_D+T_S}{2} - T_S}{\frac{T_D+T_S}{2}} &= \frac{T_D+T_S - 2T_S}{T_D+T_S} \\
+	&= \frac{T_D - T_S}{T_D + T_S}
+\end{align}
+and so if we can simply write down expectations for $T_D$ and $T_S$ in terms of relevant parameters, then we can get an expression describing the expected value of $F_{ST}$ as a function of distance from the recombination site and other relevant population genetic parameters.
+\begin{flushright}
+	\textbf{October 2, 2013}
+\end{flushright}
+\begin{align}
+	T_S = &P(\text{rec out during sweep}) \mathbb{E}[T_2] + \\
+	&P(\text{no rec out during sweep})P(\text{rec out during bottleneck before coal})\mathbb{E}[T_2] \\
+	&P(\text{no rec out during sweep})P(\text{no rec out or coal during bottleneck})\\&P(\text{ancestral rec before coal})\mathbb{E}[T_2]
+\end{align}
+or, for shorthand, if $P_{S,S}$ is the probability of a recombination event happening during the sweep, $P_{B,S}$ the probability of recombining before coalescing during the bottleneck, $P_{EB,S}$ is the probability of escaping the bottleneck without recombining or coalescing, and $P_{A,S}$ the probability of recombining before coalescing during the ancestral phase, then
+\begin{align}
+	T_S = &P_{S} \mathbb{E}[T_2] + (1-P_{S})P_{B,S}\mathbb{E}[T_2] + (1-P_{S})P_{EB,S}P_{A}\mathbb{E}[T_2].
+\end{align}
+In contrast, when considering expected coalescent time of two sequences sampled from different populations
+\begin{align}
+	T_D = P(\text{rec during sweep})\mathbb{E}[T_2] + P(\text{no rec in sweep})P(\text{rec in bottleneck})\mathbb{E}[T_2] +\\
+	P(\text{no rec in sweep})P(\text{no rec bottleneck})P(\text{rec ancestral})\mathbb{E}[T_2]
+\end{align}
+or
+\begin{align}
+	T_D = P_{S} \mathbb{E}[T_2] + (1-P_{S})P_{B,D}\mathbb{E}[T_2] + (1-P_{S})(1-P_{B,D})P_{A}\mathbb{E}[T_2].
+\end{align}
+Plugging in to our expression above, we find that the numerator can be written as
+\begin{align}
+	(1-P_S)[P_{B,D} - P_{B,S} + P_A(1- P_{B,D} - P_{EB,S})]\mathbb{E}[T_2],
+\end{align}
+and the denominator as
+\begin{align}
+	2P_S + (1-P_S)[(1-P_A)P_{B,D} + P_{B,S} + P_A(1 + P_{EB,S})]\mathbb{E}[T_2].
+\end{align}
+Our expression for $F_{ST}$ is thus
+\begin{align}
+	F_{ST} = \frac{(1-P_S)[P_{B,D} - P_{B,S} + P_A(1- P_{B,D} - P_{EB,S})]}{2P_S + (1-P_S)[(1-P_A)P_{B,D} + P_{B,S} + P_A(1 + P_{EB,S})]}.
+\end{align}
+From previous work above, we have
+\begin{align}
+	P_A &= \frac{R_f}{1+R_f} \\
+	P_S &= 1 - e^{-2r\int_0^{T_{\text{fix}}}1-X(t)\mathrm{d}t} \\
+	\text{while}\\
+	P_{B,D} &= 1-  e^{-2rT_{bot}(1-f)} \\
+	P_{B,S} &= r(1-f)\int_0^{T_{bot}}e^{-2tr(1-f)}e^{-\frac{t}{2NfB}}\mathrm{d}t\\
+	P_{EB,S} &= e^{-2T_{bot}r(1-f)-\frac{T_{bot}}{2NfB}}
+\end{align}
 \bibliography{library}
 \bibliographystyle{plain}
 \end{document}

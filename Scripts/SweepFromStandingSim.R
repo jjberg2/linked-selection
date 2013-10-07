@@ -4,8 +4,8 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , time.factor = 1 ) {
-	options ( error = NULL )
+StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
+	options ( error = recover )
 	#recover()
 	
 	
@@ -13,7 +13,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	
 	if ( constant.freq == FALSE ) {
 	
-		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix )
+		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix , display.rep.count )
 		frequencies <- temp [[ 1 ]]
 	
 		if ( no.sweep == FALSE ) {	
@@ -97,7 +97,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , fixation.time = fixation.time , T.total = T.total , sim.distance.bp = sim.distance/r) )
 }
 
-SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , time.factor = 1  ) {
+SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
 	
 	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
@@ -138,7 +138,7 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 			#plus.minus <- sample ( c ( 0 , 1 ) , sum ( neutral.not.fixed ) , replace = TRUE )	
 			#drift.neutral <- ifelse ( plus.minus == 1 , neutral.drift.mag , -1 * neutral.drift.mag )
 			
-			 cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,
+			cond.mean <- ifelse ( rep ( cond.on.loss , reps ) ,
 			 				- neutral.freq.matrix [[ i ]] [ neutral.not.fixed ] * delta.T ,
 			 				0)
 			
@@ -152,7 +152,7 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )
 		
 		}
-		if ( i %% 5000 == 0 ) {
+		if ( i %% 5000 == 0 & display.rep.count) {
 				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )
 				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )
 				cat ( "p = " , my.freq , ",  " , sep = "" )
@@ -728,8 +728,11 @@ MakeHapsPretty <- function ( seqs ) {
 
 
 if(FALSE){
-fs <- c ( 0.001 , 0.01 , 0.05 , 0.1 )
-temp <- lapply ( fs , function ( x ) StructuredCoalescentSweep ( N = 10000 , s = 0.05 , f = x , reps = 200 , n.tips = 12 , r = 10^-8 , sim.distance = 0.01 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , time.factor = 1 ) )
+fs <- c ( 1/20000  , 0.01 , 0.05 , 0.1 )
+ss <- c ( 0.001 , 0.01 , 0.05 )
+fands <- expand.grid ( fs , ss )
+colnames ( fands ) <- c ( "f" , "s")
+temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000 , s = x[2] , f = x[1] , reps = 200 , n.tips = 12 , r = 10^-8 , sim.distance = 0.01 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = FALSE ,  time.factor = 1 ) )
 
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
@@ -740,7 +743,7 @@ MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, 
 # # 
 # # Let's think about inference w/ genealogies
 
-coal.times <- lapply ( 1 : length ( fs ) , function ( x ) temp[[x]]$coal.times )
+coal.times <- lapply ( 1 : nrow ( fands ) , function ( x ) temp[[x]]$coal.times )
 
 
 LikelihoodFunction <- function ( my.times , s.f , N ) {
@@ -776,15 +779,24 @@ LikelihoodFunction <- function ( my.times , s.f , N ) {
 }
 
 s.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
-f.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
+f.vect <- seq ( 1/20000 , 0.05 , 1e-4 )
 fs.grid <- expand.grid ( s.vect , f.vect )
-log.likes <- lapply ( 1:nrow(coal.times [[ 1 ]]) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( coal.times [[ 1 ]] [ y , ] , x , 20000 ) ) )
+for ( i in 1 : length ( coal.times ) ) {
+	log.likes[[i]] <- lapply ( 1:nrow(coal.times[[i]]) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( coal.times[[i]] [ y , ] , x , 20000 ) ) )
+	print ( i )
+}
+#log.likes <- lapply ( coal.times , function ( z ) lapply ( 1:nrow(z) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( z [ y , ] , x , 20000 ) ) )  )
 temp <- lapply ( log.likes , function ( x ) x [ 1:2 , which.max ( x [3,] ) ] )
 max.like <- do.call ( rbind , temp )
 my.means <- colMeans ( max.like )
+margin.s <- lapply ( log.likes , function ( x )  tapply ( exp(t ( x ) [,3]), t ( x ) [,1],mean))
+margin.f <- lapply ( log.likes , function ( x )  tapply ( exp(t ( x ) [,3]), t ( x ) [,2],mean))
+hist ( f.vect [unlist ( lapply ( margin.f , which.max)) ],breaks = 50)
+hist ( s.vect [unlist ( lapply ( margin.s , which.max)) ],breaks = 50)
+
 
 LikelihoodFunction ( my.times , c ( 0.05, 0.05) , 20000 )
-plot ( NA , xlim = c ( 0,0.2),ylim = c ( 0, 0.2),type ="n",bty="n")
+plot ( NA , xlim = c ( 0,0.2),ylim = c ( 0, 0.05),type ="n",bty="n")
 lapply ( 1:200 , function ( x ) points ( temp[[x]][1] , temp[[x]][2] , cex=0.7,pch=20))
 points (my.means[1] , my.means[2] , pch = 3 , col = "red" )
 
