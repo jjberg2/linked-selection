@@ -220,12 +220,12 @@ SoftSweepSim <- function ( N_A , N_a , s1 , s2 = NULL , h , switch = 0 , mu , ge
 
 SweepReplicates <- function ( N_A , N_a , s1 , s2 = NULL , h , switch = 0 , shut.mut.off = FALSE , stop.at.fix = TRUE , reuse.mutant.classes = TRUE , mu , gens , mut.index = 1001 , reps , suppress.output = TRUE , suppress.plot = TRUE ){
 
-	#recover()
-	prob.at.fix <- numeric ( reps )
-	prob.at.balance <- numeric ( reps * ( switch - 100 ) )
+	recover()
+	#prob.at.fix <- numeric ( reps )
+	#prob.at.balance <- numeric ( reps * ( switch - 100 ) )
 	for ( r in 1 : reps ) {
 		
-		temp <- SoftSweepSim ( N_A = N_A , N_a = N_a , s1 = s1 , s2 = s2 , switch = switch , stop.at.fix = stop.at.fix , reuse.mutant.classes = reuse.mutant.classes , mu = mu , gens = gens , suppress.output = suppress.output , suppress.plot = suppress.plot ) [ c( "coal.prob.sim.fix" , "coal.prob.sim.mut.sel.drift" ) ]
+		temp <- SoftSweepSim ( N_A = N_A , N_a = N_a , s1 = s1 , s2 = s2 , switch = switch , stop.at.fix = stop.at.fix , reuse.mutant.classes = reuse.mutant.classes , mu = mu , gens = gens , suppress.output = suppress.output , suppress.plot = suppress.plot )
 		prob.at.fix [ r ] <- temp[[1]]
 		prob.at.balance [ ( ( switch - 100 ) * ( r - 1 ) + 1 ) : ( ( r * ( switch - 100 ) - 1 ) + 1 ) ] <- temp[[2]]
 		cat ( "rep =" , r , "\n" )
@@ -281,9 +281,9 @@ DiversityPlot <- function ( N , mu.b , mu.n , l , r , s , threshold ){
 
 
 
-first.run <- SoftSweepSim ( N_A = c ( 690000 ) , N_a = c ( 10000 ) , s1 = 0 , s2 = 5*10^-3 , switch = 0 , stop.at.fix = TRUE , reuse.mutant.classes = FALSE , mu = 0 , gens = 50000 , suppress.output = FALSE , sort.mutation.time = FALSE )
+first.run <- SoftSweepSim ( N_A = c ( 10000 ) , N_a = c ( 0 ) , s1 = -0.01 , s2 = 0.01 , switch = 1000 , stop.at.fix = TRUE , reuse.mutant.classes = TRUE , mu = 10^-5 , gens = 50000 , suppress.output = FALSE , sort.mutation.time = FALSE )
 
-temp <- SweepReplicates ( N_A = c ( 20000 ) , N_a = c ( 0 ) , s1 = 0.001 , s2 = 0.01 , switch = 2000 , shut.mut.off = FALSE , stop.at.fix = TRUE , reuse.mutant.classes = TRUE , mu = 10^-5 , gens = 100000 , suppress.output = TRUE , suppress.plot = TRUE , reps = 500 )
+temp <- SweepReplicates ( N_A = c ( 200000 ) , N_a = c ( 0 ) , s1 = -0.001 , s2 = 0.01 , switch = 0 , shut.mut.off = FALSE , stop.at.fix = TRUE , reuse.mutant.classes = TRUE , mu = 10^-5 , gens = 100000 , suppress.output = FALSE , suppress.plot = TRUE , reps = 500 )
 
 #temp2 <- SweepReplicates ( N_A = c ( 20000 ) , N_a = c ( 0 ) , s1 = -0.1 , s2 = 0.1 , switch = 1000 , shut.mut.off = FALSE , stop.at.fix = TRUE , reuse.mutant.classes = TRUE , mu = 10^-5 , gens = 100000 , suppress.output = FALSE , suppress.plot = TRUE , reps = 500 )
 

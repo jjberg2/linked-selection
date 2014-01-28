@@ -444,6 +444,78 @@ From previous work above, we have
 	P_{B,S} &= r(1-f)\int_0^{T_{bot}}e^{-2tr(1-f)}e^{-\frac{t}{2NfB}}\mathrm{d}t\\
 	P_{EB,S} &= e^{-2T_{bot}r(1-f)-\frac{T_{bot}}{2NfB}}
 \end{align}
+
+Alternatively, there's a bottleneck that happens at exactly the same time the sweep starts, but we've taken our sample some number of generations after the sweep has finished. Thus, if $P_C$ is the probability that two lineages sampled from the same population coalesce before the sweep starts, we throw out all of the $P_{B,--}$ terms, and keep everything else, then
+\begin{align}
+	T_S &= (1-P_C)P_S + (1-P_C)(1-P_S)P_A \\
+	T_D &= P_S + (1-P_S)P_A \\
+	F_{ST} &= \frac{P_S\left(P_A + P_C - P_A P_C\right)}{\left(2-P_C\right)\left(P_S + P_A - P_S P_A\right)} 
+\end{align}
+where again
+\begin{align}
+	P_A &= \frac{R_f}{1+R_f} \\
+	P_S &= 1 - e^{-2r\int_0^{T_{\text{fix}}}1-X(t)\mathrm{d}t} \\
+	&\text{and} \\
+	P_C & = \frac{1}{2NB}e^{-\frac{T_0}{2NB}}
+\end{align}
+
+
+\begin{flushright}
+	\textbf{October 28, 2013}
+\end{flushright}
+
+\subsection*{The full sampling formula for the configuration of coalescent familes caused by the sweep}
+
+I haven't done this yet, so figured it's worth writing down. The ``full'' Ewens Sampling Formula gives the joint probability of the number of partitions ($k$), as well as the number of allelic classes that have $j$ members ($a_j$). The probability distribution on the partition of lineages into coalescent families can be written as a modified form of this sampling formula, in which we simply sum over the the number of singletons ($a_1$) created by recombination during the sweep.
+
+\begin{align}
+	P(k,a_1,a_2,\dots,a_n) &= \sum_{k_s = 1}^{a_1}P(k_s\text{ singletons created during sweep})P(k-k_s,a_1-k_s,a_2,\dots,a_n\mid \text{Ewens}) \\
+	&= \sum_{k_s=1}^{a_1}\binom{n}{k_s}e^{-r\mathcal{T}(n-k_s)}(1-e^{-r\mathcal{T}})^{k_s}\frac{n!R_f^{(k-k_s)}}{\prod_{i=0}^{n-1}(R_f+i)} \frac{1}{(a_1-k_s)}\prod_{j=2}^{n}\frac{1}{j^{a_j}a_j!}
+\end{align}
+
+\begin{flushright}
+	\textbf{October 30, 2013}
+\end{flushright}
+\subsection*{The frequency spectrum of linked neutral variation}
+
+The probability that $\ell_n$ out of $n_n$ lineages that fail to escape the sweep during the selected phase carry a derived mutation ancestral to the sweep, given that the $n_n$ sampled lineages are forced into $k_n$ coalescent families (where $n_n = n - n_s$; $n$ is the total number of lineages sampled, and $n_s$ is the number of lineages that do escape the sweep), of which $j_n$ carried the derived mutation$\dots\textit{gasps for breath}\dots$is given by
+
+\begin{align}
+	P\left(\ell_n \mid j_n , k_n , n_n = n - n_s\right) &= \sum_{\substack{n_1+\dots+n_{j_n}=\ell_n \\ n_{j_{n}+1 } + \dots + j_{k_n} = n_n - \ell_n } }P\left(n_1,\dots,n_{k_n} \mid k_n , n_n\right) \\
+	&= \sum_{\substack{n_1+\dots+n_{j_n}=\ell_n \\ n_{j_{n}+1 } + \dots + j_{k_n} = n_n - \ell_n} } \frac{n!}{k!n_1\dotsi n_{k_n}S_{n_n}^{(k_n)}} \\
+	&= \frac{\binom{n_n}{\ell_n}}{\binom{k_n}{j_n}}\frac{S_{\ell_n}^{(j_n)}S_{n_n - \ell_n}^{(k_n- j_n)}}{S_{n_n}^{k_n}} \label{baffling_sum}
+\end{align}
+where in general (i.e. everywhere it appear in my notes), $S_n^k$ is the unsigned Stirling number of the first kind, which counts something to do with permutations that I don't fully understand. This is kind of baffling at first (or at least was to me), until you notice that the $j_n$ and $\ell_n$ in \eqref{baffling_sum} arise from the terms under the sum.
+
+The probability that $j_n$ out of $k_n$ coalescent families emerging from the sweep carry the derived mutation is simply given the by neutral allele frequency spectrum
+\begin{align}
+	P(j_n \mid k_n) = \frac{1}{j_n a_{k_n}}
+\end{align}
+where in general $a_{k}:=\sum_{i=1}^{k}\frac{1}{i}$.
+
+The probability that $j_s$ out of $n_s$ lineages that escape the sweep carry the derived mutation, given that $j_n$ out of the $k_n$ coalescent families the sweep creates also carry it is
+\begin{align}
+	P ( j_s \mid n_s , j_n , k_n ) &= \frac{P(j_s , j_n \mid n_s , k_n )}{P(j_n \mid k_n)} \\ 
+	&= \frac{\frac{1}{ja_k}}{\frac{1}{j_n a_{k_n}}}
+\end{align}
+where we write $j = j_n + j_s$ and $k = k_n + n_s$ for notational convenience.
+
+The probability that the $j$ copies of the derived allele are partitioned such that it is carried by $j_n$ of the $k_n$ coalescent families, and $j_s$ of the $n_s$ escaping singletons is
+\begin{align}
+	P(\{j_n,j_s\}\mid j , k_n , n_s) = \frac{\binom{j}{j_s}\binom{k_n}{j_n}\binom{n_s}{j_s}}{\binom{k_n+n_s}{j}}.
+\end{align}
+
+We want to know the probability that $\ell = \ell_n + j_s$ lineages sampled in the present day carry the derived mutation. Conditional on $j$, $k_n$ and $n_s$, this is
+\begin{align}
+	P(\ell,\{j_n,j_s\}\mid j , k_n , n_s )
+\end{align}
+
+Therefore, the probability that $\ell$ out of $n$ lineages sampled at fixation of the sweep are of the derived type is given by
+\begin{align}
+	P(\ell \mid n) &= P(k_n \mid n_n = n - n_s, r , f  ,N )\sum_{j=1}^{min(\ell,k_n+n_s)}P(j\mid k) \\ 
+	&\sum_{j_s = 1}^{n_s} P(\{j_s,j_n = j - j_s\}\mid j , k_n , n_s) 
+	P\left(\ell_n = \ell - j_s \mid j_n , k_n , n_n = n - n_s\right)
+\end{align}
 \bibliography{library}
 \bibliographystyle{plain}
 \end{document}

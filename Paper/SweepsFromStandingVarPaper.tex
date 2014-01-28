@@ -1,0 +1,76 @@
+%\documentclass[authoryear,round]{tufte-book}
+\documentclass[a4paper,10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{natbib}
+\usepackage{mathrsfs}
+\usepackage{array}
+\newcommand{\head}[2]{\multicolumn{1}{>{\centering\arraybackslash}p{#1}}{#2}}
+%\usepackage{sidecap}
+\usepackage[capbesideposition={top,right},facing=yes,capbesidesep=quad]{floatrow}
+\usepackage[hypertexnames=false]{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, citecolor=black, linkcolor=black}
+%\usepackage{lineno}
+%\usepackage{lscape}
+%\usepackage{multirow}
+
+\newcommand{\var}{\mathop{\mbox{Var}}}
+\newcommand{\cov}{\mathop{\mbox{Cov}}}
+\newcommand{\gc}[1]{{\it \color{red} (#1)} }
+\newcommand{\jb}[1]{{\it\color{blue} (#1)} }
+\def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}
+%\newcommand{\Rho}{\mathrm{P}}
+
+%opening
+\title{Theory of Sweeps from Standing Variation}
+\author{
+Jeremy J. Berg$^{1,2,3}$ and Graham Coop$^{1,2,3}$ \\
+$^1$ Graduate Group in Population Biology, University of California, Davis. \\
+$^2$ Center for Population Biology, University of California, Davis.\\
+$^3$ Department of Evolution and Ecology, University of California, Davis\\
+\small To whom correspondence should be addressed: \texttt{jjberg@ucdavis.edu, gmcoop@ucdavis.edu}\\
+}
+
+\date{}
+
+\begin{document}
+
+%\linenumbers
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+\section{Discussion}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Acknowledgements}
+
+\section{Methods}
+
+
+\bibliographystyle{genetics}
+\bibliography{library,morelibrary}
+
+\section{Supplementary materials}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\end{document}
