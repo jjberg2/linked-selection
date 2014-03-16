@@ -737,12 +737,53 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
 
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 6 , n.tips = 10 , r = 10^-8 , sim.distance = 0.015 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = FALSE ,  time.factor = 1 )
 
 
+SequenceIBDPlots <- function ( trees ) {
+	
+	#recover()
+	seq.structure <- trees$sequence.structure
+	seq.resort <- do.call(what = order, as.data.frame(seq.structure))
+	seq.structure <- lapply ( seq.structure , function ( x ) x [ seq.resort , ] )
+	rec.points <- trees$rec.events.off.background
+	scaled.rec.points <- list ()
+	scaled.rec.points$right <- c ( 0 , rec.points$rec.right.off.background$sequence.location / trees$sim.distance , 1 )
+	scaled.rec.points$left <- - c ( 0 , rec.points$rec.left.off.background$sequence.location / trees$sim.distance , 1 )
+	#my.cols <- rainbow ( max ( unlist ( seq.structure ) ) + 1 , alpha = 0.7 )
+	my.cols.right <- brewer.pal ( max ( unlist ( seq.structure ) ) + 1 , "Paired" )
+	my.cols.left <- brewer.pal ( max ( unlist ( seq.structure ) ) + 1 , "Set3" )
+	plot ( NA , bty = "n" , xlim = c ( -1 , 1 ) , ylim = c ( 0 , 12 ) , xaxt = "n" , yaxt = "n" , ylab = "" , xlab = "" )
 
-# # 
-# # Let's think about inference w/ genealogies
+	### right side
+	for ( row in seq_len ( nrow ( seq.structure$right.seq ) ) ) {
+		my.recs <- unique ( seq.structure$right.seq[row,] )
+		recode.my.recs <-  c ( unique ( seq.structure$right.seq[row,] ) , max ( unlist ( seq.structure$right.seq ) ) + 1 ) + 1
+		for ( i in seq_along ( my.recs ) ) {
+			polygon ( x = c ( scaled.rec.points$right [ recode.my.recs [ i ] ] , scaled.rec.points$right [ recode.my.recs [ i ] ] , scaled.rec.points$right [ recode.my.recs [ i + 1 ] ] , scaled.rec.points$right [ recode.my.recs [ i + 1 ] ] ) , y = c ( row , row - 1 , row - 1 , row  ) , col = my.cols.right [ my.recs [ i ] + 1 ] , lty = 0 )
+		}
+	}
 
+
+	### left side
+	for ( row in seq_len ( nrow ( seq.structure$left.seq ) ) ) {
+		my.recs <- unique ( seq.structure$left.seq[row,] )
+		recode.my.recs <-  c ( unique ( seq.structure$left.seq[row,] ) , max ( unlist ( seq.structure$left.seq ) ) + 1 ) + 1
+		for ( i in seq_along ( my.recs ) ) {
+			polygon ( x = c ( scaled.rec.points$left [ recode.my.recs [ i ] ] , scaled.rec.points$left [ recode.my.recs [ i ] ] , scaled.rec.points$left [ recode.my.recs [ i + 1 ] ] , scaled.rec.points$left [ recode.my.recs [ i + 1 ] ] ) , y = c ( row , row - 1 , row - 1 , row  ) , col = my.cols.left [ my.recs [ i ] + 1 ] , lty = 0 )
+		}
+	}
+	abline ( v = 0 )
+}
+
+if ( FALSE) SequenceIBDPlots ( temp$trees[[1]] )
+par ( mfrow = c ( 3 ,2 ) )
+for ( i in 1 : 6 ) SequenceIBDPlots ( temp$trees[[i]] )
+
+
+##########################################
+#### Let's think about inference w/ genealogies ####
+##########################################
 coal.times <- lapply ( 1 : nrow ( fands ) , function ( x ) temp[[x]]$coal.times )
 
 
