@@ -59,6 +59,11 @@ The key insight for this paper is that the recombination events that occur durin
 
 Consider a neutral locus partially linked (with recombination rate $r$) to a second locus where an allele arises, and is initially either neutral, or balanced at a low frequency, but eventually becomes beneficial (due to a change in environment). Our aim is to describe some features of the genealogy at the selected site at at adjacent neutral sites, how these features effect a number of population genetic summary statistics, and to explore the extent to which they can be used to say anything meaningful about sites where sweeps from standing variation may have occurred. 
 
+\begin{figure}
+\includegraphics[width = 0.8
+          \textwidth]{Paper_Figures/Cartoon_of_soft_sweeps.pdf}
+\end{figure}
+
 \subsubsection{Neutral phase} \gc{not clear that neutral is a good term}
 Imagine that we sample $k$ neutral alleles (lineages) from the population in the present day. 
 We will assume that the selected phase of the trajectory occurs rapidly so there is no timefor coalescence to occur in the selected phase. So at the start of the neutral phase we have k lineages and the frequency of the selected allele is $f$ on the population.
@@ -90,6 +95,12 @@ p_{n,k}(R_f)  = S(n,k) \frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) }  \label{ESF2}
 \end{equation}
 where $S(n,k)$ is a Stirling number of the first kind.  
 
+
+\begin{figure}
+\includegraphics[width = 0.8
+          \textwidth]{Paper_Figures/Ewens_vs_Jeremy.pdf}
+\end{figure}
+
 \subsubsection{Selected phase}
 Assume that we are at a neutral site a genetic distance $r$ away from the selected site. 
 If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $1-r\left(1-X(t)\right)$. The probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep is given by 
@@ -105,6 +116,7 @@ P_{NR}(i;k) = {k \choose i} P_{NR}^{i} (1-P_{NR})^{k-i}.
 This binomial approximation has been made by a number of authors in the context of hard sweeps \citep{Barton}, and more accurate approximations have been developed \citep{}. However, as long as the population is large, the sample is not too large,  $\tau$ is not too long, and $f$ not too small (e.g. $\tau {k \choose 2}/(2Nf)<<1$) then this approximation should be adequet. The other more accurate forms could be incorporated into our framework, but we stick with this simple form for the sake of clarity of presentation.
 
 At a given distance away from the selected site every one of the lineages that recombines out of the selected class will be a singleton, and the remaining lineages will be partitioned according to the Ewens' Sampling formula.  
+
 
 \subsubsection{Patterns of neutral diversity surrounding standing sweeps}
 Given this approximate model of the coalescent with a sweep from standing variation we can now calculate basic summaries of variation in the region surrounding the sweep. We will assume that the per base pair mutation rate per generation is $\mu$. We will ignore mutations over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes neglibably to the total amount of time in the genealogy. This corresponds to an assumption that $2N\mu \gg 2N \mu f$, in line with our previous set of assumptions that $f \ll 1$. If this is the case we simply consider patterns of diversity in our sample at a site, by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
@@ -127,6 +139,16 @@ We can extend this idea of conditioning on how many lineages escape the sweep to
 \end{equation}
 In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
 
+\begin{figure}
+\includegraphics[width = 0.8
+          \textwidth]{Paper_Figures/pi_density.pdf}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width = 0.8
+          \textwidth]{Paper_Figures/segsite_density.pdf}
+\end{figure}
+
 We can now reincorporate recombination during the sweep phase. Under our approximation to recombination during the sweep phase every lineage that recombines out is a singleton. So we can write the probability of having $k$ distinct lineages having recombined out of our sweep as
 \begin{equation}
 \sum_{i=0}^{k} {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i} p_{n-i,k-i}(R_f)
@@ -135,11 +157,18 @@ as if we generate $i$ recombinant lineages during our sweep the remaining $k-i$ 
 \begin{equation}
 \mathbb{E}(T_{TOT})  \approx 2N \sum_{i=0}^{k} {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i} p_{n-i,k-i}(R_f)   \sum_{j=1}^{k-1} 1/j
 \end{equation}
-the expected number of segregating sites can be found by taking $\mu$ times this. 
+and the expected number of segregating sites can be found by taking $\mu$ times this. 
 
-
-
-
+We can also obtain an expression for the frequency spectrum at sites surrounding a soft sweep. To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where our frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \citep{PenningandHermisson} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations, see their ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section. We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
+Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ is
+\begin{equation}
+  \sum_{k=1}^{n}  q_{j,k}  p(l | k,n) p(k)
+\end{equation}
+where
+\begin{equation}
+p(l | k,n) = \sum_{a_1+\cdots a_j=l;~~n_{a+1}+\cdots a_k=n-l} p(\{a_1,\dots,a_k\}) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) }
+\end{equation}
+i.e. the probability that our $k$ recombinant lineages divide our sample into $l$ derived alleles and $n-l$ alleles, summing  $\{a_1,\dots,a_k\}$. 
 %  In our sample of two, because we assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero, the two lineages recombine out of the selected phase independently, and thus
 % $$P_{norec,s,2} = e^{-2r\mathcal{T}_{\left(s,f\right)}}.$$
 
