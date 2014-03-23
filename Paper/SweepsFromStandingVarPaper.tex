@@ -84,22 +84,31 @@ Assuming that the frequency of the allele remains fixed at $f$, at a distance $r
 
 If we are interested in the number and size of different recombinant clades at a given distance from the selected site (colored clades in Figure \ref{cartoon_fig_1}B \& C)  this a direct analogy of the infinitely-many allele model \citep{}. In the infinite alleles model, every mutation event creates a new allele, while in our process every recombination event creates a new recombinant lineage (an potentially a distinct haplotype, depending on the configuration of mutations). Under the infinitely many alleles model, sample configurations can be found by simulating the coalescent and assigning current day alleles is found by lineages back through time to the lowest mutation on the genealogy (see Figure \ref{cartoon_fig_1}B). Equivalently we can simulate a sample under the infinitely-many allele model by simulating the mutational process and coalescent process simulatenously, running the process back coalescing lineages and stopping following lineages (`kill' them) when a mutation occurs on them (see Figure \ref{cartoon_fig_1}C). 
 
-Given this nice direct analogy under our set of approximations the number and frequency of the various recombinant lineage classes at a given distance from the selected site can be found using the Ewens' Sampling Formula \citep[ESF][]{}.The population-scaled mutation rate in the infinitely-many alleles model ($\theta/2=4N\mu$), in our model, is replaced by the rate of recombination out of the selected class ($R_{f}/2=4Nrf(1-f)$). If $n$ lineages sampled in the present day fail to recombine off of the selected background during the course of the sweep, then the  probability that these $n$ lineages coalesce into a set of $k$ families and that the number of coalescent families with $1,2,\dots,n$ lineages is given by the partition
- $\{a_1,a_2,\dots,a_n\}$ is 
+Given this nice direct analogy under our set of approximations the number and frequency of the various recombinant lineage classes at a given distance from the selected site can be found using the Ewens' Sampling Formula \citep[ESF][]{}.The population-scaled mutation rate in the infinitely-many alleles model ($\theta/2=4N\mu$), in our model, is replaced by the rate of recombination out of the selected class ($R_{f}/2=4Nrf(1-f)$). If $n$ lineages sampled in the present day fail to recombine off of the selected background during the course of the sweep, then the probability that these $n$ lineages coalesce into a set of $k$ recombinant lineages is 
 \begin{equation}
-P\left(k,a_1,a_2,\dots,a_n\right) =\frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) } \prod_{j=1}^n\frac{1}{j^{a_j}a_j!} \label{ESF}
+p_{ESF}(k | R_f,n)  = S(n,k) \frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) }  \label{ESF1}
 \end{equation}
-The probability of there being $k$ alleles (recombinant lineages) in our sample of $n$ is 
+where $S(n,k)$ is a Stirling number of the first kind
 \begin{equation}
-p_{n,k}(R_f)  = S(n,k) \frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) }  \label{ESF2}
+S(n,k) = \textrm{StirlingStirlingStirling}
 \end{equation}
-where $S(n,k)$ is a Stirling number of the first kind.  
-
+These recombinant lineages partition our sample up between themselves, so that each of these lineages have a number descendents in our present sample$\{n_1,n_2,\dots,n_k\}$, where $\sum_1^k n_i =n$. Conditional on $k$ the probability of a smaple configuration is
+\begin{equation}
+p(\{n_1,n_2,\dots,n_k\} \mid k,n) = \frac{n!}{k! n_1\cdots n_k S(n,k)}  \label{ESF2}
+\end{equation}
+Note this does not depend on $R_f$, which gives the classic result that the number of alleles is sufficient statistic for $R_f$ (i.e. the partition is not needed to estimate $R_f$). Note also that this is a slightly different form to that usually used for the ESF, usually the sample configuration is expressed as a frequency spectrum where we count up the number of alleles present once, twice, etc in our sample.
 
 \begin{figure}
 \includegraphics[width = 0.8
           \textwidth]{Paper_Figures/Ewens_vs_Jeremy.pdf}
 \end{figure}
+
+%and that the number of coalescent families with $1,2,\dots,n$ lineages is given by the partition
+%  $\{n_1,n_2,\dots,n_k\}$ is 
+% \begin{equation}
+% P\left(k,n_1,n_2,\dots,n_n| R_f,n \right) =\frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) } \prod_{j=1}^n\frac{1}{j^{n_j}n_j!} \label{ESF}
+% \end{equation}
+% The probability of there being $k$ alleles (recombinant lineages) in our sample of $n$
 
 \subsubsection{Selected phase}
 Assume that we are at a neutral site a genetic distance $r$ away from the selected site. 
@@ -160,15 +169,27 @@ as if we generate $i$ recombinant lineages during our sweep the remaining $k-i$ 
 and the expected number of segregating sites can be found by taking $\mu$ times this. 
 
 We can also obtain an expression for the frequency spectrum at sites surrounding a soft sweep. To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where our frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \citep{PenningandHermisson} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations, see their ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section. We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
-Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ is
+Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ can be written as
 \begin{equation}
-  \sum_{k=1}^{n}  q_{j,k}  p(l | k,n) p(k)
+p(l | n) =  \sum_{k=1}^{n}  q_{j,k}  p(l | k,n) p_{ESF}(k | R_f,n) 
 \end{equation}
-where
+where is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
 \begin{equation}
-p(l | k,n) = \sum_{a_1+\cdots a_j=l;~~n_{a+1}+\cdots a_k=n-l} p(\{a_1,\dots,a_k\}) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) }
+p(l | j, ~k,~n) = 
+\sum_{\substack{a_1+\cdots a_j=l;\\
+    n_{a+1}+\cdots a_k=n-l}} 
+p(\{a_1,\dots,a_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
 \end{equation}
-i.e. the probability that our $k$ recombinant lineages divide our sample into $l$ derived alleles and $n-l$ alleles, summing  $\{a_1,\dots,a_k\}$. 
+
+
+
+When we allow for recombination during the sweep this expression becomes more complex, but the same logic can be followed and write
+\begin{equation}
+p(l | n) = \sum_{S=1}^n P_{NR}(n-S; n) \sum_{k=1}^{n-S} p_{ESF}(k | R_f,n-S) \sum_{j=1}^{S+k} q_{j,S+k}
+\sum_{i=1}^{l \wedge S} B(i \mid S,j/(S+k)) p(l-i \mid j-i,k,n-S )
+\end{equation}
+where A$\wedge$B denotes the min(A,B). Here $S$ lineages recombine out of the selected phase, and our remaining $n-S$ lineages are partitioned into $k$ families due to recombination in the neutral phase. Out of our $S$ singleton lineages $i$ each independently choose to be of type $1$ with probability $j/(S+k)$ (i.e. binomially $ B(i \mid S,j/(S+k))$). Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
+
 %  In our sample of two, because we assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero, the two lineages recombine out of the selected phase independently, and thus
 % $$P_{norec,s,2} = e^{-2r\mathcal{T}_{\left(s,f\right)}}.$$
 
