@@ -1,5 +1,5 @@
 source ("SweepFromStandingSim.R")
-run.ms.f<-function(f.index,n.sam=2){
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE){
 
 	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")
 
@@ -18,8 +18,11 @@ run.ms.f<-function(f.index,n.sam=2){
 			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)
 			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)
 			cat(i," ")
-			system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))
-	
+			if(get.site.density){ 
+				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))
+				}else{   ##setup for the mo. to do freq. spectrum
+				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 > myseqdata",sep=""))
+			}
 		}
 	}
 }

@@ -171,9 +171,9 @@ and the expected number of segregating sites can be found by taking $\mu$ times 
 We can also obtain an expression for the frequency spectrum at sites surrounding a soft sweep. To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where our frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \citep{PenningandHermisson} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations, see their ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section. We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
 Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ can be written as
 \begin{equation}
-p(l | n) =  \sum_{k=1}^{n}  q_{j,k}  p(l | k,n) p_{ESF}(k | R_f,n) 
+p(l | n) =  \sum_{k=1}^{n}  p_{ESF}(k | R_f,n)  \sum_{j=1}^{k} q_{j,k}  p(l | k,n) 
 \end{equation}
-where is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
+where $  p(l | k,n) $ is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles when the neutral allele segregates at a frequency of $j/k$ in the population before the sweep. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
 \begin{equation}
 p(l | j, ~k,~n) = 
 \sum_{\substack{a_1+\cdots a_j=l;\\
