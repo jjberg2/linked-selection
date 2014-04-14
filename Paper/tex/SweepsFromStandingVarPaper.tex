@@ -196,7 +196,41 @@ where A$\wedge$B denotes the min(A,B). Here $S$ lineages recombine out of the se
 \begin{equation}
 	D^2 = F_{ij,ij} - 2F_{ij,ik} + F_{ij,kl}
 \end{equation}
-where the three terms are, respectively, the probability that two sequences $i$ and $j$ are identical at both sites $x$ and $y$, the probability that sequences 
+where the three terms are, respectively, the probability that two sequences $i$ and $j$ are identical at both sites $x$ and $y$, the probability that sequences $i$ and $j$ are identical at site $x$ while sequences $i$ and $k$ are identical at site $y$, and finally that sequences $i$ and $j$ are identical at site $x$, while sequence $k$ and $l$ are identical at site $y$. \cite{McVean2002} showed that each of these quantities can be expressed in terms of the expected product of coalescent times with the genealogies at sites $x$ and $y$ for samples with the given configurations
+\begin{equation}
+	D^2 = \frac{Cov\left(t_{x\left(ij\right)},t_{y\left(ij\right)}\right) - 2Cov\left(t_{x\left(ij\right)},t_{y\left(ik\right)}\right) + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}{\mathbb{E}\left[T_x T_y\right]}
+\end{equation}
+where $t_{x\left(ij\right)}$ is the coalescence time of sequences $i$ and $j$ at site $x$, and $T_x$ is the total height of the genealogy at site $x$. \cite{McVean2002} further obtained an expression for the denominator of $\sigma_d^2$, such that
+\begin{equation}
+	\sigma_d^2 = \frac{Cov\left(t_{x\left(ij\right)},t_{y\left(ij\right)}\right) - 2Cov\left(t_{x\left(ij\right)},t_{y\left(ik\right)}\right) + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}{\mathbb{E}\left[t_{x\left(ij\right)}\right]\mathbb{E}\left[t_{y\left(kl\right)}\right] + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}.
+\end{equation}
+Further, because $Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right) = \mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] - \mathbb{E}\left[t_{x\left(ij\right)}\right]\mathbb{E}\left[t_{y\left(kl\right)}\right]$, and because the expected pairwise coalescent time is the same at each locus for all three sampling configurations, we can cancel all of the terms involving products of expectations to obtain
+\begin{equation}
+	\sigma_d^2 = \frac{\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] - 2\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] + \mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right]}{\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right]}.
+\end{equation}
+
+We will rely on the assumption that zero time elapses while at least one lineage remains on the background of the selected allele. For clarity, call configurations $\{ij,ij\}$, $\{ij,ik\}$, and $\{ij,kl\}$ states A, B and C respectively, and label as state O any configuration in which ancestral material has been lost due to coalescence at either site. We need to know the expected product of coalescent times for pairs of lineages sampled in each of these three configurations at the moment the beneficial allele fixes. Under our approximation in which coalescence on the selected background (either before or after it actually becomes beneficial) is assumed to happen at $t = 0$, we can calculate the expected product of coalescent times for neutral loci sampled on the selected background at fixation as a function of the probability of transitioning to any other configuration at the first moment when all four alleles are found on the wild type background. For example,
+\begin{equation}
+	\mathbb{E}_S\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] = \phi_{AA}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] + \phi_{AB}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] + \phi_{AC}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] + \phi_{AO}\times 0
+\end{equation}
+where $\phi_{AA}$, $\phi_{AB}$, $\phi_{AC}$ and $\phi_{AO}$ are the probabilities of transitioning from state A at $t = 0$ to state A, B, C or O at the first moment when no lineages remain on the selected background, and the expectations with subscript W represent the values obtained for standard neutral theory. These quantities are known 
+\begin{align}
+	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] = \frac{36 + 14R +R^2}{18 + 13R + R^2} \\
+	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] = \frac{24 + 13R +R^2}{18 + 13R + R^2} \\
+	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] = \frac{22 + 13R +R^2}{18 + 13R + R^2}.	
+\end{align}
+Therefore, our only task is to calculate the transition probabilities. \cite{McVean:2006ke} approaches this problem for the standard hard sweep case by separating the sweep into two components. In the first part of the sweep (looking backward in time), each lineage makes an independent choice whether to recombine out of the sweep or not, recombining out with probability $(1 - e^{-\frac{r}{s}ln(2N)})$. In the second phase of the sweep, all lineages which fail to recombine out are forced to coalesce with probability one, and then mutate out of the selected background immediately.
+
+In order to obtain an expected value for $\sigma_d^2$ following a sweep that begins from frequency $f$, we need to modify \citeapos{McVean:2006ke} approach. The first modification is to replace the probability of recombining off of the selected background with $(1 - e^{-\frac{r}{s}ln(\frac{1}{f})})$ reflecting the fact that the selected phase is slightly shorter when mutations come a frequency greater than $\frac{1}{2N}$, and thus there is less opportunity to recombine. The second modification is more involved. In contrast to \citeapos{McVean:2006ke} hard sweep model in which no recombination occurs during the second phase, in our model we must track the behavior of a Markov chain in which coalescence, recombination, and mutation may occur. The set of events which we allow to occur in this Markov chain are recombination of an allele at the $x$ locus off of the selected background (at rate $r_x\left(1-f\right)$), recombination at the $y$ locus off of the selected background (at rate $r_y\left(1-f\right)$), coalescence of two chromosomes on the selected background (at rate $\frac{1}{2Nf}$), and coalescence of two chromosomes on the non-selected background (at rate $\frac{1}{2N\left(1-f\right)}$), and mutation off of the selected background, which we assume to occur with probability one as soon as there is only a single chromosome left on the selected background.
+
+This Markov chain has a total of 46 states which can be reached beginning from one of the three initial configurations (A, B or C). However, 26 of these transitions result in loss of ancestral material due to coalescence, and thus contribute a value of zero toward the product of coalescence times. We therefore don't need to explicitly calculate the probability of transitioning into those state, and need only track transitions to states that don't result in loss of ancestral material. The full transition matrix \jb{will be} given in the Appendix, but here are a few of the transition probabilities as examples
+\begin{align}
+	&P\left(\{i^Sj^S,k^Sl^S\} \rightarrow \{i^Sj^S,k^Sl^W\}\right) = \frac{4Nr_y f\left(1-f\right)}{12 + 4Nr_x f\left(1-f\right) + 4Nr_y f\left(1-f\right)} \\
+	&P\left(\{i^Sj^W,k^Sl^W\} \rightarrow \{i^Sj^W,i^Sk^W\}\right) = \frac{1}{1 + \frac{f}{1-f} + 2Nr_x f\left(1-f\right) + 2Nr_x f\left(1-f\right)} \\
+	&P\left(\{i^Sj^S,i^Sk^S\} \rightarrow \{i^Sj^W,k^Sl^S\}\right) = \frac{2Nr_x f\left(1-f\right)}{6 + 2Nr_x f\left(1-f\right) + 2Nr_y f\left(1-f\right)} \\
+	&P\left(\{i^Sj^S,i^Sk^S\} \rightarrow \{i^Sj^W,k^Wl^S\}\right) = 0 \\
+	&P\left(\{i^Sj^W,i^Sk^W\} \rightarrow \{i^Wj^W,i^Wk^W\}\right) = 1.
+\end{align}
 
 
 \section{Discussion}
