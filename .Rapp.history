@@ -1,315 +1,207 @@
-library ( expm )#
-library ( combinat )#
-library(plyr)#
-MakeMatrices <- function ( states ) {#
+run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
 	#recover()#
-	x <- y <- numeric ( 8 )#
-	x [ states[[1]] ] <- y [ states[[2]] ] <- 1#
-	S <- as.data.frame ( cbind ( x [ 1:4 ] , y [ 1:4 ] ) )#
-	W <- as.data.frame ( cbind ( x [ 5:8 ] , y [ 5:8 ] ) )#
-	S <- S [ order ( S$V1 , S$V2 , decreasing = T ) , ]#
-	W <- W [ order ( W$V1 , W$V2 , decreasing = T ) , ]#
-	return ( list ( S = S , W = W ) )#
-}#
-one.locus.states <- c ( combn ( seq ( 1,8,1) , 2 , simplify = F ) , list ( 1,2,5,6 ) )#
-#one.locus.states <- split ( one.locus.states , rownames ( one.locus.states ) ); names ( one.locus.states ) <-NULL#
-two.locus.states <- expand.grid ( one.locus.states , one.locus.states )#
-state.matrices <- apply ( t ( two.locus.states ) , 2 , MakeMatrices )#
-#
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
+	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
+	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
+	#recover()#
+	ld.stats <- list ()#
+	for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	}#
+	sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	for ( i in levels ( ld.stats [[1]][[4]]) ) {#
+		for ( j in levels ( ld.stats [[1]][[4]]) ) {#
+			site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
+			site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
+			temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
+			sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
+			r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
 		}#
+		print ( i )#
 	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-state.matrices
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-state.matrices
-GetNumerator <- function ( state.one , state.two , f, N , r_x , r_y ) {#
-	#if ( recover.on ) recover()#
-	test.state <- rbind ( state.one$S [ 1 , ] , state.one$W )#
-	test.state <- test.state [ order ( test.state$V1 , test.state$V2 , decreasing = T ) , ]#
-	test.state <- test.state [ 1 : 4 , ]#
-	if (#
-				# if only one lineage is left on selected background, mutate#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 0 &#
-				all ( test.state == state.two$W )#
-			) {#
-		return ( 1 )#
-	} else if (#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1#
-			) {#
-		return ( 0 )#
-			}#
-	else if ( #
-				# if all lineages reside on wild type background, do nothing w.p. one#
-				all ( state.one$W == state.two$W ) &#
-				sum ( state.one$S ) == 0 & #
-				sum ( state.two$S ) == 0#
-			) {#
-		return ( 1 )#
-	} else if ( #
-				# otherwise, cannot transition to identical state; probability zero#
-				all ( c ( state.one$S == state.two$S ) , c ( state.one$W == state.two$W ) ) #
-			) {#
-		return ( 0 )#
-	} else if ( #
-				## recombination at x locus off of the selected background into wt background#
-				all ( colSums ( state.one$S ) - c ( 1 , 0 ) == ( colSums ( state.two$S ) ) ) &#
-				all ( colSums ( state.one$W ) + c ( 1 , 0 ) == ( colSums ( state.two$W ) ) ) &#
-				sum ( rowSums ( state.one$W ) > 0 ) + 1 == sum ( rowSums ( state.two$W ) > 0 ) &#
-				(#
-					sum ( rowSums ( state.one$S ) > 0 ) == sum ( rowSums ( state.two$S ) > 0 ) |#
-					sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 )#
-				)#
-				## when there are exchangeable alleles at the x locus#
-			) {#
-				if ( #
-					(#
-						all ( rowSums ( state.one$S ) == c ( 2 , 2 , 0 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 1 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 1 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					)#
-				) {#
-					return ( 2 * r_x * ( 1 - f ) )#
-				} else {#
-					# and when there are not#
-					return ( r_x * ( 1 - f ) )#
-				}#
-	} else if ( #
-				## recombination at y locus off of the selected background into wt background#
-				all ( colSums ( state.one$S ) - c ( 0 , 1 ) == ( colSums ( state.two$S ) ) ) &#
-				all ( colSums ( state.one$W ) + c ( 0 , 1 ) == ( colSums ( state.two$W ) ) ) &#
-				sum ( rowSums ( state.one$W ) > 0 ) + 1 == sum ( rowSums ( state.two$W ) > 0 ) &#
-				(#
-					sum ( rowSums ( state.one$S ) > 0 ) == sum ( rowSums ( state.two$S ) > 0 ) |#
-					sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 )#
-				)#
-				## when there are exchangeable alleles at the y locus#
-			) {#
-				if ( #
-					(#
-						all ( rowSums ( state.one$S ) == c ( 2 , 2 , 0 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 1 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 1 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					)#
-				) {#
-					return ( 2 * r_y * ( 1 - f ) )#
-				} else {#
-					# and when there are not#
-					return ( r_y * ( 1 - f ) )#
-				}#
-	} else if ( #
-				## coalescence when 4 possible events give the same transition#
-				sum ( rowSums ( state.one$S ) > 0 ) == 4 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 3 &#
-				all ( colSums ( state.one$S ) == c ( 2 , 2 ) ) &#
-				all ( colSums ( state.two$S ) == c ( 2 , 2 ) ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 4 / ( 2 * N * f ) )#
-	} else if (#
-				## coalescence when two possible events give the same transition#
-				sum ( rowSums ( state.one$S ) > 0 ) == 3 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 2 &#
-				( (#
-					all ( colSums ( state.one$S ) == c ( 2 , 1 ) ) &#
-					all ( colSums ( state.two$S ) == c ( 2 , 1 ) ) #
-				) |#
-				(#
-					all ( colSums ( state.one$S ) == c ( 1 , 2 ) ) &#
-					all ( colSums ( state.two$S ) == c ( 1 , 2 ) )#
-				) ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 2 / ( 2 * N * f ) )#
-	} else if (#
-				# all other coalescent events on the selected background occur w.p. 1/2Nf#
-				sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 1 / ( 2 * N * f ) )		#
-	} else if (#
-				# coalescence on the wild type background when alleles split evenly across backgrounds at both loci#
-				all ( rowSums ( state.one$W ) == c ( 1 , 1 , 0 , 0 ) ) &#
-				all ( colSums ( state.one$W ) == c ( 1 , 1 ) ) &#
-				all ( rowSums ( state.two$W ) == c ( 2 , 0 , 0 , 0 ) ) &#
-				all ( colSums ( state.two$W ) == c ( 1 , 1 ) ) &#
-				all ( state.one$S == state.two$S )#
-			){#
-		return ( 1 / ( 2 * N * ( 1 - f ) ) )#
-	} else {#
-		return (0)#
-	}#
+	return ( list ( sig.sq , r.sq ) )#
 }#
 #
-GetDenominator <- function ( state.one , state.two , f, N , r_x , r_y ) {#
+LDSimCalc <- function ( file.name ) {#
 	#recover()#
-	test.state <- rbind ( state.one$S [ 1 , ] , state.one$W )#
-	test.state <- test.state [ order ( test.state$V1 , test.state$V2 , decreasing = T ) , ]#
-	test.state <- test.state [ 1 : 4 , ]#
-	if (#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 0 &#
-				all ( test.state == state.two$W )#
-			) {#
-		return ( 1 )#
-	} else if ( #
-				# if all lineages reside on wild type background, do nothing w.p. one#
-				all ( state.one$W == state.two$W ) &#
-				sum ( state.one$S ) == 0 & #
-				sum ( state.two$S ) == 0#
-			) {#
-		return ( 1 )#
-	} else {#
-		rec_x <- colSums ( state.one$S ) [ 1 ] * r_x * ( 1 - f )#
-		rec_y <- colSums ( state.one$S ) [ 2 ] * r_y * ( 1 - f )#
-		coal_s <- choose ( sum ( rowSums ( state.one$S ) > 0 ) , 2 ) / ( 2 * N * f )#
-		coal_w <- choose ( sum ( rowSums ( state.one$W ) > 0 ) , 2 ) / ( 2 * N * ( 1 - f ) )#
-		return ( rec_x + rec_y + coal_s + coal_w )#
+	my.lines <- readLines ( file.name )#
+	pos.line.id <- grep ( "pos" , my.lines )#
+	pos.line <- my.lines [ pos.line.id ]#
+	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
+	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
+	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
+	geno.mat <- do.call ( rbind , split.geno.lines )#
+	D.stat.sq <- cov ( geno.mat )^2#
+	freqs <- colMeans ( geno.mat )#
+	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
+	var.prod.mat <- rt.vars %o% rt.vars#
+	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
+}
+temp <- run.ms.f ( n.sam = 20 , f = 0.01 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
+	recover()#
+	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
+	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
+	#recover()#
+	ld.stats <- list ()#
+	for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
 	}#
-}#
-LDCalc <- function ( f , N , r_x , r_y , state.matrices ) {#
-	#recover()#
-	transition.mat <- matrix ( NA , nrow = 20 , ncol = 20 )#
-	for ( i in 1 : 20 ) {#
-		for ( j in 1 : 20 ) {#
-			num <- GetNumerator (state.matrices [[ i ]] , state.matrices [[ j ]] , f , N , r_x , r_y )#
-			denom <- GetDenominator (state.matrices [[ i ]] , state.matrices [[ j ]] , f , N , r_x , r_y )#
-			transition.mat [ i , j ] <- num / denom#
+	sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	for ( i in levels ( ld.stats [[1]][[4]]) ) {#
+		for ( j in levels ( ld.stats [[1]][[4]]) ) {#
+			site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
+			site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
+			temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
+			sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
+			r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
 		}#
+		print ( i )#
 	}#
-	# default neutral values#
-	tt_ijij_w <- ( 36 + 14 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	tt_ijik_w <- ( 24 + 13 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	tt_ijkl_w <- ( 22 + 13 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	phi_a <- ( c ( 1 , rep ( 0 , 19 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	phi_b <- ( c ( 0 , 1 , rep ( 0 , 18 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	phi_c <- ( c ( 0 , 0 , 0 , 1 , rep ( 0 , 16 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	# reweighted selected values#
-	tt_ijij_s <- sum ( phi_a * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	tt_ijik_s <- sum ( phi_b * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	tt_ijkl_s <- sum ( phi_c * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	( tt_ijij_s - 2 * tt_ijik_s + tt_ijkl_s ) / ( 1 + tt_ijkl_s )#
+	return ( list ( sig.sq , r.sq ) )#
+}#
+#
+LDSimCalc <- function ( file.name ) {#
+	#recover()#
+	my.lines <- readLines ( file.name )#
+	pos.line.id <- grep ( "pos" , my.lines )#
+	pos.line <- my.lines [ pos.line.id ]#
+	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
+	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
+	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
+	geno.mat <- do.call ( rbind , split.geno.lines )#
+	D.stat.sq <- cov ( geno.mat )^2#
+	freqs <- colMeans ( geno.mat )#
+	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
+	var.prod.mat <- rt.vars %o% rt.vars#
+	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
 }
-my.freqs <- seq ( 0.01 , 0.1 , 0.01 )#
-my.dist <- seq ( 0 , 10^-3 , length.out = 100 ) #
-my.ld <- list ()#
-for ( j in 1 : 10 ) {#
-	my.ld [[ j ]] <- numeric ( 100 )#
-	for ( i in 1 : 100 ) {#
-		my.ld [[ j ]] [ i ] <-  LDCalc ( f = my.freqs [ j ] , N = 100000 , r_x = my.dist [ i ] , r_y = my.dist [ i ] , state.matrices )#
-	}#
+temp <- run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]
+my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )
+ld.stats <- list ()
+length ( my.trajectories )
+i=1
+header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )
+write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )
+write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )
+system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
+i=2
+header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )
+write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )
+write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )
+system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
+i=3
+header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )
+write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )
+write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )
+system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
+for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	}
+i
+header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )
+for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
+	}
+for ( i in 1 : length ( my.trajectories ) ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	}
+i
+LDSimCalc <- function ( file.name ) {#
+	recover()#
+	my.lines <- readLines ( file.name )#
+	pos.line.id <- grep ( "pos" , my.lines )#
+	pos.line <- my.lines [ pos.line.id ]#
+	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
+	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
+	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
+	geno.mat <- do.call ( rbind , split.geno.lines )#
+	D.stat.sq <- cov ( geno.mat )^2#
+	freqs <- colMeans ( geno.mat )#
+	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
+	var.prod.mat <- rt.vars %o% rt.vars#
+	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
 }
-my.ld
-gewwd()
-getwd()
-setwd("Documents/Academics/StandingSweep/")
-save ( my.ld , file = "LDvals.Robj")
-cols <- rainbow ( 10 )
-cols
-plot ( ld [[ 1 ]] , type = "l" , col = cols [ i ] )
-plot ( my.ld [[ 1 ]] , type = "l" , col = cols [ i ] )
-plot ( my.ld [[ 1 ]] , type = "l"  )
-matplot ( my.ld , type = "l")
-matplot ( do.call ( rbind, my.ld ) , type = "l")
-matplot ( do.call ( cbind, my.ld ) , type = "l")
+i=1
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+my.lines <- readLines ( file.name )
+file.name
+c
+LDSimCalc <- function ( file.name ) {#
+	#recover()#
+	my.lines <- readLines ( file.name )#
+	pos.line.id <- grep ( "pos" , my.lines )#
+	pos.line <- my.lines [ pos.line.id ]#
+	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
+	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
+	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
+	geno.mat <- do.call ( rbind , split.geno.lines )#
+	D.stat.sq <- cov ( geno.mat )^2#
+	freqs <- colMeans ( geno.mat )#
+	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
+	var.prod.mat <- rt.vars %o% rt.vars#
+	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
+}
+i=1
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+2
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+2
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+2 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+2 ; i
+i=1
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i
+?readLines

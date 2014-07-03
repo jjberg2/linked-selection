@@ -223,7 +223,7 @@ Therefore, our only task is to calculate the transition probabilities. \cite{McV
 
 In order to obtain an expected value for $\sigma_d^2$ following a sweep that begins from frequency $f$, we need to modify \citeapos{McVean:2006ke} approach. The first modification is to replace the probability of recombining off of the selected background with $(1 - e^{-\frac{r}{s}ln(\frac{1}{f})})$ reflecting the fact that the selected phase is slightly shorter when mutations come a frequency greater than $\frac{1}{2N}$, and thus there is less opportunity to recombine. The second modification is more involved. In contrast to \citeapos{McVean:2006ke} hard sweep model in which no recombination occurs during the second phase, in our model we must track the behavior of a Markov chain in which coalescence, recombination, and mutation may occur. The set of events which we allow to occur in this Markov chain are recombination of an allele at the $x$ locus off of the selected background (at rate $r_x\left(1-f\right)$), recombination at the $y$ locus off of the selected background (at rate $r_y\left(1-f\right)$), coalescence of two chromosomes on the selected background (at rate $\frac{1}{2Nf}$), and coalescence of two chromosomes on the non-selected background (at rate $\frac{1}{2N\left(1-f\right)}$), and mutation off of the selected background, which we assume to occur with probability one as soon as there is only a single chromosome left on the selected background.
 
-This Markov chain has a total of 46 states which can be reached beginning from one of the three initial configurations (A, B or C). However, 26 of these transitions result in loss of ancestral material due to coalescence, and thus contribute a value of zero toward the product of coalescence times. We therefore don't need to explicitly calculate the probability of transitioning into those state, and need only track transitions to states that don't result in loss of ancestral material. The full transition matrix \jb{will be} given in the Appendix, but here are a few of the transition probabilities as examples
+This Markov chain has a total of 46 states which can be reached beginning from one of the three initial configurations (A, B or C). However, 26 of these transitions result in loss of ancestral material due to coalescence, and thus contribute a value of zero toward the product of coalescence times. We therefore don't need to explicitly calculate the probability of transitioning into these states, and need only track transitions to states that don't result in loss of ancestral material. The full transition matrix \jb{will be} given in the Appendix, but here are a few of the transition probabilities as examples
 \begin{align}
 	&P\left(\{i^Sj^S,k^Sl^S\} \rightarrow \{i^Sj^S,k^Sl^W\}\right) = \frac{4Nr_y f\left(1-f\right)}{12 + 4Nr_x f\left(1-f\right) + 4Nr_y f\left(1-f\right)} \\
 	&P\left(\{i^Sj^W,k^Sl^W\} \rightarrow \{i^Sj^W,i^Sk^W\}\right) = \frac{1}{1 + \frac{f}{1-f} + 2Nr_x f\left(1-f\right) + 2Nr_x f\left(1-f\right)} \\
@@ -231,7 +231,7 @@ This Markov chain has a total of 46 states which can be reached beginning from o
 	&P\left(\{i^Sj^S,i^Sk^S\} \rightarrow \{i^Sj^W,k^Wl^S\}\right) = 0 \\
 	&P\left(\{i^Sj^W,i^Sk^W\} \rightarrow \{i^Wj^W,i^Wk^W\}\right) = 1.
 \end{align}
-
+Let $\mathbf{D}$ be the $20\times 20$ transition matrix for the neutral phase, and let $\mathbf{A}$ be the transition matrix for the selected phase. 
 
 \section{Discussion}
 
