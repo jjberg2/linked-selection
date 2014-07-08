@@ -1,7 +1,7 @@
 args <- commandArgs ( trailingOnly = T )
 LDSimCalc <- function ( file.name , n.loc ) {
 	
-	recover()
+	#recover()
 	my.con <- file ( file.name )
 	open ( my.con )
 	my.lines <- readLines ( my.con )
