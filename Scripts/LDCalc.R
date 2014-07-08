@@ -309,12 +309,12 @@ save ( my.ld , file = "../Output/My.LD.calc.Robj")
 
 
 
-temp <- run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+
 
 
 
 run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){
-	recover()
+	#recover()
 	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")
 	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")
 	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]
@@ -328,42 +328,35 @@ run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){
 		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )
 		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )
 	}
-	for ( i in 1 : length ( my.trajectories ) ) {
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T ) ; i = i+1 ; i 
-	}
-	sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )
-	r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )
-	for ( i in levels ( ld.stats [[1]][[4]]) ) {
-		for ( j in levels ( ld.stats [[1]][[4]]) ) {
-			site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )
-			site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )
-			temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )
-			sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )
-			r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	
-		}
-		print ( i )
-	}
-	return ( list ( sig.sq , r.sq ) )
+	
 }
 
-LDSimCalc <- function ( file.name ) {
-	
-	#recover()
-	my.lines <- readLines ( file.name )
-	pos.line.id <- grep ( "pos" , my.lines )
-	pos.line <- my.lines [ pos.line.id ]
-	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )
-	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]
-	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )
-	geno.mat <- do.call ( rbind , split.geno.lines )
-	D.stat.sq <- cov ( geno.mat )^2
-	freqs <- colMeans ( geno.mat )
-	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )
-	var.prod.mat <- rt.vars %o% rt.vars
-	return ( list ( D.stat.sq , var.prod.mat , positions ) )
-	
+setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")
+run.ms.f ( n.sam = 20 , f = 0.01 , s = 0.01 , no.sweep = F , reps = 1000 , N = 10000 , n.loc = 40 )
+for ( i in 1 : 10 ) {
+		system ( paste ( "Rscript Scripts/LDSimCalcFunc.R Output/myseqdata" , i , " 40" , sep = "" ) )
+		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
+		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
+		cat ( i )
 }
+
+
+sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )
+r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )
+for ( i in levels ( ld.stats [[1]][[4]]) ) {
+	for ( j in levels ( ld.stats [[1]][[4]]) ) {
+		site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )
+		site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )
+		temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )
+		sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )
+		r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	
+	}
+	print ( i )
+}
+	
+
+
+
 
 
 
