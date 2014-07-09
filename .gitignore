@@ -15,5 +15,5 @@ Scripts/seedms
 MaizeData/
 Scripts/Objects
 
-#Don't track /Working folder
+Output/*
 Working/*
