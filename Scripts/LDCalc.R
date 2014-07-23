@@ -332,12 +332,13 @@ run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){
 }
 
 setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")
-run.ms.f ( n.sam = 20 , f = 0.01 , s = 0.01 , no.sweep = F , reps = 1000 , N = 10000 , n.loc = 40 )
-for ( i in 1 : 10 ) {
+run.ms.f ( n.sam = 50 , f = 0.01 , s = 0.01 , no.sweep = F , reps = 1000 , N = 10000 , n.loc = 40 )
+for ( i in 1 : 1000 ) {
 		system ( paste ( "Rscript Scripts/LDSimCalcFunc.R Output/myseqdata" , i , " 40" , sep = "" ) )
+		gc()
 		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
 		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
-		cat ( i )
+		cat ( i , "\n" )
 }
 
 

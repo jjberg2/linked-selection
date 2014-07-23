@@ -21,7 +21,7 @@ run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){
 #setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")
 run.ms.f ( n.sam = as.numeric(args[1]) , f = as.numeric(args[2]) , s = as.numeric(args[3]) , no.sweep = args[4] , reps = as.numeric(args[5]) , N = as.numeric(args[6]) , n.loc = as.numeric(args[7]) )
 for ( i in 1 : args[5] ) {
-    system ( paste ( "Rscript Scripts/LDSimCalcFunc.R Output/myseqdata" , i , args[7] , sep = "" ) )
+    system ( paste ( "Rscript Scripts/LDSimCalcFunc.R Output/myseqdata" , i, " " , args[7] , sep = "" ) )
     # ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )
     # ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )
     #cat ( i )

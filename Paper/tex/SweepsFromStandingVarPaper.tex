@@ -21,6 +21,8 @@
 
 \newcommand{\var}{\mathop{\mbox{Var}}}
 \newcommand{\cov}{\mathop{\mbox{Cov}}}
+\newcommand{\fancyN}{$\mathcal N$ }
+\newcommand{\fancyB}{$\mathcal B$ }
 \newcommand{\gc}[1]{{\it \color{red} (#1)} }
 \newcommand{\jb}[1]{{\it\color{blue} (#1)} }
 \def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}
@@ -53,20 +55,37 @@ $^3$ Department of Evolution and Ecology, University of California, Davis\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
-\jb{thinking perhaps we should motivate our whole framework with a fair bit of verbal description before we delve into any math. Ideas here are reletively straightforward, but a fair bit of ``scene setting'' to do first}
+Consider two loci, labeled \fancyN and \fancyB, which are separated on the chromosome by a recombination distance $r$. We imagine that an allele arises at the \fancyB locus and segregates at low frequency for some period of time (either due to neutral fluctuations, or because it is balanced at low frequency), before a change in the environment causes it to become beneficial and sweep to fixation. Alleles at the \fancyN locus are neutral, and its history can be determined by considering a structured neutral coalescent conditional on behavior of the \fancyB locus.
 
-The key insight for this paper is that the recombination events that occur during the period when an allele is neutral or balanced prior to a sweep can be treated like mutations, and thus under the assumption of constant population size, we can use the Ewens Sampling Formula to calculate expectations for a variety of quantities of interest in the region surrounding the selected site.
+Our aim is to describe some features of the genealogy at the \fancyN locus, and to use this understanding of the genealogies to build intuition on the process of a sweep from standing variation, as well as to derive expectations for a range of population genetic summary statistics in a sample taken at the conclusion of a standing sweep.
 
-Consider a neutral locus partially linked (with recombination rate $r$) to a second locus where an allele arises, and is initially either neutral, or balanced at a low frequency, but eventually becomes beneficial (due to a change in environment). Our aim is to describe some features of the genealogy at the selected site at at adjacent neutral sites, how these features effect a number of population genetic summary statistics, and to explore the extent to which they can be used to say anything meaningful about sites where sweeps from standing variation may have occurred. 
+The key insight for this paper is that the recombination events that occur between the \fancyN and \fancyB loci before the sweep has begun can be treated as mutations on the genealogy of the \fancyB locus, and thus under the assumption of constant population size, we can use the Ewens Sampling Formula to calculate expectations for a variety of quantities of interest in the region surrounding the selected site.
 
 \begin{figure}
 \includegraphics[width = 0.8
           \textwidth]{Paper_Figures/Cartoon_of_soft_sweeps.pdf}
 \end{figure}
 
-\subsubsection{Neutral phase} \gc{not clear that neutral is a good term}
-Imagine that we sample $k$ neutral alleles (lineages) from the population in the present day. 
-We will assume that the selected phase of the trajectory occurs rapidly so there is no timefor coalescence to occur in the selected phase. So at the start of the neutral phase we have k lineages and the frequency of the selected allele is $f$ on the population.
+
+\subsubsection{Selected phase}
+Looking backward in time, we let $X\left(t\right)$ be the frequency of the selected allele at the \fancyB locus at time $t$ in the past, where $t=0$ is the moment of fixation (i.e. $X\left(0\right) = 1$). The probability that a single lineage sampled at the \fancyN locus at $t=0$ fails to recombine off of the selected background in generation $t$ is $1-r\left(1-X(t)\right)$. If we let $\tau$ be the first generation (forward in time) in which the allele at the \fancyB locus is beneficial (i.e. $X\left(\tau\right) = f$), then the probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep is given by
+\begin{equation}
+P_{NR} = \prod_{t=0}^{\tau} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau}(1-X\left(t\right))\mathrm{d} t \right)
+\end{equation}
+for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep from frequency $f$ can be written $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If the effect of our beneficial allele on relative fitness is strictly additive, such that heterozygotes enjoy a selective advantage of $s/2$ and heterozygotes an advantage of $s$, then our allele's trajectory through the population under a deterministic approximation is logistic and $\mathcal{T}_{\left(s,f\right)} = ???$
+
+We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage makes an independent choice of whether it recombines out of the sweep, so that the probability that $i$ out of $k$ lineages fail to escape off the sweep background is
+\begin{equation}
+P_{NR}(i;k) = {k \choose i} P_{NR}^{i} (1-P_{NR})^{k-i}.
+\end{equation}
+This binomial approximation has been made by a number of authors in the context of hard sweeps \citep{Barton}, and more accurate approximations have been developed \citep{Etheridge2006}. However, as long as the population is large, the sample is not too large,  $\tau$ is not too long, then this approximation should be adequate. The other more accurate forms could be incorporated into our framework, but we stick with this simple form for the sake of clarity of presentation.
+
+%At a given distance away from the selected site every one of the lineages that recombines out of the selected class will be a singleton, and the remaining lineages will be partitioned according to the Ewens' Sampling formula.  
+
+
+
+\subsubsection{Neutral phase}
+Looking backward in time, having sampled $k$ lineages at the \fancyN locus at $t=0$, we arrive at the beginning of the neutral phase at time $\tau$ with $k-i$ lineages linked to the non-beneficial background at the \fancyB locus (which has a frequency of $1-f$), and $i$ lineages linked to the beneficial background (which has a frequency of $f$).
 
 We will argue that the majority of information about patterns of diversity surrounding a sweep from standing variation can be understood by understanding the genealogy at the selected site,
 and where recombinations fall on this genealogy as we move away from the selected sites. 
@@ -109,23 +128,6 @@ Note this does not depend on $R_f$, which gives the classic result that the numb
 % P\left(k,n_1,n_2,\dots,n_n| R_f,n \right) =\frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) } \prod_{j=1}^n\frac{1}{j^{n_j}n_j!} \label{ESF}
 % \end{equation}
 % The probability of there being $k$ alleles (recombinant lineages) in our sample of $n$
-
-\subsubsection{Selected phase}
-Assume that we are at a neutral site a genetic distance $r$ away from the selected site. 
-If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $1-r\left(1-X(t)\right)$. The probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep is given by 
-\begin{equation}
-P_{NR} \prod_{t=0}^{\tau} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau}(1-X\left(t\right))\mathrm{d} t\left(t\right) \right)
-\end{equation}
-for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep is $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If our selected allele has an additive avantage in terms of relative fitness of $s/2$ in heterozygotes and $s$ in homozygotes, then our allele's deterministic trajectory through the population is logistic and $\mathcal{T}_{\left(s,f\right)} =???$
-
-We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage makes an independent choice of whether it recombines out of the sweep, so that the probability that $i$ out of $k$ lineages fail to escape off the sweep background is
-\begin{equation}
-P_{NR}(i;k) = {k \choose i} P_{NR}^{i} (1-P_{NR})^{k-i}.
-\end{equation}
-This binomial approximation has been made by a number of authors in the context of hard sweeps \citep{Barton}, and more accurate approximations have been developed \citep{}. However, as long as the population is large, the sample is not too large,  $\tau$ is not too long, and $f$ not too small (e.g. $\tau {k \choose 2}/(2Nf)<<1$) then this approximation should be adequet. The other more accurate forms could be incorporated into our framework, but we stick with this simple form for the sake of clarity of presentation.
-
-At a given distance away from the selected site every one of the lineages that recombines out of the selected class will be a singleton, and the remaining lineages will be partitioned according to the Ewens' Sampling formula.  
-
 
 \subsubsection{Patterns of neutral diversity surrounding standing sweeps}
 Given this approximate model of the coalescent with a sweep from standing variation we can now calculate basic summaries of variation in the region surrounding the sweep. We will assume that the per base pair mutation rate per generation is $\mu$. We will ignore mutations over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes neglibably to the total amount of time in the genealogy. This corresponds to an assumption that $2N\mu \gg 2N \mu f$, in line with our previous set of assumptions that $f \ll 1$. If this is the case we simply consider patterns of diversity in our sample at a site, by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
