@@ -1,673 +1,619 @@
-ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )
-ts_mean
-ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )
-ts_true
-ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )
-ts_true
-hist ( ts_true , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-mean ( ts_true)
-mean ( ts_mean)
-new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))
-ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )
-mean ( ts_mean)
-mean ( var_mean)
-mean ( ts_true)
-var ( ts_true)
-var ( var_mean)
-var ( ts_mean)
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-var_true
-mean ( var_true)
-var ( var_true)
-Q
-MakeVar ( 0.5 , 10000 , 0.01 , 2 )
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop ) {#
-	#recover()#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-}#
-MakeVar ( 0.5 , 10000 , 0.01 , 2 )
-ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )
-hist ( ts_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )
-hist ( ts_true , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-par ( mfrow = c ( 1 ,2 ))
-hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )
-par ( mfrow = c ( 1 ,1 ))
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_true , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-rand = T
-if ( rand ) p <- runif ( n_rep )
-p
-new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )
-p
-p <- runif ( n_rep )
-p
-p <- runif ( n_rep )
-p
-n_loc = 100
-p <- runif ( n_loc * n_rep )
-length(p)
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_pop )
-p
-dim(p)
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-dim(p)
-p[,1]
-p[,1] * diag ( 100 )
-p[,1] * (1-p[,1] )* diag ( 100 )
-apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , x  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
-apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , x  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
-x
-x
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) )
-n_loc
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
-rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-dim(new_ps)
-head(new_ps)
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- apply ( new_ps , 2 , function ( x ) sum ( x * ( 1 - x ) ) )
-vars_t
-colSums ( new_ps * ( 1 - new_ps ) )
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-p * ( 1 - p )
-colSums ( p * ( 1 - p ) )
-vars_t
-vars_0 <- colSums ( p * ( 1 - p ) )
-vars_0 - vars_t
-Fst * vars_0
-( vars_0 - vars_t ) / ( Fst * vars_0 )
-vars_start <- colSums ( p * ( 1 - p ) )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , T , 100 )
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	recover()#
-	if ( rand ) {#
-		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		( vars_start - vars_t ) / ( Fst * vars_start )#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+ls()
+dir)
+dir())
+dir()
+setwd("Scripts/")
+dir()
+dir()
+get.freq.spec<-function(n,num.sims){#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+(4+n)*iter,nrow=1)#
+		seqs.raw<-scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)#
+		#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}#
+		#
+		these.pos<-positions[-1]>0.5#
+		#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		#
+		#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
 #
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-p
-n_rep
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-vars_t
-vars_start <- colSums ( p * ( 1 - p ) )
-vars_start
-( vars_start - vars_t ) / ( Fst * vars_start )
-my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-dt
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 1000 )
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 200 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-sd ( my.stat)
-curve ( dnorm ( x , 1, 0.83) , add = T , col = "red")
-qqplot ( my.stat , dnorm ( x , 1, 0.83))
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
+return(freq.specs)#
 }
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 300 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-p
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE){#
+#
+	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			#
+			my.times<-my.times / (4*10e3)#
+	#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			if(get.site.density){ #
+				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+				}else{   ##setup for the mo. to do freq. spectrum#
+				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 > myseqdata",sep=""))#
+			}#
+		}#
 	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+}
+run.ms.f(f.index=1,n.sam=20, get.site.density=FALSE)
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE,recom=FALSE){#
 #
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-warnings()
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-vars_start <- colSums ( p * ( 1 - p ) )
-vars_start
-vars_t
-vars_start
-my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-vars_start - vars_t
-hist ( vars_start - vars_t , breaks = 50 , freq = F )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-n_loc
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
-		recover()	#
+	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
 #
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			#
+			my.times<-my.times / (4*10e3)#
+	#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			if(get.site.density){ #
+				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+				}else{   ##setup for the mo. to do freq. spectrum#
+				system(paste("msseldir/mssel ",n.sam," ",20," 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep="")) #
+				spec<-get.freq.spec(n.sam,num.sims=20)#
+				recover()#
+			}#
+		}#
 	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+}
+get.freq.spec<-function(n,num.sims){#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+(4+n)*iter,nrow=1)#
+		seqs.raw<-scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)#
+		#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		if(iter ==19) recover()#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}#
+		#
+		these.pos<-positions[-1]>0.5   ###why the -1 here?#
+		#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		#
+		#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
 #
+return(freq.specs)#
+}
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+options(error=recover)
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+dir()
+system("more myseqdata")
+system(paste("msseldir/mssel ",n.sam," ",20," 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep=""))
+system(paste("msseldir/mssel ",n.sam," ",20," 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep=""))
+system("more myseqdata")
+system("grep segsites myseqdata")
+spec
+specs
+length(positions)
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+system("grep segsites myseqdata")
+iter
+		seqs.raw<-scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)
+Q
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+system("grep segsites myseqdata")
+length(positions)
+iter
+positions
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label
+sum(these.pos)
+freq.spec<-(1:n==sum(seqs));
+freq.spec
+seqs[,these.pos]
+specs
+spec
+system("more myseqdata")
+20*5*100
+Q
+get.freq.spec<-function(n,num.sims){#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+(4+n)*iter,nrow=1)#
+		seqs.raw<-scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)#
+		#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+#		if(iter ==19) recover()#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+#
+return(freq.specs)#
+}
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE,recom=FALSE){#
+	num.sims<-20#
+	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+	counter<-1#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			#
+			my.times<-my.times / (4*10e3)#
+	#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			if(get.site.density){ #
+				system(paste("msseldir/mssel ",n.sam," ",num.sims," 0 " ,n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+				}else{   ##setup for the mo. to do freq. spectrum#
+				system(paste("msseldir/mssel ",n.sam," ",num.sims," 0 " ,n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep="")) #
+				spec<-get.freq.spec(n.sam,num.sims=20)#
+#				recover()#
+				#
+				my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec#
+				counter<-counter+1#
+			}#
+		}#
+	}#
+}
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+spec
+	my.specs<-matrix(NA,nrow=20,ncol=10000)
+				my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec
+my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]
+Q
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE,recom=FALSE){#
+	num.sims<-20#
+	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")#
+	counter<-1#
+	#
+	my.specs<-matrix(NA,nrow=20,ncol=10000)#
+	system(paste("rm ",my.file))#
+	for(run in 1:5){#
+		load(paste("run_cond_lost_",run,".Robj",sep=""))#
+		for(i in 1:100){#
+			my.freqs<-my.runs[[f.index]]$trees[[i]]$freqs#
+			my.times<-0:length(my.freqs)#
+			my.freqs<-c(my.freqs,0)#
+			#
+			my.times<-my.times / (4*10e3)#
+	#
+	#		recover()#
+			header.material<-c("1","1",paste("n:",length(my.times) ))#
+			write(file=paste("my.standing",f.index,".traj",sep=""),header.material)#
+			write.table(file=paste("my.standing",f.index,".traj",sep=""),cbind(my.times,my.freqs), append=TRUE, sep="\t",quot=FALSE,col.nam=FALSE,row.name=FALSE)#
+			cat(i," ")#
+			if(get.site.density){ #
+				system(paste("msseldir/mssel ",n.sam," ",num.sims," 0 " ,n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))#
+				}else{   ##setup for the mo. to do freq. spectrum#
+				system(paste("msseldir/mssel ",n.sam," ",num.sims," 0 " ,n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep="")) #
+				spec<-get.freq.spec(n.sam,num.sims=20)#
+#				recover()#
+				#
+				my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec#
+				counter<-counter+1#
+			}#
+		}#
+	}#
+}
+run.ms.f(f.index=1,n.sam=10, get.site.density=FALSE, recom=10)
+iter
+scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)
+read.table("myseqdata",skip=5+(4+n)*iter,nrow=1)
+system("grep segsites myseqdata")
+5+(4+n)*iter
+system("wc -l myseqdata")
+n
+n
+n
+n
+iter
+n
+iter
+6+(4+n)*iter
+iter
+6+(4+n)*iter
+n
+2*n
+2*n/2
+system("wc -l myseqdata")
+6+(4+n-1)*iter
+num.sims
+num.sims-1
+counter
+system("grep segsites myseqdata")
+iter
+read.table("myseqdata",skip=5+(4+n)*(iter-1),nrow=1)
+system("tail myseqdata")
+scan("myseqdata",skip=6+(4+n)*(iter-1),nline=n,what=character(),quiet=TRUE)
+n
+n*10
+system("tail -n20 myseqdata")
+get.freq.spec<-function(n,num.sims){#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+(4+n)*iter,nrow=1)#
+		seqs.raw<-scan("myseqdata",skip=6+(4+n)*iter,nline=n,what=character(),quiet=TRUE)#
+		print(positions[1])#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+#		if(iter ==19) recover()#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})
+return(freq.specs)#
+}
+get.freq.spec(n.sam=10,num.sims=20)
+get.freq.spec(10,num.sims=20)
+system("head -n20 myseqdata")
+system("head -n40 myseqdata")
+system("grep segsites myseqdata")
+?system
+system("grep segsites myseqdata",intern=TRUE)
+a<-system("grep segsites myseqdata",intern=TRUE)
+a
+sapply(a,function(seq){as.numeric(strsplit(a,":")[[1]])})
+a
+a[1]
+a[2]
+a[3]
+sapply(a,function(b){as.numeric(strsplit(b,":")[[1]])})
+sapply(a,function(seq){as.numeric(strsplit(a,":")[[1]][2])})
+sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
+	a<-system("grep segsites myseqdata",intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0
+polymorph
+seg.sites*10
+polymorph*10
+cumsum(polymorph*10)
+cumsum(polymorph*10)[-length(polymorph)]
+c(0,cumsum(polymorph*10)[-length(polymorph)])
+for(iter in 0:19){positions<-read.table("myseqdata",skip=5+4*iter+seq.lines[iter],nrow=1);print(positions[1])}
+iter
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i],nrow=1);print(positions[1])}
+Q
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i],nrow=1);print(positions[1])}
+	a<-system("grep segsites myseqdata",intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*10)[-length(polymorph)])
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i],nrow=1);print(positions[1])}
+5 + 4 * i + seq.lines[i]
+i
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1);print(positions[1])}
+polymorph
+106145.50+36.88
+3409.76+3045.90
+(3409.76+3045.90)/2
+(3409.76+3045.90)/2+6984.28
+17518.74/2
+17518.74/2+10212.11
+106182.40-18971.48
+ 87210.92-3900
+63959.18-3900
+106145.50+36.88+366
+106548.4-18971.48
+106548.4-18971.48-3900
+20952.07-16848
+10212.11+8759.37
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1);print(positions[1])}
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1);cat(positions[1],length(positions[1]),"\n")}
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1);cat(positions[1],length(positions),"\n")}
+for(i in 0:19){positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1);cat(length(positions),"\n")}
+get.freq.spec<-function(n,num.sims){#
+	#
+	a<-system("grep segsites myseqdata",intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*10)[-length(polymorph)])#
+	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1)#
+		print(positions[1])#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+#
+		seqs.raw<-scan("myseqdata",skip=6+(4*iter +n*sum()),nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+#
+return(freq.specs)#
+}
+spec<-get.freq.spec(10,num.sims=20)
+iter
+		seqs.raw<-scan("myseqdata",skip=6+4*i+seq.lines[i+1],nline=n,what=character(),quiet=TRUE)
+seqs.raw
+positions
+Q
+get.freq.spec<-function(n,num.sims){#
+	#
+	a<-system("grep segsites myseqdata",intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*10)[-length(polymorph)])#
+	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+4*i+seq.lines[i+1],nrow=1)#
+		print(positions[1])#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+#
+		seqs.raw<-scan("myseqdata",skip=6+4*i+seq.lines[i+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+#
+return(freq.specs)#
+}
+spec<-get.freq.spec(10,num.sims=20)
+spec
+get.freq.spec<-function(n,num.sims){#
+	#
+	a<-system("grep segsites myseqdata",intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*10)[-length(polymorph)])#
+	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){#
+		positions<-read.table("myseqdata",skip=5+4*iter+seq.lines[iter+1],nrow=1)#
+		print(positions[1])#
+		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+#
+		seqs.raw<-scan("myseqdata",skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+#
+return(freq.specs)#
+}
+spec<-get.freq.spec(10,num.sims=20)
+spec
+system("tail myseqdata")
+system("tail -n30 myseqdata")
+system("tail -n40 myseqdata")
+spec
+system("head -n40 myseqdata")
+options(error=recover)
+4/100
+4/100/1e6
+1/4/100/1e6
+1/(4/100/1e6)
+1.25/100/1e6
+1(1.25/100/1e6)
+1/(1.25/100/1e6)
+0.71/(1.25/100/1e6)/log(10e6)
+3523990/1e6
+500e3
+40e3
+.025/(4*1.5e-8)
+0.71/(1.25/100/1e6)/log(416666*2*.72)
+4269173/1e6
+0.71/(1.25/100/1e6)/log(416666*2*.71)
+.025/(4*7e-9)
+0.71/(1.25/100/1e6)/log(892857*2*.71)
+rBP =1e-8
+rBP =1.25e-8
+t=log(416666*2*.71)/0.71
+L=20e3
+N=416666
+t=log(N*2*.71)/0.71
+(2/(exp(-2*rBP*t*L))-1)/(4*N*rBP*L)
+L=500e3
+(2/(exp(-2*rBP*t*L))-1)/(4*N*rBP*L)
+1/(2*N)
+log(1e6)
+log(10e6)
+http://www.nature.com/nature/journal/vaop/ncurrent/extref/nature11041-s1.pdf
+ [1] 0.29127963 0.17454100 0.12799214 0.09906631 0.08427703 0.06895849#
+ [7] 0.05965337 0.04846220 0.04576983 0.00000000
+1/(1:9)/(sum(1/(1:9)))
+40*5
+140*5
+4e5*2/1000
+my.freq.specs<-list(20)
+load("ms_standing_freq_spectrum_1.Robj")
+getwd()
+load("freq_spectrum/ms_standing_freq_spectrum_1.Robj")
+show(load("freq_spectrum/ms_standing_freq_spectrum_1.Robj"))
+length(my.freq.specs)
+dim(my.freq.specs[[1]])
+rowSums(my.freq.specs[[1]])
+rowSums(my.freq.specs[[2]])
+rowSums(my.freq.specs[[3]])
+sum(my.freq.specs[[3]])
+lapply(my.freq.specs,rowSums)
+sapply(my.freq.specs,rowSums)
+sapply(my.freq.specs,sum)
+tot.sites<-sapply(my.freq.specs,sum)
+plot(sapply(my.freq.specs,rowSums)[1,]/tot.sites)
+show(load("freq_spectrum/ms_standing_freq_spectrum_2.Robj"))
+sapply(my.freq.specs,sum)
+show(load("freq_spectrum/ms_standing_freq_spectrum_3.Robj"))
+sapply(my.freq.specs,sum)
+show(load("freq_spectrum/ms_standing_freq_spectrum_3.Robj"))
+sapply(my.freq.specs,sum)
+show(load("freq_spectrum/ms_standing_freq_spectrum_3.Robj"))
+sapply(my.freq.specs,sum)
+points(sapply(my.freq.specs,rowSums)[1,]/tot.sites,col="red")
+sapply(my.freq.specs,rowSums)[1,]
+points(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="red")
+sapply(my.freq.specs,sum)
+sapply(my.freq.specs,rowSums)[1,]
+length(sapply(my.freq.specs,sum))
+show(load("freq_spectrum/ms_standing_freq_spectrum_1.Robj"))
+plot(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="red")
+show(load("freq_spectrum/ms_standing_freq_spectrum_2.Robj"))
+points(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="green")
+show(load("freq_spectrum/ms_standing_freq_spectrum_1.Robj"))
+plot(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="red",ylab=c(0,1))
+plot(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="red",ylim=c(0,1))
+show(load("freq_spectrum/ms_standing_freq_spectrum_2.Robj"))
+points(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="green")
+show(load("freq_spectrum/ms_standing_freq_spectrum_3.Robj"))
+points(sapply(my.freq.specs,rowSums)[1,]/sapply(my.freq.specs,sum),col="purple")
+abline(h=1/(1/(1:10)))
+abline(h=1/sum(1/(1:10)))
+exp.times<-matrix(NA,nrow=20,ncol=10)#
+#
+my.freq.specs<-list(20)#
+recs<-seq(0,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance,f=0.01)#
+	}
+expected.freq.times.standing<-function(n,N,r,distance,f){#
+#
+ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=distance , f=f )    ### is of form [n,k]#
+my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+#
+#
+expected.t.l<-rep(NA,n)#
+for(l in 1:(n-1)){#
+#
+	freq.specs<-sapply(1:n,function(k){#
+		freq.spec<-rep(NA,n)#
+		freq.spec[1:k]<-(1/(1:k))#
+		return(freq.spec)#
+	})#
+	#
+	freq.specs<-t(freq.specs)#
+	#
+	terms.in.sum<-rep(0,n)#
+	for(k in 2:n){   ##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+			stirling.bit<-	my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+			p_l_given_k<-stirling.bit*choose(n,l)/choose(k,l)#
+			if(!is.finite(p_l_given_k)){cat("problem",l,k,j," "); p_l_given_k<-0 }  ##is this right?#
+			terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k*freq.specs[k,j]#
+			stopifnot(is.finite(terms.in.sum[k])) #
+		}#
+		#
+	}#
+#
+	expected.t.l[l]<-sum(terms.in.sum)#
 }#
-MakeVar ( 0.5 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p=0.45
-p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p <- numeric ( n_loc * n_rep )
-p
-tmp <- runif ( )
-tmp <- runif ( 1 )
-tmp
-blah <- integrate( function ( x ) 1/ x  , 0 , 1 )
-blah <- integrate( function ( x ) 1/ x  , 0.00001 , 1 )
-blah
-integrate( function ( x ) 1/ x  , 0.000001 , 1 )
-integrate( function ( x ) 1/ x  , 0.0000001 , 1 )
-integrate( function ( x ) 1/ x  , 0.00000001 , 1 )
-1/20000
-integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-tmp <- runif ( 1 )
-tmp
-denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-1/tmp
-(1/tmp)/denom
-denom
-names(denom)
-denom$value
-(1/tmp)/denom$value
-n_rep
-tmp
-p <- numeric ( n_loc * n_rep )
-i = 1 #
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
-hist ( p , breaks = 500 , freq = F)
-hist ( p , breaks = 50 , freq = F)
-tmp =0.0001
-denom
-denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-denom
-1/tmp
-(1/tmp)/denom$value
-tmp
-tmp = 0.0000001
-tmp < 1/20000
-p <- numeric ( n_loc * n_rep )#
-		i = 1 #
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
-			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
-hist ( p , breaks = 50)
-denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )
-denom
-p <- numeric ( n_loc * n_rep )#
-		i = 1 #
-		denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )#
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
+#
+return(expected.t.l)#
+}
+exp.times<-matrix(NA,nrow=20,ncol=10)#
+#
+my.freq.specs<-list(20)#
+recs<-seq(0,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance,f=0.01)#
+	}
+exp.times<-matrix(NA,nrow=20,ncol=10)#
+#
+my.freq.specs<-list(20)#
+recs<-seq(0,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance=1,f=0.01)#
+	}
+exp.times<-matrix(NA,nrow=20,ncol=10)#
+#
+my.freq.specs<-list(20)#
+recs<-seq(1,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance=1,f=0.01)#
+	}
+exp.times
+exp.times<-matrix(NA,nrow=20,ncol=9)#
+#
+#
+recs<-seq(1,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance=1,f=0.01)#
+	}
+exp.times<-matrix(NA,nrow=20,ncol=10)#
+#
+recs<-seq(1,200,length=20)#
+#
+for(my.rec.index in 1:length(recs)){#
+		exp.times[my.rec.index,]<- expected.freq.times.standing(n=10,N=10000,r=recs[my.rec.index]/10000,distance=1,f=0.01)#
+	}
+rowSums(exp.times)
+rowSums(exp.times,na.rm=TRUE)
+exp.times[,1]/rowSums(exp.times,na.rm=TRUE)
+lines(exp.times[,1]/rowSums(exp.times,na.rm=TRUE))

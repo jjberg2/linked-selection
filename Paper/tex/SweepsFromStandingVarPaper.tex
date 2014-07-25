@@ -181,8 +181,6 @@ p(l | j, ~k,~n) =
 p(\{a_1,\dots,a_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
 \end{equation}
 
-
-
 When we allow for recombination during the sweep this expression becomes more complex, but the same logic can be followed and write
 \begin{equation}
 p(l | n) = \sum_{S=1}^n P_{NR}(n-S; n) \sum_{k=1}^{n-S} p_{ESF}(k | R_f,n-S) \sum_{j=1}^{S+k} q_{j,S+k}

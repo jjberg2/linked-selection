@@ -1,5 +1,5 @@
 source ("SweepFromStandingSim.R")
-run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE){
+run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE,recom=FALSE){
 
 	my.file<-paste("mssel_f",n.sam,f.index,".out",sep="")
 
@@ -21,7 +21,9 @@ run.ms.f<-function(f.index,n.sam=2, get.site.density=TRUE){
 			if(get.site.density){ 
 				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> ",my.file,sep=""))
 				}else{   ##setup for the mo. to do freq. spectrum
-				system(paste("msseldir/mssel ",n.sam," 20 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r 200. 20000 > myseqdata",sep=""))
+				system(paste("msseldir/mssel ",n.sam," ",20," 0 ",n.sam," my.standing",f.index,".traj 0 -t 200. -r ",recom, " 2 > myseqdata",sep="")) 
+				spec<-get.freq.spec(n.sam,num.sims=20)
+				recover()
 			}
 		}
 	}
@@ -73,7 +75,7 @@ dev.off()
 
  
  for(f.index in 1:5){
- run.ms.f(f.index=f.index,n.sam=20)
+ run.ms.f(f.index=f.index,n.sam=10)
  }
  
 
@@ -93,9 +95,11 @@ for(f.index in 1:5){
 	lines(mut.density$x,mut.density$y/(5*100*20),col=f.index,lty=1,lwd=2)
 
 	f<-fs[f.index]
- 	ewens.dist.matrix<-make.ewens(n.tips=10,N=10000,intervals,r,f=f)
+	ESF.prob.k<-sapply(intervals,function(distance){EwensDist( n=n , N =N, r=r , distance=distance , f=f )[n,]})
+ 	
 	num.seg.sites.cond.i<-c(0,sapply(1:9,function(i){ sum(1/(1:i)) }))
-	num.seg.sites.r<-colSums(apply( ewens.dist.matrix,2,function(x){x*num.seg.sites.cond.i}))
+	num.seg.sites.r<-colSums(apply(ESF.prob.k,2,function(x){x*num.seg.sites.cond.i}))
+
 	lines(4*N*intervals*r,num.seg.sites.r,col=f.index,lty=2,lwd=2) 	
  	
  }
