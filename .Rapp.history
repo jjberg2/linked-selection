@@ -1,315 +1,794 @@
-library ( expm )#
-library ( combinat )#
-library(plyr)#
-MakeMatrices <- function ( states ) {#
+MakeVar ( 0.5 , 10000 , 0.01 , 2 )
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop ) {#
 	#recover()#
-	x <- y <- numeric ( 8 )#
-	x [ states[[1]] ] <- y [ states[[2]] ] <- 1#
-	S <- as.data.frame ( cbind ( x [ 1:4 ] , y [ 1:4 ] ) )#
-	W <- as.data.frame ( cbind ( x [ 5:8 ] , y [ 5:8 ] ) )#
-	S <- S [ order ( S$V1 , S$V2 , decreasing = T ) , ]#
-	W <- W [ order ( W$V1 , W$V2 , decreasing = T ) , ]#
-	return ( list ( S = S , W = W ) )#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
 }#
-one.locus.states <- c ( combn ( seq ( 1,8,1) , 2 , simplify = F ) , list ( 1,2,5,6 ) )#
-#one.locus.states <- split ( one.locus.states , rownames ( one.locus.states ) ); names ( one.locus.states ) <-NULL#
-two.locus.states <- expand.grid ( one.locus.states , one.locus.states )#
-state.matrices <- apply ( t ( two.locus.states ) , 2 , MakeMatrices )#
+MakeVar ( 0.5 , 10000 , 0.01 , 2 )
+ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )
+hist ( ts_mean , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
+var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )
+hist ( var_mean , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
+ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )
+hist ( ts_true , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
+var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
+hist ( var_mean , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
+var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
+hist ( var_mean , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
+par ( mfrow = c ( 1 ,2 ))
+hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )
+par ( mfrow = c ( 1 ,1 ))
+var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
+hist ( var_true , breaks = 50 , freq = F )
+curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
+rand = T
+if ( rand ) p <- runif ( n_rep )
+p
+new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )
+p
+p <- runif ( n_rep )
+p
+p <- runif ( n_rep )
+p
+n_loc = 100
+p <- runif ( n_loc * n_rep )
+length(p)
+p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_pop )
+p
+dim(p)
+p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
+dim(p)
+p[,1]
+p[,1] * diag ( 100 )
+p[,1] * (1-p[,1] )* diag ( 100 )
+apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , x  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
+x
+rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
+rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) )
+n_loc
+rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
+rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
+new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
+dim(new_ps)
+head(new_ps)
+new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
+new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
+vars_t <- apply ( new_ps , 2 , function ( x ) sum ( x * ( 1 - x ) ) )
+vars_t
+colSums ( new_ps * ( 1 - new_ps ) )
+vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
+p * ( 1 - p )
+colSums ( p * ( 1 - p ) )
+vars_t
+vars_0 <- colSums ( p * ( 1 - p ) )
+vars_0 - vars_t
+Fst * vars_0
+( vars_0 - vars_t ) / ( Fst * vars_0 )
+vars_start <- colSums ( p * ( 1 - p ) )
+Q
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , T , 100 )
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	recover()#
+	if ( rand ) {#
+		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		( vars_start - vars_t ) / ( Fst * vars_start )#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
 #
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
+p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
+p
+n_rep
+new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
+new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
+new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
+vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
+vars_t
+vars_start <- colSums ( p * ( 1 - p ) )
+vars_start
+( vars_start - vars_t ) / ( Fst * vars_start )
+my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
+hist ( my.stat , breaks = 50 , freq = F)
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
 	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+Q
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+dt
+Q
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+mean ( my.stat )
+var ( my.stat )
+Q
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
 	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
+new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
+new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 1000 )
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 200 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
+sd ( my.stat)
+curve ( dnorm ( x , 1, 0.83) , add = T , col = "red")
+qqplot ( my.stat , dnorm ( x , 1, 0.83))
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
 }
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 300 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+p
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
+		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+		recover()	#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+mean ( my.stat )
+var ( my.stat )
+sd ( my.stat )
+p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
+		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
+warnings()
+p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
+new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
+new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
+new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
+vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
+vars_start <- colSums ( p * ( 1 - p ) )
+vars_start
+vars_t
+vars_start
+my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+p
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+vars_start - vars_t
+hist ( vars_start - vars_t , breaks = 50 , freq = F )
+Q
+MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
+n_loc
+Q
+MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
+	if ( rand ) {#
+		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
+		#p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
+		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
+		hist ( my.stat , breaks = 50 , freq = F)#
+		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
+		recover()	#
+#
+		mean ( my.stat )#
+		var ( my.stat )#
+		sd ( my.stat )#
+	} else {#
+	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
+	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	}#
+	p_bars <- rowMeans ( new_ps )#
+	par ( mfrow = c ( 2,2))#
+	recover()#
+	#####
+	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( ts_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
+	hist ( var_mean , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
+	#####
+	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
+	hist ( ts_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	#####
+	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
+	hist ( var_true , breaks = 50 , freq = F )#
+	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+#
+}#
+MakeVar ( 0.5 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+p=0.45
+p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
+		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
+		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
+		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
+		vars_start <- colSums ( p * ( 1 - p ) )#
+		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
+hist ( my.stat , breaks = 50 , freq = F)
+curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
+p <- numeric ( n_loc * n_rep )
+p
+tmp <- runif ( )
+tmp <- runif ( 1 )
+tmp
+blah <- integrate( function ( x ) 1/ x  , 0 , 1 )
+blah <- integrate( function ( x ) 1/ x  , 0.00001 , 1 )
+blah
+integrate( function ( x ) 1/ x  , 0.000001 , 1 )
+integrate( function ( x ) 1/ x  , 0.0000001 , 1 )
+integrate( function ( x ) 1/ x  , 0.00000001 , 1 )
+1/20000
+integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
+tmp <- runif ( 1 )
+tmp
+denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
+1/tmp
+(1/tmp)/denom
+denom
+names(denom)
+denom$value
+(1/tmp)/denom$value
+n_rep
+tmp
+p <- numeric ( n_loc * n_rep )
 i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-state.matrices
-i = 1 #
-while ( i < ( length ( state.matrices ) + 1 ) ) {#
-	j = i + 1#
-	current <- state.matrices [[ i ]]#
-	while ( j < length ( state.matrices ) + 1 ) {#
-		test <- state.matrices [[ j ]]#
-		if ( all ( c ( current$S == test$S ) & c (current$W == test$W) ) ) {#
-			state.matrices [[ j ]] <- NULL#
-		} else {#
-			j = j + 1#
-		}#
-	}#
-	#if ( i == 44 ) stop()#
-	if ( sum ( unlist ( current ) ) < 4 ) {#
-		state.matrices [[ i ]] <- NULL#
-	}#
-	i = i + 1#
-	#head(state.matrices [ - c (1:i)])#
-}
-state.matrices
-GetNumerator <- function ( state.one , state.two , f, N , r_x , r_y ) {#
-	#if ( recover.on ) recover()#
-	test.state <- rbind ( state.one$S [ 1 , ] , state.one$W )#
-	test.state <- test.state [ order ( test.state$V1 , test.state$V2 , decreasing = T ) , ]#
-	test.state <- test.state [ 1 : 4 , ]#
-	if (#
-				# if only one lineage is left on selected background, mutate#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 0 &#
-				all ( test.state == state.two$W )#
-			) {#
-		return ( 1 )#
-	} else if (#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1#
-			) {#
-		return ( 0 )#
+		while ( i <= n_loc * n_rep ) {#
+			tmp <- runif ( 1 )#
+			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
+			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
+				p [ i ] <- tmp#
+				i <- i + 1#
+			} else {#
+				next#
 			}#
-	else if ( #
-				# if all lineages reside on wild type background, do nothing w.p. one#
-				all ( state.one$W == state.two$W ) &#
-				sum ( state.one$S ) == 0 & #
-				sum ( state.two$S ) == 0#
-			) {#
-		return ( 1 )#
-	} else if ( #
-				# otherwise, cannot transition to identical state; probability zero#
-				all ( c ( state.one$S == state.two$S ) , c ( state.one$W == state.two$W ) ) #
-			) {#
-		return ( 0 )#
-	} else if ( #
-				## recombination at x locus off of the selected background into wt background#
-				all ( colSums ( state.one$S ) - c ( 1 , 0 ) == ( colSums ( state.two$S ) ) ) &#
-				all ( colSums ( state.one$W ) + c ( 1 , 0 ) == ( colSums ( state.two$W ) ) ) &#
-				sum ( rowSums ( state.one$W ) > 0 ) + 1 == sum ( rowSums ( state.two$W ) > 0 ) &#
-				(#
-					sum ( rowSums ( state.one$S ) > 0 ) == sum ( rowSums ( state.two$S ) > 0 ) |#
-					sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 )#
-				)#
-				## when there are exchangeable alleles at the x locus#
-			) {#
-				if ( #
-					(#
-						all ( rowSums ( state.one$S ) == c ( 2 , 2 , 0 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 1 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 1 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					)#
-				) {#
-					return ( 2 * r_x * ( 1 - f ) )#
-				} else {#
-					# and when there are not#
-					return ( r_x * ( 1 - f ) )#
-				}#
-	} else if ( #
-				## recombination at y locus off of the selected background into wt background#
-				all ( colSums ( state.one$S ) - c ( 0 , 1 ) == ( colSums ( state.two$S ) ) ) &#
-				all ( colSums ( state.one$W ) + c ( 0 , 1 ) == ( colSums ( state.two$W ) ) ) &#
-				sum ( rowSums ( state.one$W ) > 0 ) + 1 == sum ( rowSums ( state.two$W ) > 0 ) &#
-				(#
-					sum ( rowSums ( state.one$S ) > 0 ) == sum ( rowSums ( state.two$S ) > 0 ) |#
-					sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 )#
-				)#
-				## when there are exchangeable alleles at the y locus#
-			) {#
-				if ( #
-					(#
-						all ( rowSums ( state.one$S ) == c ( 2 , 2 , 0 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 0 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 1 , 2 ) )#
-					) |#
-					(	all ( rowSums ( state.one$S ) == c ( 1 , 1 , 1 , 1 ) ) & #
-						all ( colSums ( state.one$S ) == c ( 2 , 2 ) )#
-					)#
-				) {#
-					return ( 2 * r_y * ( 1 - f ) )#
-				} else {#
-					# and when there are not#
-					return ( r_y * ( 1 - f ) )#
-				}#
-	} else if ( #
-				## coalescence when 4 possible events give the same transition#
-				sum ( rowSums ( state.one$S ) > 0 ) == 4 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 3 &#
-				all ( colSums ( state.one$S ) == c ( 2 , 2 ) ) &#
-				all ( colSums ( state.two$S ) == c ( 2 , 2 ) ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 4 / ( 2 * N * f ) )#
-	} else if (#
-				## coalescence when two possible events give the same transition#
-				sum ( rowSums ( state.one$S ) > 0 ) == 3 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 2 &#
-				( (#
-					all ( colSums ( state.one$S ) == c ( 2 , 1 ) ) &#
-					all ( colSums ( state.two$S ) == c ( 2 , 1 ) ) #
-				) |#
-				(#
-					all ( colSums ( state.one$S ) == c ( 1 , 2 ) ) &#
-					all ( colSums ( state.two$S ) == c ( 1 , 2 ) )#
-				) ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 2 / ( 2 * N * f ) )#
-	} else if (#
-				# all other coalescent events on the selected background occur w.p. 1/2Nf#
-				sum ( rowSums ( state.one$S ) > 0 ) - 1 == sum ( rowSums ( state.two$S ) > 0 ) &#
-				all ( state.one$W == state.two$W )#
-			) {#
-		return ( 1 / ( 2 * N * f ) )		#
-	} else if (#
-				# coalescence on the wild type background when alleles split evenly across backgrounds at both loci#
-				all ( rowSums ( state.one$W ) == c ( 1 , 1 , 0 , 0 ) ) &#
-				all ( colSums ( state.one$W ) == c ( 1 , 1 ) ) &#
-				all ( rowSums ( state.two$W ) == c ( 2 , 0 , 0 , 0 ) ) &#
-				all ( colSums ( state.two$W ) == c ( 1 , 1 ) ) &#
-				all ( state.one$S == state.two$S )#
-			){#
-		return ( 1 / ( 2 * N * ( 1 - f ) ) )#
-	} else {#
-		return (0)#
-	}#
-}#
-#
-GetDenominator <- function ( state.one , state.two , f, N , r_x , r_y ) {#
+		}
+p
+hist ( p , breaks = 500 , freq = F)
+hist ( p , breaks = 50 , freq = F)
+tmp =0.0001
+denom
+denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
+denom
+1/tmp
+(1/tmp)/denom$value
+tmp
+tmp = 0.0000001
+tmp < 1/20000
+p <- numeric ( n_loc * n_rep )#
+		i = 1 #
+		while ( i <= n_loc * n_rep ) {#
+			tmp <- runif ( 1 )#
+			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
+			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
+			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
+				p [ i ] <- tmp#
+				i <- i + 1#
+			} else {#
+				next#
+			}#
+		}
+p
+hist ( p , breaks = 50)
+denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )
+denom
+p <- numeric ( n_loc * n_rep )#
+		i = 1 #
+		denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )#
+		while ( i <= n_loc * n_rep ) {#
+			tmp <- runif ( 1 )#
+			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
+			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
+				p [ i ] <- tmp#
+				i <- i + 1#
+			} else {#
+				next#
+			}#
+		}
+p
+run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
+	recover()#
+	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
+	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
 	#recover()#
-	test.state <- rbind ( state.one$S [ 1 , ] , state.one$W )#
-	test.state <- test.state [ order ( test.state$V1 , test.state$V2 , decreasing = T ) , ]#
-	test.state <- test.state [ 1 : 4 , ]#
-	if (#
-				sum ( rowSums ( state.one$S ) > 0 ) == 1 &#
-				sum ( rowSums ( state.two$S ) > 0 ) == 0 &#
-				all ( test.state == state.two$W )#
-			) {#
-		return ( 1 )#
-	} else if ( #
-				# if all lineages reside on wild type background, do nothing w.p. one#
-				all ( state.one$W == state.two$W ) &#
-				sum ( state.one$S ) == 0 & #
-				sum ( state.two$S ) == 0#
-			) {#
-		return ( 1 )#
-	} else {#
-		rec_x <- colSums ( state.one$S ) [ 1 ] * r_x * ( 1 - f )#
-		rec_y <- colSums ( state.one$S ) [ 2 ] * r_y * ( 1 - f )#
-		coal_s <- choose ( sum ( rowSums ( state.one$S ) > 0 ) , 2 ) / ( 2 * N * f )#
-		coal_w <- choose ( sum ( rowSums ( state.one$W ) > 0 ) , 2 ) / ( 2 * N * ( 1 - f ) )#
-		return ( rec_x + rec_y + coal_s + coal_w )#
+	ld.stats <- list ()#
+	for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 100000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
 	}#
-}#
-LDCalc <- function ( f , N , r_x , r_y , state.matrices ) {#
+	# for ( i in 1 : length ( my.trajectories ) ) {#
+		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	# }#
+	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
+		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
+			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
+			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
+			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
+			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
+			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
+		# }#
+		# print ( i )#
+	# }#
+	# return ( list ( sig.sq , r.sq ) )#
+}
+run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
 	#recover()#
-	transition.mat <- matrix ( NA , nrow = 20 , ncol = 20 )#
-	for ( i in 1 : 20 ) {#
-		for ( j in 1 : 20 ) {#
-			num <- GetNumerator (state.matrices [[ i ]] , state.matrices [[ j ]] , f , N , r_x , r_y )#
-			denom <- GetDenominator (state.matrices [[ i ]] , state.matrices [[ j ]] , f , N , r_x , r_y )#
-			transition.mat [ i , j ] <- num / denom#
-		}#
+	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
+	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
+	#recover()#
+	ld.stats <- list ()#
+	for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 100000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
 	}#
-	# default neutral values#
-	tt_ijij_w <- ( 36 + 14 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	tt_ijik_w <- ( 24 + 13 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	tt_ijkl_w <- ( 22 + 13 * N * ( r_x + r_y ) + ( N * ( r_x + r_y ) )^2 ) / ( 18 + 13 * N * ( r_x + r_y ) )#
-	phi_a <- ( c ( 1 , rep ( 0 , 19 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	phi_b <- ( c ( 0 , 1 , rep ( 0 , 18 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	phi_c <- ( c ( 0 , 0 , 0 , 1 , rep ( 0 , 16 ) ) %*% ( transition.mat %^%10 ) ) [ 18 : 20 ]#
-	# reweighted selected values#
-	tt_ijij_s <- sum ( phi_a * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	tt_ijik_s <- sum ( phi_b * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	tt_ijkl_s <- sum ( phi_c * c ( tt_ijij_w , tt_ijik_w , tt_ijkl_w ) )#
-	( tt_ijij_s - 2 * tt_ijik_s + tt_ijkl_s ) / ( 1 + tt_ijkl_s )#
+	# for ( i in 1 : length ( my.trajectories ) ) {#
+		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	# }#
+	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
+		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
+			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
+			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
+			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
+			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
+			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
+		# }#
+		# print ( i )#
+	# }#
+	# return ( list ( sig.sq , r.sq ) )#
 }
-my.freqs <- seq ( 0.01 , 0.1 , 0.01 )#
-my.dist <- seq ( 0 , 10^-3 , length.out = 100 ) #
-my.ld <- list ()#
-for ( j in 1 : 10 ) {#
-	my.ld [[ j ]] <- numeric ( 100 )#
-	for ( i in 1 : 100 ) {#
-		my.ld [[ j ]] [ i ] <-  LDCalc ( f = my.freqs [ j ] , N = 100000 , r_x = my.dist [ i ] , r_y = my.dist [ i ] , state.matrices )#
+run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
+	#recover()#
+	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
+	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
+	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
+	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
+	#recover()#
+	ld.stats <- list ()#
+	for ( i in 1 : length ( my.trajectories ) ) {#
+		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
+		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
+		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
+		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
 	}#
+	# for ( i in 1 : length ( my.trajectories ) ) {#
+		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	# }#
+	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
+	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
+		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
+			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
+			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
+			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
+			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
+			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
+		# }#
+		# print ( i )#
+	# }#
+	# return ( list ( sig.sq , r.sq ) )#
 }
-my.ld
-gewwd()
-getwd()
-setwd("Documents/Academics/StandingSweep/")
-save ( my.ld , file = "LDvals.Robj")
-cols <- rainbow ( 10 )
-cols
-plot ( ld [[ 1 ]] , type = "l" , col = cols [ i ] )
-plot ( my.ld [[ 1 ]] , type = "l" , col = cols [ i ] )
-plot ( my.ld [[ 1 ]] , type = "l"  )
-matplot ( my.ld , type = "l")
-matplot ( do.call ( rbind, my.ld ) , type = "l")
-matplot ( do.call ( cbind, my.ld ) , type = "l")
+run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
+for ( i in 1 : length ( my.trajectories ) ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+	}
+for ( i in 1 : 100 ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+}
+LDSimCalc <- function ( file.name ) {#
+	#recover()#
+	my.con <- file ( file.name )#
+	open ( my.con )#
+	my.lines <- readLines ( my.con )#
+	close ( my.con )#
+	pos.line.id <- grep ( "pos" , my.lines )#
+	pos.line <- my.lines [ pos.line.id ]#
+	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
+	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
+	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
+	geno.mat <- do.call ( rbind , split.geno.lines )#
+	D.stat.sq <- cov ( geno.mat )^2#
+	freqs <- colMeans ( geno.mat )#
+	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
+	var.prod.mat <- rt.vars %o% rt.vars#
+	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
+}
+for ( i in 1 : 100 ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+}
+ld.stats = list()
+for ( i in 1 : 100 ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+}
+n.loc=40
+for ( i in 1 : 100 ) {#
+		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
+		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+}
+ld.stats
+length(ld.stats[[1]])
+dim(length(ld.stats[[1]][[1]]))
+dim(ld.stats[[1]][[1]])
+dim(ld.stats[[1]][[2]])
+dim(ld.stats[[1]][[3]])
+dim(ld.stats[[1]][[4]])
+dim(ld.stats[[1]][[3]])
+ld.stats[[1]][[3]]
+ld.stats[[1]][[4]]
