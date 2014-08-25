@@ -253,6 +253,21 @@ gives the probability that $g$ out of $j$ derived alleles are found on singleton
 \subsection{Patterns of Haplotypic Variation}
 
 \jb{Write some nice intro here}
+%Consider the task of both detecting and distinguishing selective sweeps of the classical ``hard'', standing, and multiple hit ``soft'' cases. A large number of methods now exist for detecting classic hard sweeps \jb{refs}, and a few approaches designed specifically for soft sweeps have been developed as well \jb{cite Nandita and Ben here}.
+%
+%We consider the problem of doing inference on sweep parameters (where the ``type'' of sweep is included as a ``parameter'') in a hypothetical situation in which we have access to the maximal amount of information which could reasonably be obtained directly from sequence data. In other words, we imagine an ``infinite haplotypes'' model, in which all chromosomes sampled at the completion of the sweep can be assigned to a unique ancestral chromosome which existed immediately prior to the beginning of the sweep. 
+
+We have described a model for the marginal genealogical and recombinational history at a site some distance from a standing sweep. It is of some interest to consider patterns of haplotypic diversity we expect to observe along the sequence for a single realization of a standing sweep, or in other words the \textit{joint} history of the sequence in the region surrounding beneficial allele. If we again follow the custom of first ignoring recombination during the sweep phase 
+
+Under this model, for both hard sweeps and standing sweeps, all chromosomes at the selected site trace their ancestry to the individual ancestral chromosome on which the beneficial mutation originally arose, and thus there is only a single haplotype at the selected site. As we imagine moving along the sequence away from the selected site, we would eventually encounter a transition from a single haplotype to two haplotypes (with some number of chromosomes partitioned into each haplotype group), and a subsequent transition from two haplotypes to three haplotypes (which arises from splitting one of the two existing haplotypes into two subgroups). If we consider moving further and further out from the selected site, we would eventually reach the point where there were $n$ distinct haplotypes in a sample of $n$ chromosomes, where each subsequent increase in the number of haplotypes as we move away from the selected site results from a partitioning of one existing haplotype into two sub-haplotypes.
+
+In principle, then, all of the information about a given sweep is contained in the distances at which transitions in the partition scheme occur, as well as the path the sequence takes through partition space (e.g. whether the first transition creates a partition of \{6,4\} or \{7,3\}, etc.)
+
+
+These transitions arise due to recombination events in on the (unknown) genealogy as we move away from the selected site. Continuing to ignore neutral mutations which have occurred since the mutation(s) which gave rise to the sweep, all of the information about the sweep is contained jointly in the distances 
+
+The transitions 
+
 We want to be able to describe patterns of haplotypic variation surrounding standing sweeps. In particular, we are interested in the usefulness of haplotype statistics to distinguish three different types of ``full sweep'': the classical hard sweep, the multiple mutation soft sweep, and the soft sweep from standing variation. We adopt the convention of querying the number and partition of haplotypes which are present within a window with the left boundary at the position of the selected mutation, and the right boundary some distance away. We will argue that the majority (but not all) of the information which can be used to distinguish these types of sweeps can be accessed by considering how the number and partition of haplotypes changes as the right boundary of the window is increased from zero until we reach the point at which all chromosomes are present on distinct haplotypes (the point beyond which there is no further information about the sweep).
 
 Further, we adopt an infinite haplotypes perspective, in which every recombination event which transfers genetic material from the background of the ancestral allele to the beneficial alleles results in the creation of a distinct haplotype. In this model, most of the information about the parameters of the sweep (including that of which type of sweep it is), are contained jointly in the set of transitions in the haplotype partition scheme as one moves away from the beneficial locus, along with the list of their locations along the sequence. 
@@ -262,13 +277,20 @@ As we are considering the haplotype partition largely in the context of inferenc
 \jb{Note that there is also additional information present in the locations and frequencies, and correlations between mutations which have occurred on the background of the beneficial allele. We will focus for the most part on the haplotype partition scheme as defined solely by recombination events, and then comment briefly on the role of new mutations occurring on the beneficial background.}
 
 
-\subsubsection*{The Classic Hard Sweep Case}
 
-In the case of a classic hard sweep, we consider the construction of the haplotype partition as a process along the sequence, beginning with a single haplotype at the selected site, and transitioning as we move away through states where there are two, three, four, etc. haplotypes, until we eventually transition through to the state where all sampled chromosomes are found on independent haplotypes. Under the binomial approximation, as used by \cite{Fay:2000usa,others}, the expected distance in base pairs to the transition from one haplotype to two is  simply $\frac{1}{n\mathcal{T}_s r_{BP}}$, and in general the expected distance between the transition from $i$ haplotypes to $i+1$ haplotypes is $\frac{1}{\left(n-i+1\right)\mathcal{T}_s r_{BP}}$. Under the binomial approximation, all transitions simply result from one individual from the core haplotype becoming a singleton due to a recombination event which occurred before the multiple merger at the beginning of the sweep, and thus all of the information about the sweep is contained in the joint distribution on the distances at which the transitions occur.
+
+
+\subsubsection*{The Classic Hard Sweep Case}
+In the case of a classic hard sweep, we consider the construction of the haplotype partition as a process along the sequence, beginning with a single haplotype at the selected site, and transitioning as we move away through states where there are two, three, four, etc. haplotypes, until we eventually transition through to the state where all sampled chromosomes are found on independent haplotypes. 
+
+
+Under the binomial approximation for the classic hard sweep case, as used by \cite{Fay:2000usa,others}, the expected distance in base pairs to the transition from one haplotype to two is  simply $\frac{1}{n\mathcal{T}_s r_{BP}}$, and in general the expected distance between the transition from $i$ haplotypes to $i+1$ haplotypes is $\frac{1}{\left(n-i+1\right)\mathcal{T}_s r_{BP}}$. Under the binomial approximation, all transitions simply result from one individual from the core haplotype becoming a singleton due to a recombination event which occurred before the multiple merger at the beginning of the sweep, and thus all of the information about the sweep is contained in the joint distribution on the distances at which the transitions occur.
+
+In fact, all coalescence does not occur instantaneously at the base of a classic hard sweep, especially when the sample is even moderately large (i.e. $n > 20$), and thus there is an opportunity for recombination events to occur on internal branches of the genealogy \cite{Etheridge06,Barton98}. This results in transitions in the partition scheme that result in a class of additional non-singleton haplotypes, and their eventual breakdown due to further recombination events lower in the genealogy.
 
 \subsubsection*{Standing Sweep Case}
 
-In the case of the standing sweep, we start with a single haplotype at the selected site. Moving from left to right along the sequence, we eventually encounter the first recombination event which 
+In the case of the standing sweep, the dynamics of the partition scheme in the vicinity of the selected site are dominated by events occurring during the standing phase, while at greater distances the partition scheme is dominated by recombination events occurring in the sweep phase.
 
 \subsection{Inference Concerns}
 
