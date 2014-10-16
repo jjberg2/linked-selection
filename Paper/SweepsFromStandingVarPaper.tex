@@ -188,7 +188,13 @@ When we allow for recombination during the sweep this expression becomes more co
 p(l | n) = \sum_{S=1}^n P_{NR}(n-S; n) \sum_{k=1}^{n-S} p_{ESF}(k | R_f,n-S) \sum_{j=1}^{S+k} q_{j,S+k}
 \sum_{i=1}^{l \wedge S} B(i \mid S,j/(S+k)) p(l-i \mid j-i,k,n-S )
 \end{equation}
-where A$\wedge$B denotes the min(A,B). Here $S$ lineages recombine out of the selected phase, and our remaining $n-S$ lineages are partitioned into $k$ families due to recombination in the neutral phase. Out of our $S$ singleton lineages $i$ each independently choose to be of type $1$ with probability $j/(S+k)$ (i.e. binomially $ B(i \mid S,j/(S+k))$). Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
+
+where A$\wedge$B denotes the min(A,B). Here $S$ lineages recombine out of the selected phase, and our remaining $n-S$ lineages are partitioned into $k$ families due to recombination in the neutral phase. Out of our $S$ singleton lineages $i$ each independently choose to be of type $1$ with probability $j/(S+k)$ (i.e. binomially $ B(i \mid S,j/(S+k))$). Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.
+i.e. the probability that our $k$ recombinant lineages divide our sample into $l$ derived alleles and $n-l$ alleles, summing  $\{a_1,\dots,a_k\}$. 
+
+\subsubsection{LD notes}
+
+
 
 %  In our sample of two, because we assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero, the two lineages recombine out of the selected phase independently, and thus
 % $$P_{norec,s,2} = e^{-2r\mathcal{T}_{\left(s,f\right)}}.$$
