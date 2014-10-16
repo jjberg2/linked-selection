@@ -4,9 +4,6 @@
 #For now, don't need to track random figures.
 Figures/*
 
-#Don't need to track mssel
-Scripts/mssel*
-
 #Or autosaved files
 *(Autosaved)*
 
@@ -17,3 +14,8 @@ Scripts/seedms
 #Don't need to track Maize Data
 MaizeData/
 Scripts/Objects
+
+Output/*
+Working/*
+LS\ Notebook/*
+Scripts/*
