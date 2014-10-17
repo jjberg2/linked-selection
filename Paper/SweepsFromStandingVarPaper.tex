@@ -112,11 +112,20 @@ Note this does not depend on $R_f$, which gives the classic result that the numb
 
 \subsubsection{Selected phase}
 Assume that we are at a neutral site a genetic distance $r$ away from the selected site. 
-If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $1-r\left(1-X(t)\right)$. The probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep is given by 
+If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $1-r\left(1-X(t)\right)$. The probability that a single lineage fails to recombine off the selected background at any point during the course of the sweep is given by 
 \begin{equation}
-P_{NR} \prod_{t=0}^{\tau} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau}(1-X\left(t\right))\mathrm{d} t\left(t\right) \right)
+	P_{NR} = \prod_{t=0}^{\tau} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau}(1-X\left(t\right))\mathrm{d} t\left(t\right) \right)
 \end{equation}
-for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep is $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If our selected allele has an additive avantage in terms of relative fitness of $s/2$ in heterozygotes and $s$ in homozygotes, then our allele's deterministic trajectory through the population is logistic and $\mathcal{T}_{\left(s,f\right)} =???$
+for $r \ll 1$, with
+\begin{equation}
+	X\left(0\right) = f
+\end{equation}
+gives the frequency of the allele when the sweep starts, and
+\begin{equation}
+	\tau = \frac{ln\left(\left(2N - 1\right)\frac{1-f}{f}\right)}{s}
+\end{equation}
+approximates the time it takes for the allele to reach fixation, starting from frequency $f$.
+We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep is $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If our selected allele has an additive avantage in terms of relative fitness of $s/2$ in heterozygotes and $s$ in homozygotes, then our allele's deterministic trajectory through the population is logistic and $\mathcal{T}_{\left(s,f\right)} =???$
 
 We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage makes an independent choice of whether it recombines out of the sweep, so that the probability that $i$ out of $k$ lineages fail to escape off the sweep background is
 \begin{equation}
