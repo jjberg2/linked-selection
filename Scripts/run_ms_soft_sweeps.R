@@ -1,10 +1,14 @@
-source('~/Documents/Academics/CoopLab/Projects/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+#source('~/Documents/Academics/CoopLab/Projects/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+source('~/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R', chdir = TRUE)
 
 
 real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
-my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T ) )
-save ( my.runs , file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata")
 
+my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T ) )
+
+
+#save ( my.runs , file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata")
+load ( "~/Documents/Academics/StandingSweep/Sims/11000freq.trajectories.RData")
 
 
 run.ms.f <- function ( runs , n.sam = 2  , N , path , get.site.density = TRUE , recom = FALSE ) {
@@ -14,7 +18,7 @@ run.ms.f <- function ( runs , n.sam = 2  , N , path , get.site.density = TRUE , 
 	system ( paste ( "rm " , my.file ) )
 	#for ( run in 1:5 ) {
 	#	load ( paste ( "run_cond_lost_" , run , ".Robj" , sep = "" ) )
-	for ( i in 1: nrow ( runs ) ) {
+	for ( i in 1 : nrow ( runs ) ) {
 		my.freqs <- runs [ i , runs [ i , ] > 0 ]
 		my.times <- 0 : length ( my.freqs )
 		my.freqs <- c ( my.freqs , 0 )
@@ -37,12 +41,13 @@ run.ms.f <- function ( runs , n.sam = 2  , N , path , get.site.density = TRUE , 
 }
 
 
-run.ms.f ( runs = my.runs [[ 1 ]] [[ 1 ]] , n.sam = 2 , N = 10000 , path = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/" )
+# example of running one set of frequencies
+run.ms.f ( runs = my.runs [[ 1 ]] [[ 1 ]] , n.sam = 2 , N = 10000 , path = "~/Documents/Academics/StandingSweep" )
 
-load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )
+#load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )
 
 for ( f.index in 1 : length ( real.fs ) ) {
-	run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] , n.sam = 20 , N = 10000 , path = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/" )
+	run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] , n.sam = 12 , N = 10000 , path = "~/Documents/Academics/StandingSweep/" )
 }
 
 
