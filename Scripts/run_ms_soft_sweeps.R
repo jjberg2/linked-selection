@@ -1,5 +1,5 @@
-#source('~/Documents/Academics/CoopLab/Projects/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
-source('~/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+source('~/Documents/Academics/CoopLab/Projects/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+#source('~/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R', chdir = TRUE)
 source('~/Documents/Academics/StandingSweep/Scripts/run.ms.f.R', chdir = TRUE)
 
 
