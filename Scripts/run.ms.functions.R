@@ -40,3 +40,41 @@ run.ms.f <- function ( runs , n.sam = 2  ,f.index, N , path , get.site.density =
 	}
 	if (! get.site.density ) return(my.specs)
 }
+
+
+get.mut.density<-function(file){
+	myres = scan(file)
+	##myres*theta, note range of smoothing
+	myres<-myres*200
+	
+	mydens = density(myres,from=3,to=190,bw=2.0,na.rm=T)
+	mydens$y<-mydens$y*length(myres)
+	return(mydens)
+}
+
+get.freq.spec<-function(n,num.sims, path){
+	a<-system(paste("grep segsites ", path,"myseqdata",sep=""),intern=TRUE)
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
+	polymorph<- seg.sites>0
+	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	
+	freq.specs<-sapply(0:(num.sims-1),function(iter){		
+		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}
+		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)
+#		print(positions[1])
+#		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		
+		seqs.raw<-scan(paste(path, "Sims/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})
+		colnames(seqs)<-NULL
+		seqs<-t(seqs)
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}
+		mut.freq<-colSums(seqs)
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})
+		return(freq.spec)
+	})
+return(freq.specs)
+}
+
+
