@@ -5,8 +5,8 @@ library("ape")
 turn.on.recovers=FALSE
 
 StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
-	options ( error = recover )
-	#recover()
+	#options ( error = recover )
+	
 	
 	
 	
@@ -104,7 +104,8 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 }
 
 SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
-	
+	options ( error = recover )
+	#recover()
 	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
 	neutral.freq.matrix <- list ( rep ( f , reps ) )

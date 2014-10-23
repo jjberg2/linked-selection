@@ -1,16 +1,3 @@
-#source('~/Documents/Academics/CoopLab/Projects/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
-
-
-real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
-#my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.01 , f = x , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T ) )
-#save ( my.runs , file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata")
-
-load( file = "~/../Shared/11000freq.trajectories.Rdata")  #graham's work machine
-#load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )    ##Jeremy's machine
-
-#Sys.info()["nodename"]
-#path = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/"  ##Jeremy's machine
-path = "~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/" #graham's work machine
 
 
 run.ms.f <- function ( runs , n.sam = 2  ,f.index, N , path , get.site.density = TRUE , recom = FALSE ) {
@@ -51,18 +38,14 @@ run.ms.f <- function ( runs , n.sam = 2  ,f.index, N , path , get.site.density =
 
 
 
+# example of running one set of frequencies
+#run.ms.f ( runs = my.runs [[ 1 ]] [[ 1 ]] , n.sam = 2 , N = 10000 , path = "~/Documents/Academics/StandingSweep" )
 
+#load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )
 
-get.mut.density<-function(file){
-	myres = scan(file)
-	##myres*theta, note range of smoothing
-	myres<-myres*200
-	
-	mydens = density(myres,from=3,to=190,bw=2.0,na.rm=T)
-	mydens$y<-mydens$y*length(myres)
-	return(mydens)
-}
-
+#for ( f.index in 1 : length ( real.fs ) ) {
+#	run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] , n.sam = 12 , N = 10000 , path = "~/Documents/Academics/StandingSweep/" )
+#}
 get.freq.spec<-function(n,num.sims, path){
 	a<-system(paste("grep segsites ", path,"Sims/myseqdata",sep=""),intern=TRUE)
 	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
@@ -89,22 +72,6 @@ return(freq.specs)
 }
 
 
-##setup for BATCH put inside if FALSE after
-
-recoms<- seq(1,200,length=20)
-f.freq.spec<-list()
-for(f.index in 1:length(real.fs)){
-	print(f.index)
-	collect.freq.spec<-numeric()
-	for(recom in recoms){
-		cat("recom",recom,"\n")
-		my.freqs.specs<- run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] ,f.index=1, n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)
-		collect.freq.spec<-cbind(collect.freq.spec,rowMeans(my.freqs.specs))
-		save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)
-	}
-	f.freq.spec[[f.index]]<-collect.freq.spec
-	save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)
-}
 
 if(FALSE){
 run.ms.f ( runs = my.runs [[ 1 ]] [[ 1 ]] ,f.index=1, n.sam = 2 , N = 10000 , path = path )
