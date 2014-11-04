@@ -182,6 +182,9 @@ Now incorporating recombination during the sweep our expected pairwise coalescen
 as to avoid (near) instantaneous coalescence our pair of lineages could either recombine either during the sweep or during the standing phase. The expected level of pairwise diversity as we move away from a sweep is given by $2\mu \mathbb{E}(T_2)$
 In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
 
+\begin{figure}
+	\includegraphics[width = \textwidth]{../Paper_Figures/pi_density.pdf}
+\end{figure}
 
 We can extend this idea of conditioning on the number of lineages that escape the sweep to calculate the expected total time in the genealogy as we move away from the \fancyB locus. Conditional on  $k$ independent lineages escaping the sweep, the expected total time in the genealogy is $2N \sum_{\ell=1}^{k-1} 1/\ell$, the standard result for a neutral coalescent with $k$ lineages \citep{Watterson}. Ignoring for a moment recombination during the sweep phase, the probability that $k$ lineages escape the sweep is the probability of $k$ alleles in a sample of $n$ under the ESF, $p_{ESF}(k\mid R_f,n)$ (under our approximation). The expected time in the genealogy a distance $r$ away from the selected site is therefore
 \begin{equation}
