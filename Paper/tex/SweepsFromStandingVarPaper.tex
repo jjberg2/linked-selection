@@ -21,6 +21,8 @@
 
 \newcommand{\var}{\mathop{\mbox{Var}}}
 \newcommand{\cov}{\mathop{\mbox{Cov}}}
+\newcommand{\fancyN}{$\mathcal N$ }
+\newcommand{\fancyB}{$\mathcal B$ }
 \newcommand{\gc}[1]{{\it \color{red} (#1)} }
 \newcommand{\jb}[1]{{\it\color{blue} (#1)} }
 \def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}
@@ -49,187 +51,331 @@ $^3$ Department of Evolution and Ecology, University of California, Davis\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
+Understanding complex relationship between demography, natural selection, and DNA variation a major goal of evolutionary biology.
 
+Now commonly recognized phenomenon resulting from strongish natural selection is the selective sweep, which leaves characteristic signature in DNA data.
+
+Historical focus on ``hard sweep'' model, (one allele, one haplotype). Widely varying opinions on whether we've found more or fewer of these than we expected to.
+
+More recent interest in alternative modes of adaptation, and whether they might be detectable, e.g. multiple mutation sweeps, sweeps from standing variation.
+
+Here we take a look at standing sweeps and the patterns they generate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
-\jb{thinking perhaps we should motivate our whole framework with a fair bit of verbal description before we delve into any math. Ideas here are reletively straightforward, but a fair bit of ``scene setting'' to do first}
 
-The key insight for this paper is that the recombination events that occur during the period when an allele is neutral or balanced prior to a sweep can be treated like mutations, and thus under the assumption of constant population size, we can use the Ewens Sampling Formula to calculate expectations for a variety of quantities of interest in the region surrounding the selected site.
+\subsection{Non-technical description}
 
-Consider a neutral locus partially linked (with recombination rate $r$) to a second locus where an allele arises, and is initially either neutral, or balanced at a low frequency, but eventually becomes beneficial (due to a change in environment). Our aim is to describe some features of the genealogy at the selected site at at adjacent neutral sites, how these features effect a number of population genetic summary statistics, and to explore the extent to which they can be used to say anything meaningful about sites where sweeps from standing variation may have occurred. 
+
+
+\subsection{more technical}
+
+We consider two loci, labeled \fancyN and \fancyB, which are separated on the chromosome by a recombination distance $r$. The ancestral allele at the \fancyB locus is b, and we imagine that a new allele, B, arises at the \fancyB locus and segregates at low frequency for some period of time (either due to neutral fluctuations, or because it is balanced at low frequency), before a change in the environment causes it to become beneficial and sweep to fixation. All variation at the \fancyN locus is assumed to be neutral, and its history can be therefore be determined by considering a structured neutral coalescent conditional on the behavior of the \fancyB locus.
+
+Our aim is to describe some features of the genealogy at the \fancyN locus, and to use this understanding of the genealogies to build intuition regarding the process of a sweep from standing variation, as well as to derive the patterns of DNA sequence diversity we expect to observe at the \fancyN locus following the conclusion of the standing sweep.
+
+Our general approach is to break the history of the standing sweep into two periods, the first being the time during which the B allele is selectively favored and rising in frequency (we refer to this as the sweep phase), and the second being the period after the mutation has arisen but before the environmental shift causes it to become beneficial (we refer to this as the standing phase). Stated very briefly, our approach is to assume that selection is sufficiently strong that only recombination (i.e. no coalescence) occurs during the sweep phase, and to recognize that recombination events occurring during the standing phase can be treated as mutations in the infinite alleles model, which allows us to make use of a version of the Ewens Sampling Formula in a variety of useful ways. %The key insight that allows us to obtain an approximate understanding of this process is that the recombination events that occur between the \fancyN and \fancyB loci during the phase has begun can be treated as mutations on the genealogy of the \fancyB locus, and thus under the assumption of constant population size, we can use the Ewens Sampling Formula to calculate expectations for a variety of quantities of interest in the region surrounding the selected site.
+
+%\jb{In this paper, we will use the phrase `beneficial allele' to refer to the allele that becomes beneficial during the selected phase and the phrase `non-beneficial allele' to refer to the complementary allele which becomes disfavored, regardless of whether the effect of selection is actually being felt during the part of the process being considered. We will use the phrase `sweep phase' to refer to the part of the history during which the beneficial allele is increasing in frequency due to positive selection, and the phrase `standing phase' to refer to the part of the history that preceeds the onset of selection.}
 
 \begin{figure}
-\includegraphics[width = 0.8
-          \textwidth]{Paper_Figures/Cartoon_of_soft_sweeps.pdf}
+	\includegraphics[width = 0.8\textwidth]{../Paper_Figures/Cartoon_of_soft_sweeps.pdf} \label{cartoon_fig_1}
+	\caption{caption goes here}
 \end{figure}
 
-\subsubsection{Neutral phase} \gc{not clear that neutral is a good term}
-Imagine that we sample $k$ neutral alleles (lineages) from the population in the present day. 
-We will assume that the selected phase of the trajectory occurs rapidly so there is no timefor coalescence to occur in the selected phase. So at the start of the neutral phase we have k lineages and the frequency of the selected allele is $f$ on the population.
 
-We will argue that the majority of information about patterns of diversity surrounding a sweep from standing variation can be understood by understanding the genealogy at the selected site,
-and where recombinations fall on this genealogy as we move away from the selected sites. 
-
-If our allele was held fixed at low frequency $f$ over a long time period our genealogy at the selected site would simply be a coalescent where any pair of lineages at rate $ {k \choose 2}/(2 N f)$ (assuming that $f \gg 1/(2N)$ so that the standard coalescent assumptions hold). Such a fixed frequency could result from a beneficial allele that was balanced at low frequency, by strong constant selection. If instead of being held fixed at a frequency $f$ our allele was allowed to drift neutrally this constant pairwise coalescent rate would no long be appropriate as the frequency could have changed to $f^{\prime} \neq f$, and so now our instantaneous rate of coalescence would be  $1/(2Nf^{\prime})$. 
-
-A number of researchers have studied the behavior of the coalescent within a neutral mutant subclass \citep{XXXX}, either conditional on the frequency of the allele in a sample or in the population.. \cite{XXX} has shown that the expected coalescent time is  $2 N f/ {k \choose 2}$ in the absence of other information, e.g. as to whether the allele is ancestral or derived or other information about the frequency of the allele in the past. However, the distribution of coalescence times is no longer exponential, and the successive coalscent times are not independent \cite{} as the time it takes a pair of lineages to coalescence contains information about the current frequency of the allele and thus about susequent coalescent events. Furthermore, when the allele is known to be derived the coalescent times have a more complicated expectation, as the allele is in expectation decreasing in frequency backward in time due to the conditioning on loss \citep{}.
-
-Despite these complications we have found assuming that lineages to coalesce at a rate $ {k \choose 2}/(2 N f)$ and that coalescent time intervals are independent, i.e. that the allele frequency does not drift from $f$, is not a bad approximation when $f \ll 1$ regardless of whether the allele is ancestral or derived. In Supp. Figures XXX-XXX we show some comparisons of the coalescent process inbedded in a drifting allele frequency and this approximation. 
-
-The main reason for using this approximation is that is gives us a simple well understood characture of the true process that describes the genealogy at the selected site reasonably accurately. We can use this to understand patterns of recombination as we move away from the selected site. We will again rely on the assumption that $f \ll 1$, and assume that any lineage that recombines out of the background of our beneficial allele will not recombine back into the background. As further consequence of $f \ll 1$ the coalescent times in our beneficial allele class (on a time-scale $\propto 2Nf$) will be short compared to those in the other allelic class (on a time-scale $\propto 2Nf(1-f)$). As such, we will ignore coalescent events in the other allelic class. Under these two assumptions as we move away from the selected site, recombinations are events on our genealogy at the selected site that peels lineages out from the selected class allowing them to coalescence on much longer time scales. In Figure \ref{cartoon_fig_1}B we show the coalescent genealogy at the selected site, and show recombination events out of the benefical allele class imposed on the genealogy (these events are colored to correspond to the events on the haplotypes in Figure \ref{cartoon_fig_1}A). In 
-Figure \ref{cartoon_fig_1}C we show the genealogy at various points along the sequence shown in Figure \ref{cartoon_fig_1}A, between recombination events. 
-
-Assuming that the frequency of the allele remains fixed at $f$, at a distance $r$ away from the selected site a lineage recombines out of the selected class at rate $r(1-f)$ \gc{Still wonder if we should make this just $r$, as we are assuming $(1-f) \approx 1$ elsewhere}. As coalescent occurs at a rate ${k \choose 2}/(2Nf)$, we can rescale time in units of $2Nf$ so that coalescence happens at a rate ${k \choose 2}$, and recombination events out of the selected class happen at rate $2Nrf(1-f)$. 
-
-If we are interested in the number and size of different recombinant clades at a given distance from the selected site (colored clades in Figure \ref{cartoon_fig_1}B \& C)  this a direct analogy of the infinitely-many allele model \citep{}. In the infinite alleles model, every mutation event creates a new allele, while in our process every recombination event creates a new recombinant lineage (an potentially a distinct haplotype, depending on the configuration of mutations). Under the infinitely many alleles model, sample configurations can be found by simulating the coalescent and assigning current day alleles is found by lineages back through time to the lowest mutation on the genealogy (see Figure \ref{cartoon_fig_1}B). Equivalently we can simulate a sample under the infinitely-many allele model by simulating the mutational process and coalescent process simulatenously, running the process back coalescing lineages and stopping following lineages (`kill' them) when a mutation occurs on them (see Figure \ref{cartoon_fig_1}C). 
-
-Given this nice direct analogy under our set of approximations the number and frequency of the various recombinant lineage classes at a given distance from the selected site can be found using the Ewens' Sampling Formula \citep[ESF][]{}.The population-scaled mutation rate in the infinitely-many alleles model ($\theta/2=4N\mu$), in our model, is replaced by the rate of recombination out of the selected class ($R_{f}/2=4Nrf(1-f)$). If $n$ lineages sampled in the present day fail to recombine off of the selected background during the course of the sweep, then the probability that these $n$ lineages coalesce into a set of $k$ recombinant lineages is 
+\subsubsection{Sweep Phase}
+Looking backward in time, we let $X\left(t\right)$ be the frequency of the B allele at the \fancyB locus at time $t$ in the past, where $t=0$ is the moment of fixation (i.e. $X\left(0\right) = 1; X\left(t\right) < 1\ \forall\ t > 0$). Recalling that $r$ is the per generation recombination rate between the \fancyB and \fancyN loci, the probability that a single lineage sampled at the \fancyN locus at $t=0$ fails to recombine off of the selected background in generation $t$ is $1-r\left(1-X(t)\right)$. If we let $\tau_{f}$ be the generation in which the environmental change occurred, marking the boundary between the sweep phase and the standing phase (i.e. $X\left(\tau_{f}\right) = f$), then the probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep phase is given by
 \begin{equation}
-p_{ESF}(k | R_f,n)  = S(n,k) \frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) }  \label{ESF1}
+P_{NR} = \prod_{t=0}^{\tau_{f}} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau_{f}}(1-X\left(t\right))\mathrm{d} t \right)
 \end{equation}
-where $S(n,k)$ is a Stirling number of the first kind
+for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau_{f}}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep from frequency $f$ can be written $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If the effect of our beneficial allele on relative fitness is strictly additive, such that heterozygotes enjoy a selective advantage of $s/2$ and heterozygotes an advantage of $s$, then the trajectory of the beneficial allele through the population can be approximated deterministically by the logistic function, such that 
 \begin{equation}
-S(n,k) = \textrm{StirlingStirlingStirling}
+	\mathcal{T}_{\left(s,f\right)} = \frac{ln\left(\frac{N_e - 1}{f}-N_e + 1\right)}{s}. \textrm{\jb{this is the 1/2N approx}}
 \end{equation}
-These recombinant lineages partition our sample up between themselves, so that each of these lineages have a number descendents in our present sample$\{n_1,n_2,\dots,n_k\}$, where $\sum_1^k n_i =n$. Conditional on $k$ the probability of a smaple configuration is
+
+We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage either recombines off the B background, or fails to do so, independently of all other lineages, so that the probability that $i$ out of $n$ lineages fail to escape off the sweeping background is
 \begin{equation}
-p(\{n_1,n_2,\dots,n_k\} \mid k,n) = \frac{n!}{k! n_1\cdots n_k S(n,k)}  \label{ESF2}
+P_{NR}(i;n) = {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i}.
 \end{equation}
-Note this does not depend on $R_f$, which gives the classic result that the number of alleles is sufficient statistic for $R_f$ (i.e. the partition is not needed to estimate $R_f$). Note also that this is a slightly different form to that usually used for the ESF, usually the sample configuration is expressed as a frequency spectrum where we count up the number of alleles present once, twice, etc in our sample.
+This binomial approximation has been made by a number of authors in the context of hard sweeps \citep{Barton}, and more accurate approximations have been developed \citep{Etheridge2006}. However, as long as selection is strong, the sample is not too large,  and $\tau_{f}$ is not too long, then this approximation should be adequate. Other, more accurate approximations could certainly be incorporated into our framework, but we stick with this simple form for the sake of clarity of presentation.
+
+%At a given distance away from the selected site every one of the lineages that recombines out of the selected class will be a singleton, and the remaining lineages will be partitioned according to the Ewens' Sampling formula.  
+
+
+
+\subsubsection{Standing Phase}
+Looking backward in time, having originally sampled $n$ lineages at the \fancyN locus at $t=0$, we arrive at the beginning of the standing phase at time $\tau_{f}$ with $n-i$ lineages linked to the non-beneficial b background at the \fancyB locus (which has a frequency of $1-f$), and $i$ lineages linked to the beneficial B background (which has a frequency of $f$). 
+
+%A full description of the dynamics of this phase requires that we track both coalescent events on the beneficial B background and the non-beneficial b background, as well as recombination events occurring between \fancyB and \fancyN, which shuffle lineages at the \fancyN locus back and forth between backgrounds at the \fancyB locus, and the original mutation which gave rise to the B allele at the \fancyB locus. This two locus conditional coalescence with recombination process has been studied by a number of authors, and while exact analysis is possible, it is not especially tractable.
+
+
+We will argue that an understanding of patterns of neutral diversity at the \fancyN locus following a standing sweep can be obtained principally by tracking the histories of only the lineages that are found on the \textbf{B} background at the beginning of the standing phase, and assuming that lineages which recombine off of the \textbf{B} background do not re-enter it. This is obviously a coarse approximation to the true process, but as we argue below, it captures many of the major features sufficiently well for our purposes.
+
+
+% The following paragraphs are therefore structured as follows: first, we describe an approximation to the coalescent process for \textbf{B} alleles at the \fancyB locus conditional on being at a frequency $f$ at the beginning of the standing phase. Next, we describe an approximation to the process of recombination events which move alleles at the \fancyN locus from the beneficial background onto the non-beneficial background at the \fancyB locus. Finally, we combine these two processes along with the recombination process during the sweep phase and a separation of timescales argument to give an approximate description of the full genealogy at the \fancyN locus.
+
+\paragraph{The Coalescent Process at the \fancyB Locus}
+
+In attempting to construct the genealogy of the \fancyB locus backward in time, consider that in the first generation of the standing phase, the probability that any pair of B coalesces with one another is $1/\left(2Nf\right)$, while the probability that any pair of b alleles coalesce with one another is $1/\left(2N\left(1-f\right)\right)$. In general, the pairwise coalescent probabilities for pairs of lineages $T$ generations back into the standing phase are $1/\left(2NX(\tau_{f} + T)\right)$ for the B alleles, and $1/\left(2N\left(1-X\left(\tau_{f}+T\right)\right)\right)$ for the b alleles, where the frequency $X\left(\tau_{f} + T\right)$ may be equal to, greater than, or less than $f$, due to the random sampling effects of genetic drift. Further, coalescent events which may have occurred during the intervening $T$ generations contain information about the distribution of $X\left(\tau_{f} + T\right)$.
+
+A number of researchers have studied the behavior of this process \citep{XXXX}, either conditional on the frequency of the allele in a sample or in the population. \cite{Wiuf:2000js} has shown that the expected time to the first coalescent event is $2 N f/ {i \choose 2}$ in the absence of other information, e.g. as to whether the allele is ancestral or derived. However, the distribution of coalescence times is no longer exponential. The variance of the time between coalescent events is increased relative to the exponential as a direct result of the fact that the frequency may increase or decrease from $f$ before a given coalescent event is reached. Further, in contrast to the standard coalescent, there is non-zero covariance between subsequent coalescent intervals, as a result of the information contained about how the frequency of the allele has changed, and thus about the rate at which subsequent coalescent events occur. Lastly, if the allele is known to be either derived or ancestral the coalescent times have a more complicated expectation, as the allele is in expectation either decreasing or increasing in frequency backward in time due to the conditioning on loss or fixation respectively.
+
+%Because we are generally assuming that $f<<1$, the first approximation we make for the standing phase is to assume that no b alleles coalesce until after all of the B alleles have coalesced and the mutation has been removed. 
+%
+%
+%If the beneficial allele were held fixed at this frequency $f$ over a long period into the past, then the genealogy of our $i$ beneficial lineages would simply be a neutral coalescent with pairwise coalescent rate $1/(2 N f)$ (assuming that $f \gg 1/(2N)$ so that the standard coalescent assumptions hold). Such a fixed frequency could result from a beneficial allele that was balanced at low frequency by strong, constant selection. If instead of being held steady at a frequency $f$, the allele is allowed to drift neutrally, this constant coalescent rate no longer holds, and the problem becomes considerably more complicated.
+
+
+Despite these complications we have found assuming that lineages coalesce at a rate $ {i \choose 2}/(2 N f)$ and that coalescent time intervals are independent, i.e. that the allele frequency does not drift from $f$, is not a bad approximation when $f \ll 1$ regardless of whether the allele is ancestral or derived. In Supp. Figures XXX-XXX we show some comparisons of the coalescent process embedded in a drifting allele frequency and this approximation. 
+
+The main reason for using this approximation is that, in conjunction with a separation of timescales (i.e. an assumption that no \textbf{b} alleles coalesce until after all \textbf{B} alleles have), it allows us to work with a simple, well understood caricature of the true process that describes the genealogy at the selected site with reasonable accuracy. Conditional on this simplified coalescent process, we can study the process of recombination events occurring between the \fancyB and \fancyN loci to understand the distribution of the genetic variation at the \fancyN locus that will hitchhike along with the beneficial allele once the sweep begins. 
+
+\paragraph{Recombination Between \fancyB and \fancyN}
+We will again rely on the condition that $f \ll 1$, and assume that any lineage at the \fancyN locus that recombines off of the background of our beneficial allele will not recombine back into that background before it is removed by mutation. Under these assumptions, recombination events which move lineages at the \fancyN locus from the beneficial background onto the non-beneficial background can be viewed as events on the genealogy at the \fancyB locus which occur at rate $r\left(1-f\right)$ per lineage. Rescaling time by $2Nf$, an understanding of the genealogy at the \fancyN locus can therefore be found by considering the competing poisson processes of coalescence at rate ${i \choose 2}$, and recombination at total rate $2Nirf(1-f)$
+
+%In Figure \ref{cartoon_fig_1}B we show the coalescent genealogy at the selected site, and show recombination events out of the beneficial allele class imposed on the genealogy (these events are colored to correspond to the events on the haplotypes in Figure \ref{cartoon_fig_1}A). In Figure \ref{cartoon_fig_1}C we show the genealogy at various points along the sequence shown in Figure \ref{cartoon_fig_1}A, between recombination events. 
+
+%Assuming that the frequency of the allele remains fixed at $f$, at a distance $r$ away from the selected site a lineage recombines out of the selected class at rate $r(1-f)$. As coalescent occurs at a rate ${i \choose 2}/(2Nf)$, we can rescale time in units of $2Nf$ so that coalescence happens at a rate ${i \choose 2}$, and recombination events out of the selected class happen at rate $2Nrf(1-f)$.
+
+If we are interested in the number and size of different recombinant clades at a given recombination distance from the selected site (colored clades in Figure \ref{cartoon_fig_1}B \& C)  this a direct analogy of the infinitely-many allele model \citep{}. In the infinite alleles model, every mutation event creates a new allele, while in our process every recombination event creates a new recombinant lineage (and potentially a distinct haplotype, depending on the configuration of mutations it carries). Further, a sample from the infinite alleles process can be found by simulating the coalescent, scattering mutations down on the genealogy, and then assigning each lineage to be of a type corresponding to the mutation that sits lowest above it in the genealogy (see Figure \ref{cartoon_fig_1}B). Equivalently, we can create a sample under the infinite allele model by simulating the mutational and coalescent processes simultaneously, `killing' lineages whenever they first encounter a mutation and assigning all tips sitting below the mutation to be of the same allelic type (see Figure \ref{cartoon_fig_1}C). 
+
+Given the direct analogy to the infinite alleles model under our set of approximations, the number and frequency of the various recombinant lineage classes at a given distance from the selected site can be found using the Ewens' Sampling Formula \citep[ESF][]{}.The population-scaled mutation rate in the infinitely-many alleles model ($\theta/2=2N\mu$), in our model, is replaced by the rate of recombination out of the selected class ($R_{f}/2=2Nrf(1-f)$). If $i$ lineages sampled at the moment of fixation fail to recombine off of the beneficial background during the course of the sweep, then the probability that these $i$ lineages coalesce into a set of $k$ recombinant lineages is 
+\begin{equation}
+	p_{ESF}(k \mid R_f,n)  = S(i,k) \frac{R_f^k}{ \prod_{\ell=1}^{i-1} (R_f +\ell) }  \label{ESF1}
+\end{equation}
+where $S(i,k)$ is an unsigned Stirling number of the first kind
+\begin{equation}
+	S(i,k) = \sum_{i_1 + \dots + i_k = i} \frac{i!}{k!i_1\dots i_k}
+\end{equation}
+These recombinant lineages partition our sample up between themselves, such that each lineage has some number of descendants in our present sample $\{i_1,i_2,\dots,i_k\}$, where $\sum_{j=1}^k i_j =i$. Conditional on $k$ the probability of a given sample configuration is
+\begin{equation}
+	p(\{i_1,i_2,\dots,i_k\} \mid k,i) = \frac{i!}{k! i_1\cdots i_k S(i,k)}  \label{ESF2}
+\end{equation}
+Note this does not depend on $R_f$, which gives the classic result that the number of alleles is sufficient statistic for $R_f$ (i.e. the partition is not needed to estimate $R_f$).
+
 
 \begin{figure}
-\includegraphics[width = 0.8
-          \textwidth]{Paper_Figures/Ewens_vs_Jeremy.pdf}
+	\includegraphics[width = 0.8\textwidth]{../Paper_Figures/Ewens_vs_Jeremy.pdf}
 \end{figure}
 
 %and that the number of coalescent families with $1,2,\dots,n$ lineages is given by the partition
 %  $\{n_1,n_2,\dots,n_k\}$ is 
 % \begin{equation}
-% P\left(k,n_1,n_2,\dots,n_n| R_f,n \right) =\frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) } \prod_{j=1}^n\frac{1}{j^{n_j}n_j!} \label{ESF}
+% P\left(k,n_1,n_2,\dots,n_n\mid R_f,n \right) =\frac{R_f^i}{ \prod_{j=1}^{i-1} (R_f +j) } \prod_{j=1}^n\frac{1}{j^{n_j}n_j!} \label{ESF}
 % \end{equation}
 % The probability of there being $k$ alleles (recombinant lineages) in our sample of $n$
 
-\subsubsection{Selected phase}
-Assume that we are at a neutral site a genetic distance $r$ away from the selected site. 
-If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $1-r\left(1-X(t)\right)$. The probability that a single lineage fails to recombine off the selected background at any point during the course of the sweep is given by 
-\begin{equation}
-	P_{NR} = \prod_{t=0}^{\tau} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \int_0^{\tau}(1-X\left(t\right))\mathrm{d} t\left(t\right) \right)
-\end{equation}
-for $r \ll 1$, with
-\begin{equation}
-	X\left(0\right) = f
-\end{equation}
-gives the frequency of the allele when the sweep starts, and
-\begin{equation}
-	\tau = \frac{ln\left(\left(2N - 1\right)\frac{1-f}{f}\right)}{s}
-\end{equation}
-approximates the time it takes for the allele to reach fixation, starting from frequency $f$.
-We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep is $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If our selected allele has an additive avantage in terms of relative fitness of $s/2$ in heterozygotes and $s$ in homozygotes, then our allele's deterministic trajectory through the population is logistic and $\mathcal{T}_{\left(s,f\right)} =???$
-
-We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage makes an independent choice of whether it recombines out of the sweep, so that the probability that $i$ out of $k$ lineages fail to escape off the sweep background is
-\begin{equation}
-P_{NR}(i;k) = {k \choose i} P_{NR}^{i} (1-P_{NR})^{k-i}.
-\end{equation}
-This binomial approximation has been made by a number of authors in the context of hard sweeps \citep{Barton}, and more accurate approximations have been developed \citep{}. However, as long as the population is large, the sample is not too large,  $\tau$ is not too long, and $f$ not too small (e.g. $\tau {k \choose 2}/(2Nf)<<1$) then this approximation should be adequet. The other more accurate forms could be incorporated into our framework, but we stick with this simple form for the sake of clarity of presentation.
-
-At a given distance away from the selected site every one of the lineages that recombines out of the selected class will be a singleton, and the remaining lineages will be partitioned according to the Ewens' Sampling formula.  
-
-
 \subsubsection{Patterns of neutral diversity surrounding standing sweeps}
-Given this approximate model of the coalescent with a sweep from standing variation we can now calculate basic summaries of variation in the region surrounding the sweep. We will assume that the per base pair mutation rate per generation is $\mu$. We will ignore mutations over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes neglibably to the total amount of time in the genealogy. This corresponds to an assumption that $2N\mu \gg 2N \mu f$, in line with our previous set of assumptions that $f \ll 1$. If this is the case we simply consider patterns of diversity in our sample at a site, by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
+Given this approximate model of the coalescent with a sweep from standing variation we can now calculate basic summaries of variation in the region surrounding the sweep. We will assume that the per base pair mutation rate per generation is $\mu$. We will ignore mutations over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes negligibly to the total amount of time in the genealogy. This corresponds to an assumption that $2N\mu \gg 2N \mu f$, in line with our previous assumption that $f \ll 1$. If this is the case we simply consider patterns of diversity in our sample at a given site by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
 
-For example, excluding recombination during the sweep for a moment, the expected pairwise coalescent time a distance $r$ away from our sweep is
+For example, excluding recombination during the sweep for a moment, the expected pairwise coalescent time for lineages a distance $r$ away from the sweep is
 \begin{equation}
-\approx \frac{1}{1 + 4Nrf(1-f)} \times 0 + \frac{4Nrf(1-f)}{1 + 4Nrf(1-f)} \times 2N
+	\mathbb{E}(T_2)\approx \frac{1}{1 + 4Nrf(1-f)} \times 0 + \frac{4Nrf(1-f)}{1 + 4Nrf(1-f)} \times 2N
 \end{equation}
-where the two terms correspond to the contribution from failing to recombine during the neutral phase and so coalescing very rapidly, and one or both lineages escaping from the beneficial background and coalesing $2N$ generations ago. In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
+where the two terms correspond to the contribution from failing to recombine during the standing phase and so coalescing very rapidly, and alternately to one or both lineages escaping from the beneficial background and coalescing $2N$ generations ago.
 
-Now incorporating recombination during the sweep our expected pairwise coalescent time a distance $r$ away from our sweep is 
+Now incorporating recombination during the sweep our expected pairwise coalescent time a distance $r$ away from the sweep is
 \begin{equation}
-\mathbb{E}(T_2) \approx \left(1-\frac{1}{1 + 4Nrf(1-f)} P_{NR}^2  \right) \times 2N
+	\mathbb{E}(T_2) \approx \left(1-\frac{1}{1 + 4Nrf(1-f)} P_{NR}^2  \right) \times 2N
 \end{equation}
-as to avoid (near) instaneous coalescence our pair of lineages could recombine during either the sweep or neutral phases. The expected level of pairwise diversity as we move away from a sweep is given by $2\mu \mathbb{E}(T_2)$
-
-We can extend this idea of conditioning on how many lineages escape the sweep to calculate the expected total time in the genealogy as we move away from the sweep. Conditional on  $k$ independent lineages escaping the sweep the expected total time in the genealogy is $2N \sum_{j=1}^{k-1} 1/j$, the standard result for a neutral coalescent with $i$ lineages \citep{Watterson}. Ignoring for a moment recombination during the sweep phase the probability that $k$ lineages escape the sweep is the probability of $k$ alleles in a sample of $n$ under the ESF $p_{n,k}(R_f) $ (under our approximation). So the expected time in the genealogy a distance $r$ away from the selected site is 
-\begin{equation}
-\mathbb{E}(T_{TOT})  \approx 2N \sum_{k=2}^n p_{n,k}(R_f)   \sum_{j=1}^{k-1} 1/j
-\end{equation}
+as to avoid (near) instantaneous coalescence our pair of lineages could either recombine either during the sweep or during the standing phase. The expected level of pairwise diversity as we move away from a sweep is given by $2\mu \mathbb{E}(T_2)$
 In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
 
+
+We can extend this idea of conditioning on the number of lineages that escape the sweep to calculate the expected total time in the genealogy as we move away from the \fancyB locus. Conditional on  $k$ independent lineages escaping the sweep, the expected total time in the genealogy is $2N \sum_{\ell=1}^{k-1} 1/\ell$, the standard result for a neutral coalescent with $k$ lineages \citep{Watterson}. Ignoring for a moment recombination during the sweep phase, the probability that $k$ lineages escape the sweep is the probability of $k$ alleles in a sample of $n$ under the ESF, $p_{ESF}(k\mid R_f,n)$ (under our approximation). The expected time in the genealogy a distance $r$ away from the selected site is therefore
+\begin{equation}
+	\mathbb{E}(T_{TOT})  \approx 2N \sum_{k=2}^n p_{ESF}(k\mid R_f,n)   \sum_{j=1}^{k-1} 1/j.
+\end{equation}
+Reincorporating recombination during the sweep phase, the probability that $k$ distinct lineages have recombined off of the beneficial background between the two phases together is
+\begin{equation}
+	\sum_{m=0}^{k} {n \choose m} P_{NR}^{m} (1-P_{NR})^{n-m} p_{ESF}\left(k-m\mid R_f, n-m\right),
+\end{equation}
+because if $m$ recombinant lineages are generated during the sweep, then the remaining $k-m$ recombinant lineages have to come from recombination events in the standing phase (we take $p_{ESF}\left(0 \mid R_f,0\right)=1$, representing the extreme case where $k=n$ and all lineages manage to recombine during the sweep phase). The expected total time in the genealogy is therefore
+\begin{equation}
+	\mathbb{E}(T_{TOT})  \approx 2N\sum_{m=0}^{k} {n \choose m} P_{NR}^{m} (1-P_{NR})^{n-m} p_{ESF}\left(k-m\mid R_f, n-m\right)   \sum_{\ell=1}^{k-1} 1/\ell
+\end{equation}
+and the expected number of segregating sites can be found by taking $\mu$ times this. In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
+
+
+We can also obtain an expression for the frequency spectrum at sites surrounding a standing sweep. To break the problem into approachable components, we first condition on an absence of recombination during the sweep phase, and a fixed number $k$ recombinant families which are created by coalescence and recombination in the standing phase (both of these will be relaxed momentarily). Each of the $k$ recombinant families represents an independent draw from the population frequency prior to the \textbf{B} allele entering the population. Borrowing a trick from \cite{Pennings:2006fs} (equation 14 of their paper), if we condition on $j$ out of $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $n$ lineages sampled at fixation carry the derived allele by summing over all possible partitions of the $n$ tips into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day as
+\begin{equation}
+p(l \mid j, ~k,~i=n) = \sum_{\substack{i_1+\cdots +i_j=l \\i_{j+1}+\cdots + i_k=n-l}} p(\{i_1,\dots,i_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
+\end{equation}
+
+Next, we write $q_{j,k}$ to denote the probability that $j$ out of the $k$ recombinant families carry the derived mutation. For our purposes, we will assume this distribution follows that of the standard neutral coalescent expectation (i.e. $q(j \mid k) = \frac{1/j}{\sum_{\ell=1}^{k-1}1/\ell}$ gives the probability of $j$ derived alleles in a sample of $k$, conditional on segregation), although one could easily use an empirical frequency spectrum measured from genome-wide data, as in \citep{NielsenKim}. The probability that the derived allele is present in $l$ out of $n$ sampled lineages, conditional on there having been $k$ recombinant families, is then 
+\begin{equation}
+	p(l \mid k, i = n ) = \sum_{j=1}^k p(l \mid j,~k, ~n)q(j\mid k).
+\end{equation}	
+Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an expression for the frequency spectrum conditional on no recombination in the sweep phase as
+
+\begin{equation}
+p(l \mid i=n) =  \sum_{k=1}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^k q(j\mid k) p(l \mid j,~k, ~n)
+\end{equation}
+%
+%To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where the frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \cite{Pennings:2006fs} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations (see the ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section). We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
+%Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ can be written as
+%\begin{equation}
+%p(l \mid n) =  \sum_{k=1}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^{k} q_{j,k}  p(l \mid k,n) 
+%\end{equation}
+%where $  p(l \mid k,n) $ is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles when the neutral allele segregates at a frequency of $j/k$ in the population before the sweep. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
+
+When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
+\begin{equation}
+p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{i=1}^{l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
+\end{equation}
+where A$\wedge$B denotes min(A,B) and
+\begin{equation}
+	H(g \mid j,k,n-i) = \frac{{j \choose g}{n-i \choose g}}{{k + n - i \choose j}}
+\end{equation}
+gives the probability that $g$ out of $j$ derived alleles are found on singleton recombinants created during the sweep, given that there are $n-i$ singletons, and $k$ recombinant families created during the standing phase. Here $n-i$ lineages recombine out during the selected phase, while the remaining $i$ lineages are partitioned into $k$ families due to recombination and coalescence in the standing phase. Out of the $n-i$ singleton lineages, $g$ of them carry the derived allele, while the remaining $j-g$ copies of the derived allele which existed just prior to the arrival of the beneficial allele give rise to $l-g$ derived alleles in the present day, resulting in $l$ out of $n$ sampled lineages carrying the derived allele. %Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
+
+%\subsubsection{Linkage Disequilibrium}
+%\jb{obviously needs more explication of the history of studying LD across sweeps, but will deal with later.}
+%\cite{StrobeckMorgan78} and \cite{Hudson85} showed that the expectation of the linkage disequilibrium statistic $D^2$ (i.e. the square of the covariance in allelic state at two loci) can be expressed as
+%\begin{equation}
+%	D^2 = F_{ij,ij} - 2F_{ij,ik} + F_{ij,kl}
+%\end{equation}
+%where the three terms are, respectively, the probability that two sequences $i$ and $j$ are identical at both sites $x$ and $y$, the probability that sequences $i$ and $j$ are identical at site $x$ while sequences $i$ and $k$ are identical at site $y$, and finally that sequences $i$ and $j$ are identical at site $x$, while sequence $k$ and $l$ are identical at site $y$. \cite{McVean2002} showed that each of these quantities can be expressed in terms of the expected product of coalescent times with the genealogies at sites $x$ and $y$ for samples with the given configurations
+%\begin{equation}
+%	D^2 = \frac{Cov\left(t_{x\left(ij\right)},t_{y\left(ij\right)}\right) - 2Cov\left(t_{x\left(ij\right)},t_{y\left(ik\right)}\right) + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}{\mathbb{E}\left[T_x T_y\right]}
+%\end{equation}
+%where $t_{x\left(ij\right)}$ is the coalescence time of sequences $i$ and $j$ at site $x$, and $T_x$ is the total height of the genealogy at site $x$. \cite{McVean2002} further obtained an expression for the denominator of $\sigma_d^2$, such that
+%\begin{equation}
+%	\sigma_d^2 = \frac{Cov\left(t_{x\left(ij\right)},t_{y\left(ij\right)}\right) - 2Cov\left(t_{x\left(ij\right)},t_{y\left(ik\right)}\right) + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}{\mathbb{E}\left[t_{x\left(ij\right)}\right]\mathbb{E}\left[t_{y\left(kl\right)}\right] + Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right)}.
+%\end{equation}
+%Further, because $Cov\left(t_{x\left(ij\right)},t_{y\left(kl\right)}\right) = \mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] - \mathbb{E}\left[t_{x\left(ij\right)}\right]\mathbb{E}\left[t_{y\left(kl\right)}\right]$, and because the expected pairwise coalescent time is the same at each locus for all three sampling configurations, we can cancel all of the terms involving products of expectations to obtain
+%\begin{equation}
+%	\sigma_d^2 = \frac{\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] - 2\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] + \mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right]}{\mathbb{E}\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right]}.
+%\end{equation}
+%
+%We will rely on the assumption that zero time elapses while at least one lineage remains on the background of the selected allele. For clarity, call configurations $\{ij,ij\}$, $\{ij,ik\}$, and $\{ij,kl\}$ states A, B and C respectively, and label as state O any configuration in which ancestral material has been lost due to coalescence at either site. We need to know the expected product of coalescent times for pairs of lineages sampled in each of these three configurations at the moment the beneficial allele fixes. Under our approximation in which coalescence on the selected background (either before or after it actually becomes beneficial) is assumed to happen at $t = 0$, we can calculate the expected product of coalescent times for neutral loci sampled on the selected background at fixation as a function of the probability of transitioning to any other configuration at the first moment when all four alleles are found on the wild type background. For example,
+%\begin{equation}
+%	\mathbb{E}_S\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] = \phi_{AA}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] + \phi_{AB}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] + \phi_{AC}\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] + \phi_{AO}\times 0
+%\end{equation}
+%where $\phi_{AA}$, $\phi_{AB}$, $\phi_{AC}$ and $\phi_{AO}$ are the probabilities of transitioning from state A at $t = 0$ to state A, B, C or O at the first moment when no lineages remain on the selected background, and the expectations with subscript W represent the values obtained for standard neutral theory. These quantities are known 
+%\begin{align}
+%	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ij\right)}\right] = \frac{36 + 14R +R^2}{18 + 13R + R^2} \\
+%	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(ik\right)}\right] = \frac{24 + 13R +R^2}{18 + 13R + R^2} \\
+%	\mathbb{E}_W\left[t_{x\left(ij\right)}t_{y\left(kl\right)}\right] = \frac{22 + 13R +R^2}{18 + 13R + R^2}.	
+%\end{align}
+%Therefore, our only task is to calculate the transition probabilities. \cite{McVean:2006ke} approaches this problem for the standard hard sweep case by separating the sweep into two components. In the first part of the sweep (looking backward in time), each lineage makes an independent choice whether to recombine out of the sweep or not, recombining out with probability $(1 - e^{-\frac{r}{s}ln(2N)})$. In the second phase of the sweep, all lineages which fail to recombine out are forced to coalesce with probability one, and then mutate out of the selected background immediately.
+%
+%In order to obtain an expected value for $\sigma_d^2$ following a sweep that begins from frequency $f$, we need to modify \citeapos{McVean:2006ke} approach. The first modification is to replace the probability of recombining off of the selected background with $(1 - e^{-\frac{r}{s}ln(\frac{1}{f})})$ reflecting the fact that the selected phase is slightly shorter when mutations come a frequency greater than $\frac{1}{2N}$, and thus there is less opportunity to recombine. The second modification is more involved. In contrast to \citeapos{McVean:2006ke} hard sweep model in which no recombination occurs during the second phase, in our model we must track the behavior of a Markov chain in which coalescence, recombination, and mutation may occur. The set of events which we allow to occur in this Markov chain are recombination of an allele at the $x$ locus off of the selected background (at rate $r_x\left(1-f\right)$), recombination at the $y$ locus off of the selected background (at rate $r_y\left(1-f\right)$), coalescence of two chromosomes on the selected background (at rate $\frac{1}{2Nf}$), and coalescence of two chromosomes on the non-selected background (at rate $\frac{1}{2N\left(1-f\right)}$), and mutation off of the selected background, which we assume to occur with probability one as soon as there is only a single chromosome left on the selected background.
+%
+%This Markov chain has a total of 46 states which can be reached beginning from one of the three initial configurations (A, B or C). However, 26 of these transitions result in loss of ancestral material due to coalescence, and thus contribute a value of zero toward the product of coalescence times. We therefore don't need to explicitly calculate the probability of transitioning into these states, and need only track transitions to states that don't result in loss of ancestral material. The full transition matrix \jb{will be} given in the Appendix, but here are a few of the transition probabilities as examples
+%\begin{align}
+%	&P\left(\{i^Sj^S,k^Sl^S\} \rightarrow \{i^Sj^S,k^Sl^W\}\right) = \frac{4Nr_y f\left(1-f\right)}{12 + 4Nr_x f\left(1-f\right) + 4Nr_y f\left(1-f\right)} \\
+%	&P\left(\{i^Sj^W,k^Sl^W\} \rightarrow \{i^Sj^W,i^Sk^W\}\right) = \frac{1}{1 + \frac{f}{1-f} + 2Nr_x f\left(1-f\right) + 2Nr_x f\left(1-f\right)} \\
+%	&P\left(\{i^Sj^S,i^Sk^S\} \rightarrow \{i^Sj^W,k^Sl^S\}\right) = \frac{2Nr_x f\left(1-f\right)}{6 + 2Nr_x f\left(1-f\right) + 2Nr_y f\left(1-f\right)} \\
+%	&P\left(\{i^Sj^S,i^Sk^S\} \rightarrow \{i^Sj^W,k^Wl^S\}\right) = 0 \\
+%	&P\left(\{i^Sj^W,i^Sk^W\} \rightarrow \{i^Wj^W,i^Wk^W\}\right) = 1.
+%\end{align}
+%Let $\mathbf{D}$ be the $20\times 20$ transition matrix for the standing phase, and let $\mathbf{A}$ be the transition matrix for the selected phase. 
+
+
+\subsection{Patterns of Haplotypic Variation}
+
+%\jb{Write some nice intro here}
+%Consider the task of both detecting and distinguishing selective sweeps of the classical ``hard'', standing, and multiple hit ``soft'' cases. A large number of methods now exist for detecting classic hard sweeps \jb{refs}, and a few approaches designed specifically for soft sweeps have been developed as well \jb{cite Nandita and Ben here}.
+%
+%We consider the problem of doing inference on sweep parameters (where the ``type'' of sweep is included as a ``parameter'') in a hypothetical situation in which we have access to the maximal amount of information which could reasonably be obtained directly from sequence data. In other words, we imagine an ``infinite haplotypes'' model, in which all chromosomes sampled at the completion of the sweep can be assigned to a unique ancestral chromosome which existed immediately prior to the beginning of the sweep. 
+
+We have described a model for the marginal genealogical and recombinational history at a site some distance from a standing sweep. It is of interest to consider patterns of haplotypic diversity we expect to observe along the sequence for a single realization of a standing sweep, or in other words the \textit{joint} history of the sequence in the region surrounding beneficial allele. If we again follow the custom of first ignoring recombination during the sweep phase  We want to be able to describe patterns of haplotypic variation surrounding standing sweeps. In particular, we are interested in the usefulness of haplotype statistics to distinguish three different types of ``full sweep'': the classical hard sweep, a sweep including multiple mutations, and a sweep from standing variation. 
+
+%We adopt the convention of querying the number and partition of haplotypes which are present within a window with the left boundary at the position of the selected mutation, and the right boundary some distance away. We will argue that the majority (but not all) of the information which can be used to distinguish these types of sweeps can be accessed by considering how the number and partition of haplotypes changes as the right boundary of the window is increased from zero until we reach the point at which all chromosomes are present on distinct haplotypes (the point beyond which there is no further information about the sweep).
+
+We continue our infinitely-many haplotypes perspective, in which we imagine that every piece of DNA present in the sample taken at fixation can be labelled/colored according to which chromosome in the ancestral, pre-sweep population it traces its ancestry to. Under this convention, right at the selected site, all chromosomes descending from either a hard sweep or a standing sweep will be of the same ``color'', due to their shared common ancestry, while for multiple mutation soft sweeps each set of chromosomes tracing to a different mutational origin of the beneficial allele will be of a different color. For all kinds of sweeps, the number of distinctly colored haplotypes increases with distance from the selected site due to recombination events which cause transitions along the sequence in the haplotype partition scheme.
+
+With this perspective, most of the information about the parameters of the sweep (including that of which type of sweep it is), are contained jointly in the set of transitions in the haplotype partition scheme as one moves away from the selected site, along with the list of their locations along the sequence. As we are considering the haplotype partition largely in the context of inference, it is worth briefly acknowledging that by envisioning detailed knowledge of haplotype identities and transitions around a selected site, we are assuming access to a level of data that is quite unlikely to be attainable in any real population. The following results therefore constitute a sketch of the upper bound on the ability to distinguish the different kinds of sweeps. In cases where the ancestral genetic diversity is low, the problem is considerably worse.
+
+Below, we consider the construction of this haplotype partition as a process along the sequence for each of the three types of sweeps, beginning with either a single haplotype at the selected site (hard and standing cases), or potentially more than one (in the multiple mutation case), and transitioning as we move away through states where there are two, three, four, etc. haplotypes, until we eventually transition through to the state where all sampled chromosomes are found on independent haplotypes. 
+
+%For both hard sweeps and standing sweeps, all chromosomes at the selected site trace their ancestry to the individual ancestral chromosome on which the beneficial mutation originally arose, and thus there is only a single haplotype at the selected site. As we imagine moving along the sequence away from the selected site, we would encounter a transition from a single haplotype to two haplotypes (with some number of chromosomes partitioned into each haplotype group), and a subsequent transition from two haplotypes to three haplotypes (which arises from splitting one of the two existing haplotypes into two subgroups). If we consider moving further and further out from the selected site, we would eventually reach the point where there were $n$ distinct haplotypes in a sample of $n$ chromosomes, where each subsequent increase in the number of haplotypes as we move away from the selected site results from a partitioning of one existing haplotype into two sub-haplotypes.
+
+%In principle, then, all of the information about a given sweep is contained in the distances at which transitions in the partition scheme occur, as well as the path the sequence takes through partition space (e.g. whether the first transition creates a partition of \{6,4\} or \{7,3\}, etc.)
+
+%These transitions arise due to recombination events in on the (unknown) genealogy as we move away from the selected site. Continuing to ignore neutral mutations which have occurred since the mutation(s) which gave rise to the sweep, all of the information about the sweep is contained jointly in the distances 
+
+%\jb{Note that there is also additional information present in the locations and frequencies, and correlations between mutations which have occurred on the background of the beneficial allele. We will focus for the most part on the haplotype partition scheme as defined solely by recombination events, and then comment briefly on the role of new mutations occurring on the beneficial background.}
+
 \begin{figure}
-\includegraphics[width = 0.8
-          \textwidth]{Paper_Figures/pi_density.pdf}
+	\includegraphics[width = 0.8\textwidth]{../Paper_Figures/three_kinds_of_sweep.pdf} \label{cartoon_3_kinds}
+	\caption{caption goes here}
 \end{figure}
 
-\begin{figure}
-\includegraphics[width = 0.8
-          \textwidth]{Paper_Figures/segsite_density.pdf}
-\end{figure}
 
-We can now reincorporate recombination during the sweep phase. Under our approximation to recombination during the sweep phase every lineage that recombines out is a singleton. So we can write the probability of having $k$ distinct lineages having recombined out of our sweep as
-\begin{equation}
-\sum_{i=0}^{k} {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i} p_{n-i,k-i}(R_f)
-\end{equation}
-as if we generate $i$ recombinant lineages during our sweep the remaining $k-i$ recombinant lineages have to come from recombination events in the neutral phase. So the expected total time in the genealogy is 
-\begin{equation}
-\mathbb{E}(T_{TOT})  \approx 2N \sum_{i=0}^{k} {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i} p_{n-i,k-i}(R_f)   \sum_{j=1}^{k-1} 1/j
-\end{equation}
-and the expected number of segregating sites can be found by taking $\mu$ times this. 
+\paragraph{The Classic Hard Sweep Case}
 
-We can also obtain an expression for the frequency spectrum at sites surrounding a soft sweep. To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where our frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \citep{PenningandHermisson} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations, see their ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section. We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
-Consider the case where no recombination occurs during the selected phase, in that case the probability of observing a neutral site segregating at a frequency of $l/n$ can be written as
-\begin{equation}
-p(l | n) =  \sum_{k=1}^{n}  q_{j,k}  p(l | k,n) p_{ESF}(k | R_f,n) 
-\end{equation}
-where is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
-\begin{equation}
-p(l | j, ~k,~n) = 
-\sum_{\substack{a_1+\cdots a_j=l;\\
-    n_{a+1}+\cdots a_k=n-l}} 
-p(\{a_1,\dots,a_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
-\end{equation}
+Under the binomial approximation for the classic hard sweep case, as used by \cite{Fay:2000usa,others}, the expected distance in base pairs to the transition from one haplotype to two is $\frac{1}{n\mathcal{T}_s r_{BP}}$, and in general the expected distance between the transition from $i$ haplotypes to $i+1$ haplotypes is $\frac{1}{\left(n-i+1\right)\mathcal{T}_s r_{BP}}$. Further, conditional on the value of $\mathcal{T}_s$, the distances between subsequent haplotype partitions are roughly independent. In this approximation, all transitions result from one individual from the core haplotype becoming a singleton due to a recombination event that occurred before the multiple merger at the beginning of the sweep, and thus all of the information about the sweep is contained in the joint distribution on the distances at which the transitions occur. Each of the transitions from grey to black in Figure \ref{cartoon_3_kinds} represents an independent recombination event, and each grey haplotype is randomly drawn from the diversity prior to the sweep.
 
+The majority of our information for identifying full sweeps therefore comes from the presence, and slow decay, of a single haplotype over long distances. The fact that recombination is slowly peeling off singleton haplotypes as we move away from the sweep results in the signal of an excess of singletons and high frequency derived alleles \citep{Fay:2000usa} occurring in genomic run, a signal which forms the basis for a number of popular sweep detection algorithms \cite{Sweepfinder,EHH,etc}. Another consequence of this behavior is that immediately following a full sweep, there is a much reduced level of pairwise linkage disequilibrium across the selected site \citep{Stephan2006,McVean:2006ke}, as the star-like tree at the selected site renders recombinations on either side of the sweep effectively independent \citep{McVean:2006ke}.
 
+In reality, all coalescence does not occur instantaneously at the base of a classic hard sweep, especially when the sample is even moderately large (i.e. $n > 20$), and thus there is an opportunity for recombination events to occur on internal branches of the genealogy \cite{Etheridge06,Barton98}. This causes transitions in the partition scheme that result in a class of additional non-singleton haplotypes, which eventually break apart farther out from the selected site due to additional recombination events lower down in the genealogy.
 
-When we allow for recombination during the sweep this expression becomes more complex, but the same logic can be followed and write
-\begin{equation}
-p(l | n) = \sum_{S=1}^n P_{NR}(n-S; n) \sum_{k=1}^{n-S} p_{ESF}(k | R_f,n-S) \sum_{j=1}^{S+k} q_{j,S+k}
-\sum_{i=1}^{l \wedge S} B(i \mid S,j/(S+k)) p(l-i \mid j-i,k,n-S )
-\end{equation}
+\paragraph{Sweep with multiple mutations.}
+\citet{Pennings2006a, Pennings2006} investigated the case of multiple mutations at a single selected locus contributing to a sweep. These multiple mutations can have been present at mutation-selection balance prior to the sweep, or may have arisen sequentially during the sweep. The simple signal of hitchhiking in this case is complicated, as rather than a single allele sweeping to fixation, the multiple alleles all sweep to somewhat intermediate frequencies, partitioning the same into multiple core haplotypes. For example, in Figure \ref{cartoon_3_kinds}B, the sampled haplotypes have been partitioned by multiple mutations during the sweep into three distinct haplotypes at the selected site. Parameterizing the mutation rate toward beneficial alleles at the locus as $\mu_{B}$, \cite {Pennings2006a} found that for small samples and strong selection, the partitioning of lineages at the selected site by different mutations was well approximated by the Ewens Sampling formula with parameter $4N_e\mu_B$. Clearly, if a particular stochastic realization of this process results in only a single mutation, then we simply have a classic hard sweep, as above.
 
-where A$\wedge$B denotes the min(A,B). Here $S$ lineages recombine out of the selected phase, and our remaining $n-S$ lineages are partitioned into $k$ families due to recombination in the neutral phase. Out of our $S$ singleton lineages $i$ each independently choose to be of type $1$ with probability $j/(S+k)$ (i.e. binomially $ B(i \mid S,j/(S+k))$). Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.
-i.e. the probability that our $k$ recombinant lineages divide our sample into $l$ derived alleles and $n-l$ alleles, summing  $\{a_1,\dots,a_k\}$. 
+The tree under each of these mutations will be a very short and reasonably star-like, such that there will be a single haplotype associated with each mutation close to the selected site. Aside from the presence of multiple haplotypes in this core region, the breakdown in the haplotype partition moving away from the selected locus is relatively similar to that under the hard sweep. Again assuming the sweep took $\mathcal{T}_s$ generations, the distance between the $i^{th}$ and $i+1^{st}$ haplotype transitions is again exponential with expectation $\frac{1}{\left(n-i+1\right)\mathcal{T}_s r_{BP}}$.
 
-\subsubsection{LD notes}
+\jb{this paragraph still needs rewriting}
+Allelic differences between these colored haplotypes, present before the sweep, will now be found as intermediate frequency in the sample, such that the frequency spectrum can be skewed close to the center of the sweep \citep{Pennings2006}. Thus instances of partial sweeps can be associated with an excess of intermediate frequency alleles close to the sweep \gc{true?}. These allelic differences can be in linkage disequilibrium as they all reflect the underlying partitioning of the same by our different colored haplotypes. There can also be linkage disquilibrium across the sweep, as the paritioning of the sample by the different haplotypes the selected alleles arose on is identical on either side of the selected site. See \gc{XXXXX} for a technical treatment of the LD surrounding a multiple mutation sweep. Whether these patterns are visible depends on the magnitude of neutral diversity in the population before the sweep. If the distance between neutral polymorphisms is $\ll 1/(\mathcal{T}_s r_{BP})$ then there will likely be multiple neutral alleles revealing the haplotype partitioning at the selected site (indeed if this condition is not met, we will not see the signal of the sweep at all).
+
+\paragraph{Standing Sweep Case}
+The situation for a standing sweep is considerably more complicated than either the hard sweep or the multiple mutation sweep. Recall that $\tau_{f}$ gives the duration of the sweep phase, while the time from the beginning of the standing phase back to the common ancestor of the beneficial alleles is approximately $4N_e f$. Therefore, if $4N_e f \ll t_f$ (i.e. selection is very weak, or the mutation is still quite rare when selection switches on), then most of the recombination across the background will occur during the sweep phase. In this parameter regime, 
+
+If $4N_e f$ is at least on the same order as $t_f$, then recombinations during the standing phase can contribute to haplotypic patterns surrounding the sweep. We show both a case where $4N_e f \gg t_f$ and where they are on the same order in Figure \ref{cartoon_3_kinds}C. We will consider the case where $4N_e f \gg t_f$ first. In that case the haplotypes present in our sample today are non-recombinant descendents of those that the selected allele recombined on to present on 
+
+If the total time in the coalescent tree in the neutral phase at the selected site is $T_{tot}$, then the distance to the first recombination is $\sim \exp \left( (r_{BP} T_{TOT} \right)$. Such the expected length scale over which a single haplotype should persist away from the selected site is $\approx 1/( (2 N_e R_f log(n-1)))$, using the standard approximation to the constant in Watterson's $\theta$. This recombination partions the haplotypes according to the infinite alleles model for single mutation placed at random on the geneaology at the selected site (e.g. the green recombinant moving to the left in Figure \ref{cartoon_3_kinds}C). Moving on down the sequence we then generate the next distance to a recombination along the sequence, again from $\sim \exp \left( (r_{BP} T_{TOT} \right)$. Again we uniformly simulate a position on the tree for this new recombination, however, this time only a recombination on some of the branches would result in another colored haplotype being introduced into the sample, e.g. a recombination that falls on the same branch as the previous on. If the recombination falls in a place that doesn't alter the configuration we ignore it, otherwise we split our sample configuration again. For example, the red recombinant in Figure \ref{cartoon_3_kinds}C does not alter the sample configuration and so can be ignored, note that it does recombine the selected allele off of its original black haplotype but this recombinant is not visible in our contempory sample (likewise the light blue recombinant in Figure 1XX is not visible). We iterate this procedure moving away from the selected site, generating exponential distances to the next recombination, placing the recombination down, updating the configuration if needed. untill we reach the point that every coloured haplotype is a singleton. We repeat this procedure on the other side of the selected site using the same underlying tree at the selected site. 
+
+An equivalent way to describe this process is simulating distances to the next recombination that alters the configuration, given the tree. To do this we consider the total time in the tree where a recombination would alter the configuration. We number these recombinations out from the selected site. We start at the selected site $i=0$, with $T_0 = T_{TOT}$, generate a distance to the next recombination $\sim \exp(T_0)$. We place the recombination on the tree, then prune the tree of branches where no further change in sample configuration could result in a new colored haplotype, and set $T_i$ to the total time in this pruned tree and carry on this process till we have pruned the entire tree (where upon the distance to the next recombination would be infinity as we are left only with singleton haplotypes). 
+
+As we have discussed above marginally, at a site, the partitioning of haplotypes is the ESF (intergrating out over the unobserved genealogy). It is unclear to us how to couple together the partitioning at two sites, i.e. how to calculate the probability of  how the sample configuration $ \{i_1,i_2,\dots,i_k\},$ is further partitioned up by recombinations at a site further along the sequence. Obviously this can be calculated by resorting to brute force integration over the unobserved tree given $\{i_1,i_2,\dots,i_k\},$ but it seems like a more elegant solution could be available (but evades us, which is not hard). Given the general interest in the ESF motivated by exchangable partitions and clustering algorithms, such a coupling may be of wider interest. 
+ 
+Under our approximation, each of our coloured haplotypes represents an independent draw from the haplotypes present before the sweep. So that allelic differences we see between the haplotypes are the alleles that segregate after the sweep. As such, we should expect LD to be created between variants on the same haplotypic background. As haplotype configurations should extend over distances $\sim 1/(r_{BP} N_e f)$ this LD will extend over distances unusual compared to background LD if $N_e f \ll N_e$. The colored haplotypic patitioning on either side of the selected site is correlated due to the underlying dependence on the genealogy at the selected site, thus there can be LD across the selected site--unlike the full sweep model. But in contrast to the soft sweeps model we have to wait until we get a sufficient distance from the selected site in order for recombination to have occurred, to have variation to observe the LD. We have explored approximating the pairwise LD around the sweep using the coalescent approach of \citet{McVean:2006ke}, however, we found that no simple expressions were forthcoming from that approach (principally because we have not been able to couple two sites together other than by brute force).
+
+If $t_f$ is on the same order as $4N_e f$ then the distances to recombination events in the two phases will be on the same genomic scale, but recombinations in the selected phase occur first moving backward in time and so obscure the patterns of the sample described above (see grey bars in Figure \ref{cartoon_3_kinds}Cii). As before the physical distance along the sequence to each recombination during the selected phase is independently $\sim \exp(r_{BP} t_f) $, such that the core region swept clean of diversity to be  $\sim \exp \left( R_f T_{tot} + r_{bp} n t_{f} \right)$. The ability to see the colored haplotype structure will depend strongly on the exact magnitude of $t_f$ as compared to $N_e f$, and is likely to be highly stochastic across replicates.
 
 
+\subsection{Inference Concerns}
 
-%  In our sample of two, because we assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero, the two lineages recombine out of the selected phase independently, and thus
-% $$P_{norec,s,2} = e^{-2r\mathcal{T}_{\left(s,f\right)}}.$$
+Some authors have developed methods to infer the existence of standing sweeps \citep{Peter:2012hta} or multiple hit soft sweeps \citep{Garud:2013ve}. Here, we apply our model of a standing sweep to understand the limitations to inference of standing sweeps and to explore issues of potential confounding between standing and multiple hit soft sweeps.
+
+If $f N_e$ is not a lot smaller than $N_e$ then the resulting sweep will be very hard to distinguish from neutral patterns of diversity, much like the difficulty of identifying weak full sweeps. Obviously we can still potentially identify the allele as a putative signal of selection, if we also identify it as an unusually large change in allele frequencies between populations. In that case the lack of a haplotype signal may alter us that the allele potentially swept from standing variation. In the absence of data from populations where the allele has not swept, we are restricted to identifying alleles where $f N_e + t_f \ll N_e$. In that case the core region swept clean of variation should usually be distinguishable from background fluctations in diversity (controling for mutation rate, e.g. via divergence data). However, the trough in diversity will be smaller than an equivalent classic sweep with $t_S \approx t_f$ if $f \gg 1/(2N_e)$. A sweep consisting of multiple adaptive alleles will not result in a region swept clear of diversity, as there is no one core haplotype.
+
+Approaches that are based on looking for an unusually long persistance of haplotypes REFS should have much better power to identify all three kinds of sweep. If $\theta_B$ is not too large, or equivalently if $N_ef$ is on the order of $t_f$ or smaller, then we should have multiple pairs (or higher) of haplotypes that match each other out to a genetic distance of $\sim 1/s$. Obviously the cluster of similar haplotypes is larger in the case of a classic sweep, and so it will likely be hard to design a test that has roughly uniform power over all three types of sweep (particularly the type of sweep from standing variation).
+
+One key signal of a full sweep has been the prescence of singleton (or low frequency) recombinants off the sweep, leading to high frequency derived variants and contributing to the excess of singleton alleles. If the majority of our singleton recombinants arose
 
 
+\subsubsection{Are $s$ and $f$ independently inferable?}
 
-% Let's start with the simple case of a sample of two lineages, and work through how to calculate the expected pairwise diversity relative to neutral levels at a given distance form the selected site. We imagine taking a sample of two lineages at the neutral locus the moment the sweep fixes and tracing their genealogy backwards in time. We separate the history of the locus into two different regimes; the first being the time period during which the sweep is occurring, and the second being the period prior to which the allele became beneficial, during which it was either balanced or neutrally drifting at a constant frequency $f$. We make the simplifying assumptions that only recombination (but no coalescence or mutation) can occur during the course of the sweep, while only recombination and coalescence (but no mutation) can occur during the phase when the beneficial allele is polymorphic but neutral in the population. Therefore all diversity arises due to mutations that occurred (forward in time) before the neutral locus came to be associated with the beneficial allele. We will see from simulation results that this is a reasonable assumption. 
+In our standing sweep model, the information indicating that the sweep began from standing variation comes primarily from an observation that the genealogy at the selected site is shrunken by a factor $f$, while the information about the sweep comes form of the external branches of this genealogy being slightly longer than expected under this rescaling. The task of an inference procedure designed to identify standing sweeps is then to determine both that this shrunken genealogy exists (and that it is smaller than would be expected under neutrality), and that its external branches are too long, given the times in the rest of the tree.
 
-% For our purposes it will serve simply to track whether both lineages fail to recombine off of the selected background or not. If either lineage recombines of the selected background, then they coalesce on the standard neutral timescale of $2N$ generations. Otherwise, coalescence during the neutral phase is essentially instantaneous relative to the timescale of mutation, such that we can calculate the expected reduction in pairwise diversity as $1-P_{coal,2}$, where $P_{coal,2}$ is the probability that the two lineages are forced to coalesce before either of them recombines off the background of the beneficial allele. $P_{coal,2}$ can be obtained as $P_{norec,s,2}P_{coalfirst,n,2}$ \jb{I don't know what to call these things in any compact yet readable notation}, where $P_{norec,s,2}$ is the probability that neither lineage recombines off the selected background during the course of the sweep, and $P_{coalfirst,n,2}$ is the probability that the two lineages coalesce during the neutral phase before either of them recombines off the background of the beneficial allele, assuming neither recombined off during the sweep. We'll treat $P_{norec,s,2}$ first and $P_{coalfirst,n,2}$ after that.
+Under our simplified model, 
 
-% If we let $X\left(t\right)$ be the frequency of the selected allele at time $t$ in the past, the probability that a single lineage fails to recombine off in generation $t$ is $e^{-r\left(1-X(t)\right)}$. The probability that a single lineage manages to recombine off the selected background at any point during the course of the sweep is given by $e^{-r \int_f^{1}(1-X\left(t\right))\mathrm{d}X\left(t\right)}$. For now I will simply set $\mathcal{T}_{\left(s,f\right)} = \int_f^{1}(1-X\left(t\right))\mathrm{d}X\left(t\right)$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep is $e^{-r\mathcal{T}_{\left(s,f\right)}}$. In our sample of two, because we assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero, the two lineages recombine out of the selected phase independently, and thus
-% $$P_{norec,s,2} = e^{-2r\mathcal{T}_{\left(s,f\right)}}.$$
+\gc{points to hit}
 
-% Now let's consider the second phase, in which the (soon to be) beneficial allele is either balanced or neutral. We make the simplifying assumption that if the frequency of the allele was $f$ when the sweep began, then it is held constant at $f$ for the time period that is relevant to the processes we are interested in. Because the two alleles exist within a small subpopulation with size $2Nf$, they coalesce at rate $\frac{1}{2Nf}$. Each lineage at the neutral locus recombines off the background of the (future) selected allele at a rate $r(1-f)$. Therefore, the probability that the two lineages coalesce before either of them manages to recombine off the background is given by
-% $$P_{coalfirst,n,2} = \frac{\frac{1}{2Nf}}{\frac{1}{2Nf} + r(1-f)} = \frac{1}{1 + 4Nrf(1-f)}.$$
+Are s and f distinguishable or both inferable.
+--Weak selection maybe everyone recoms out
+--Large f maybe no signal of sweep?
+--What fraction of the singleton recombinants come from selected vs stand phases?
+--Do you get to see the singleton recombinants from the sweep. Total coalescent time in sweep phase vs total time in standing phase?
 
-% Taking these together we find that the expected pairwise diversity at distance $r$ away from a sweep from standing variation that begins from frequency $f$ is approximately equal to
-% $$\pi_{r,s,f} = \pi_0\left(1 - \frac{e^{-2r\mathcal{T}_{\left(s,f\right)}}}{1 + 4Nrf\left(1-f\right)}\right).$$
+Comparison to multiple mutations. 
+--What makes the two cases distinguishable
+--Code up? Pennings and Hermisson.
 
-% Examining the formula for $P_{coalfirst,n,2}$, we notice that it is very similar to the formula for the probability that two lineages chosen randomly from a population are of the same allelic type under the Ewens Sampling Formula, which is given by $\frac{1}{1+4N\mu}$. Specifically, we've just replaced the mutation parameter $\mu$ in the standard Ewens Sample Formula with the compound parameter $rf\left(1-f\right)$, which can be though of as the per generation probability that a randomly chosen lineage recombines off of the background of the beneficial allele onto the other background (there is a probability $f$ that the randomly chosen lineage is currently on the beneficial background, and given that it is, a probability $r\left(1-f\right)$ that it recombines onto the other background). For ease of bookkeeping, we will let $R_f = 4Nrf\left(1-f\right)$.
 
-% The observation regarding the the Ewens Sampling Formula above is in fact general, in the sense that if $n$ lineages sampled in the present day fail to recombine off of the selected background during the course of the sweep, then the  probability that these $n$ lineages coalesce into a set of $k$ families and that the number of coalescent families with $1,2,\dots,n$ lineages is given by the partition $\{a_1,a_2,\dots,a_n\}$ is 
-% $$P\left(k,a_1,a_2,\dots,a_n\right) = \frac{n!R_f^k}{{R_f}_{\left(n\right)}}\prod_{j=1}^n\frac{1}{j^{a_j}a_j!}$$
-% where ${R_f}_{\left(n\right)} = \prod_{i=0}^{n-1}\left(R_f+i\right)$.
+Time since to sweep. 
+--does this mess things up?
+--scale of recombination and coalescence leading up to sweep.
+--Maybe just have this discussion.
+
 
 \section{Discussion}
+
+Gene conversion --minor point in discussion too. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
