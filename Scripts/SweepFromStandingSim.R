@@ -104,7 +104,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 }
 
 SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
-	options ( error = recover )
+	#options ( error = recover )
 	#recover()
 	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
