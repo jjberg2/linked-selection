@@ -3,7 +3,7 @@
 #args <- commandArgs(trailingOnly=T)
 run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path  , get.site.density = TRUE , recom = FALSE ) {
 	#recover()
-	
+	options ( "scipen" = 100 , "digits" = 4 )
 	f.lab <- strsplit ( as.character ( f ) , "\\." ) [[ 1 ]] [ 2 ]
 	s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]
 	
