@@ -3,7 +3,7 @@ source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
 
 
 
-real.fs <- c ( 0.001 , 0.01 , 0.05 , 0.1 )
+real.fs <- c ( 1 / 20000 , 0.001 , 0.01 , 0.05 , 0.1 )
 my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.05 , f = x , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T ) )
 many.sim.freqs <- list ( my.runs , real.fs )
 save ( many.sim.freqs  ,  file = "~/Documents/Academics/StandingSweeps/Sims/freqs.traj.s05.Rdata"  )
@@ -66,6 +66,12 @@ for ( i in 1 : length ( real.fs ) ) {
 }
 
 
+P_NR <- exp ( - r * log ( 2 * N * s ) / s )
+for ( j in 1 : length ( r ) ) {
+	binom <- dbinom ( 0 : n , n , P_NR [ j ] )
+	std.time [ j ] <-  sum ( c ( tail ( tot.times , 1 ) , rev ( tot.times ) ) * binom ) /  tail ( tot.times , 1 )
+}
+
 
 
 for ( i in 1 : length ( real.fs ) ) {
@@ -73,6 +79,19 @@ for ( i in 1 : length ( real.fs ) ) {
 	lines ( R , my.time [[ i ]] , lty = 2 , lwd = 2 , col = i )
 
 }
+
+lines ( R , std.time , lty = 3 , lwd = 2 , col = "black" )
+
+
+
+
+
+
+
+
+
+
+
 
 
 
