@@ -104,7 +104,7 @@ source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', ch
 source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
 
 
-real.fs <- c ( 1 / 20000 , 0.001 , 0.01 , 0.02 , 0.04 , 0.06 , 0.08 , 0.1 )
+real.fs <- c ( 1 / 20000 , 0.001 , 0.01 , 0.05 , 0.1 )
 my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , s = 0.05 , f = x , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T ) )
 many.sim.freqs <- list ( my.runs , real.fs )
 save ( many.sim.freqs  ,  file = "~/Documents/Academics/StandingSweeps/Sims/freqs.traj.s05.Rdata"  )
