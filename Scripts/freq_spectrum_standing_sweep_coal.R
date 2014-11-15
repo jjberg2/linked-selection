@@ -1,3 +1,4 @@
+source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
 ####frequency spectrum
 
 real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
@@ -11,51 +12,53 @@ real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
 load( file = "~/../Shared/11000freq.trajectories.Rdata")  #graham's work machine
 #load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )    ##Jeremy's machine
 
-#Sys.info()["nodename"]
-#path = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/"  ##Jeremy's machine
-path = "~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/" #graham's work machine
+this.comp <-Sys.info()["nodename"]
+setwd ( "~/Documents/Academics/StandingSweeps/" )  ##Jeremy's machine
+##path = "~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/" #graham's work machine
 
 
 
 
-expected.freq.times.standing(n=10,N=N,r=,distance,f)
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
 
 ####freq. spectrum w. no rec. during sweeps.
 
 expected.freq.times.standing<-function(n,N,r,distance,f){
+	recover()
+	#my.StirlingNumbers<-StirlingNumbers(n) 
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 
-#my.StirlingNumbers<-StirlingNumbers(n) 
-ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=distance , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
-
-my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma
 
 
-expected.t.l<-rep(NA,n)
-for(l in 1:(n-1)){
-
-	freq.specs<-sapply(1:n,function(k){
-		freq.spec<-rep(NA,n)
-		freq.spec[1:k]<-(1/(1:k))
-		return(freq.spec)
-	})
-	
-	freq.specs<-t(freq.specs)
-#	recover()
-	terms.in.sum<-rep(0,n)
-	for(k in 2:n){   ##runs from 2 otherwise there are no polymorphism
+	expected.t.l<-rep(NA,n-1)
+	p_l_given_k <- array ( NA , dim = c ( n , n  ,n ) )
+	for(l in 1:(n-1)){
+		freq.specs<-sapply(1:n,function(k){
+			freq.spec<-rep(NA,n)
+			freq.spec[1:k]<-(1/(1:k))
+			return(freq.spec)
+		}
+		)	
+		freq.specs<-t(freq.specs)
+	#	recover()
+		terms.in.sum<-rep(0,n)
+		for(k in 2:n) {
+			##runs from 2 otherwise there are no polymorphism
 			for(j in 1:(k-1)){
-			stirling.bit<-	my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]
-			p_l_given_k<-stirling.bit*choose(n,l)/choose(k,l)
-			if(!is.finite(p_l_given_k)){ p_l_given_k<-0 }  ##cat("problem",l,k,j," "); ##is this right?
-			terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k*freq.specs[k,j]
-			stopifnot(is.finite(terms.in.sum[k])) 
-		}		
+				if ( l > k ) next
+				
+				stirling.bit<-	my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,l)
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]
+				stopifnot(is.finite(terms.in.sum[k])) 
+			}		
+		}
+		expected.t.l[l]<-sum(terms.in.sum)
 	}
-
-	expected.t.l[l]<-sum(terms.in.sum)
-}
-
-return(expected.t.l)
+	
+	return(expected.t.l)
 }
 
 
