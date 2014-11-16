@@ -1,11 +1,12 @@
 
 
 #args <- commandArgs(trailingOnly=T)
-run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path  , get.site.density = TRUE , recom = FALSE ) {
+run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path , ext = "", get.site.density = TRUE , recom = FALSE ) {
 	#recover()
 	options ( "scipen" = 100 , "digits" = 4 )
 	f.lab <- strsplit ( as.character ( f ) , "\\." ) [[ 1 ]] [ 2 ]
 	s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]
+	counter <- 1
 	
 	my.file <- paste ( path , "Sims/mssel_f" , n.sam ,  f.lab  , s.lab , N  , ".out" , sep = "" )
 	num.sims<-20
@@ -25,15 +26,15 @@ run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path  , get.site.density 
 		
 		my.times <- my.times / ( 4*N  )
 
-#		recover()
+		#recover()
 		header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
-		write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , header.material )
-		write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+		write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext , ".traj" , sep = "" ) , header.material )
+		write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." ,ext, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
 		cat( i ," " )
 		if ( get.site.density ) { 
 			system ( paste ( path , "Scripts/msseldir/mssel " , n.sam , " 20 0 " , n.sam , " " , path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> " , my.file , sep = "" ) )
 		}	else	{   ##setup for the mo. to do freq. spectrum
-			system ( paste ( "Sims/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) ) 
+			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) ) 
 			
 			spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
 			my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec
@@ -57,7 +58,8 @@ get.mut.density<-function(file){
 }
 
 get.freq.spec<-function(n,num.sims, path){
-	a<-system(paste("grep segsites ", path,"myseqdata",sep=""),intern=TRUE)
+	#recover()
+	a<-system(paste("grep segsites ","Sims/myseqdata",sep=""),intern=TRUE)
 	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
 	polymorph<- seg.sites>0
 	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	

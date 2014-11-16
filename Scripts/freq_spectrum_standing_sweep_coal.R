@@ -1,4 +1,5 @@
 source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
 ####frequency spectrum
 
 real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
@@ -9,7 +10,7 @@ real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
 #save ( my.runs , file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata")
 
 
-load( file = "~/../Shared/11000freq.trajectories.Rdata")  #graham's work machine
+##load( file = "~/../Shared/11000freq.trajectories.Rdata")  #graham's work machine
 #load ( file = "~/Documents/Academics/CoopLab/Projects/StandingSweeps/Sims/11000freq.trajectories.Rdata" )    ##Jeremy's machine
 
 this.comp <-Sys.info()["nodename"]
@@ -61,6 +62,14 @@ expected.freq.times.standing<-function(n,N,r,distance,f){
 	
 	return(expected.t.l)
 }
+
+
+
+my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+
+
 
 
 
