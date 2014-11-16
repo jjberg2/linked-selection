@@ -29,27 +29,28 @@ expected.freq.times.standing<-function(n,N,r,distance,f){
 	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 
 	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma
+	
 
-
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )
 	expected.t.l<-rep(NA,n-1)
-	p_l_given_k <- array ( NA , dim = c ( n , n  ,n ) )
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )
 	for(l in 1:(n-1)){
 		freq.specs<-sapply(1:n,function(k){
 			freq.spec<-rep(NA,n)
-			freq.spec[1:k]<-(1/(1:k))
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )
 			return(freq.spec)
 		}
 		)	
 		freq.specs<-t(freq.specs)
 	#	recover()
 		terms.in.sum<-rep(0,n)
-		for(k in 2:n) {
+		for(k in 2: ( n - 1 ) ) {
 			##runs from 2 otherwise there are no polymorphism
 			for(j in 1:(k-1)){
-				if ( l > k ) next
 				
-				stirling.bit<-	my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]
-				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,l)
+				
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)
 				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?
 				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]
 				stopifnot(is.finite(terms.in.sum[k])) 
