@@ -25,7 +25,7 @@ expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
 ####freq. spectrum w. no rec. during sweeps.
 
 expected.freq.times.standing<-function(n,N,r,distance,f){
-	recover()
+	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n) 
 	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 
