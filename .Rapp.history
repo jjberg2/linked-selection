@@ -1,794 +1,879 @@
-MakeVar ( 0.5 , 10000 , 0.01 , 2 )
 Q
-MakeVar <- function ( p , n_rep , Fst , n_pop ) {#
-	#recover()#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
+expected.freq.times.standing<-function(n,N,r,distance,f){#
 	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-}#
-MakeVar ( 0.5 , 10000 , 0.01 , 2 )
-ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )
-hist ( ts_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )
-hist ( ts_true , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_mean , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-par ( mfrow = c ( 1 ,2 ))
-hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )
-par ( mfrow = c ( 1 ,1 ))
-var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )
-hist ( var_true , breaks = 50 , freq = F )
-curve ( dchisq ( x , n_pop  ) , add = T , col = "red")
-rand = T
-if ( rand ) p <- runif ( n_rep )
-p
-new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )
-p
-p <- runif ( n_rep )
-p
-p <- runif ( n_rep )
-p
-n_loc = 100
-p <- runif ( n_loc * n_rep )
-length(p)
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_pop )
-p
-dim(p)
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-dim(p)
-p[,1]
-p[,1] * diag ( 100 )
-p[,1] * (1-p[,1] )* diag ( 100 )
-apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , x  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
-x
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) ) )
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_pop ) )
-n_loc
-rmvnorm ( 1 , 0  , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
-rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-dim(new_ps)
-head(new_ps)
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- apply ( new_ps , 2 , function ( x ) sum ( x * ( 1 - x ) ) )
-vars_t
-colSums ( new_ps * ( 1 - new_ps ) )
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-p * ( 1 - p )
-colSums ( p * ( 1 - p ) )
-vars_t
-vars_0 <- colSums ( p * ( 1 - p ) )
-vars_0 - vars_t
-Fst * vars_0
-( vars_0 - vars_t ) / ( Fst * vars_0 )
-vars_start <- colSums ( p * ( 1 - p ) )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , T , 100 )
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	recover()#
-	if ( rand ) {#
-		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		( vars_start - vars_t ) / ( Fst * vars_start )#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
 #
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-p
-n_rep
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-vars_t
-vars_start <- colSums ( p * ( 1 - p ) )
-vars_start
-( vars_start - vars_t ) / ( Fst * vars_start )
-my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
 	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-dt
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 50 )
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 1000 )
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 200 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")
-sd ( my.stat)
-curve ( dnorm ( x , 1, 0.83) , add = T , col = "red")
-qqplot ( my.stat , dnorm ( x , 1, 0.83))
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , 1, 1.1) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
+	return(expected.t.l)#
 }
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 300 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-p
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-		recover()	#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 100 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-mean ( my.stat )
-var ( my.stat )
-sd ( my.stat )
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-warnings()
-p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )
-new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )
-new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)
-new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)
-vars_t <- colSums ( new_ps * ( 1 - new_ps ) )
-vars_start <- colSums ( p * ( 1 - p ) )
-vars_start
-vars_t
-vars_start
-my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-vars_start - vars_t
-hist ( vars_start - vars_t , breaks = 50 , freq = F )
-Q
-MakeVar ( 0.25 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-n_loc
-Q
-MakeVar <- function ( p , n_rep , Fst , n_pop , rand , n_loc ) {#
-	if ( rand ) {#
-		#p <- matrix ( runif ( n_loc * n_rep )	, nrow = n_loc , ncol = n_rep )#
-		#p <- matrix ( rnorm ( n_loc * n_rep , p , 0.01 )	, nrow = n_loc , ncol = n_rep )#
-		p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )#
-		hist ( my.stat , breaks = 50 , freq = F)#
-		curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")#
-		recover()	#
-#
-		mean ( my.stat )#
-		var ( my.stat )#
-		sd ( my.stat )#
-	} else {#
-	new_ps <- p + rmvnorm ( n_rep , sigma = Fst * p * ( 1 - p ) * diag ( n_pop ) )#
-	new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-	new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-	}#
-	p_bars <- rowMeans ( new_ps )#
-	par ( mfrow = c ( 2,2))#
-	recover()#
-	#####
-	ts_mean <- (n_pop - 1 ) * ( p_bars * ( 1 - p_bars ) - rowMeans ( new_ps * ( 1 - new_ps ) ) ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( ts_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	var_mean <- rowSums ( ( new_ps- p_bars )^2 ) / ( Fst * p_bars * ( 1 - p_bars ) )#
-	hist ( var_mean , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop - 1  ) , add = T , col = "red")#
-	#####
-	ts_true <- (n_pop ) * ( p * ( 1 - p ) - rowMeans ( new_ps * ( 1 - new_ps ) ) )  / ( Fst * ( p * ( 1 - p ) ) )#
-	hist ( ts_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	#####
-	var_true <- rowSums ( ( new_ps- p )^2 ) / ( Fst * p * ( 1 - p ) )#
-	hist ( var_true , breaks = 50 , freq = F )#
-	curve ( dchisq ( x , n_pop  ) , add = T , col = "red")#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-	hist ( ts_true , breaks = 50 , freq = F , col = rgb ( 1 , 0 , 0 , 0.4 ) )#
-#
-}#
-MakeVar ( 0.5 , 10000 , 0.01 , 2 , rand = T , n_loc = 10 )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p=0.45
-p <- matrix ( p	, nrow = n_loc , ncol = n_rep )#
-		new_ps <- apply ( p , 2 , function ( x ) x + rmvnorm ( 1 , sigma = Fst * x * ( 1 - x ) * diag ( n_loc ) ) )#
-		new_ps <- ifelse ( new_ps < 0 , 0 , new_ps)#
-		new_ps <- ifelse ( new_ps > 1 , 1 , new_ps)#
-		vars_t <- colSums ( new_ps * ( 1 - new_ps ) )#
-		vars_start <- colSums ( p * ( 1 - p ) )#
-		my.stat <- ( vars_start - vars_t ) / ( Fst * vars_start )
-hist ( my.stat , breaks = 50 , freq = F)
-curve ( dnorm ( x , mean ( my.stat ), sd ( my.stat )) , add = T , col = "red")
-p <- numeric ( n_loc * n_rep )
-p
-tmp <- runif ( )
-tmp <- runif ( 1 )
-tmp
-blah <- integrate( function ( x ) 1/ x  , 0 , 1 )
-blah <- integrate( function ( x ) 1/ x  , 0.00001 , 1 )
-blah
-integrate( function ( x ) 1/ x  , 0.000001 , 1 )
-integrate( function ( x ) 1/ x  , 0.0000001 , 1 )
-integrate( function ( x ) 1/ x  , 0.00000001 , 1 )
-1/20000
-integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-tmp <- runif ( 1 )
-tmp
-denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-1/tmp
-(1/tmp)/denom
-denom
-names(denom)
-denom$value
-(1/tmp)/denom$value
-n_rep
-tmp
-p <- numeric ( n_loc * n_rep )
-i = 1 #
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
-hist ( p , breaks = 500 , freq = F)
-hist ( p , breaks = 50 , freq = F)
-tmp =0.0001
-denom
-denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )
-denom
-1/tmp
-(1/tmp)/denom$value
-tmp
-tmp = 0.0000001
-tmp < 1/20000
-p <- numeric ( n_loc * n_rep )#
-		i = 1 #
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
-			denom <- integrate( function ( x ) 1/ x  , 1/20000 , 19999/20000 )#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
-hist ( p , breaks = 50)
-denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )
-denom
-p <- numeric ( n_loc * n_rep )#
-		i = 1 #
-		denom <- integrate( function ( x ) 1/ x  , 0.00000000000000001 , 1 )#
-		while ( i <= n_loc * n_rep ) {#
-			tmp <- runif ( 1 )#
-			if ( tmp < 1/20000 | tmp > ( 1 - 1/20000 ) ) next#
-			if ( runif ( 1 ) < (1/tmp)/denom$value ) {#
-				p [ i ] <- tmp#
-				i <- i + 1#
-			} else {#
-				next#
-			}#
-		}
-p
-run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
-	recover()#
-	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
-	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
-	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
-	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
-	#recover()#
-	ld.stats <- list ()#
-	for ( i in 1 : length ( my.trajectories ) ) {#
-		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
-		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
-		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
-		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 100000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
-	}#
-	# for ( i in 1 : length ( my.trajectories ) ) {#
-		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
-	# }#
-	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
-		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
-			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
-			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
-			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
-			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
-			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
-		# }#
-		# print ( i )#
-	# }#
-	# return ( list ( sig.sq , r.sq ) )#
-}
-run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
-run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
-	#recover()#
-	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
-	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
-	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
-	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
-	#recover()#
-	ld.stats <- list ()#
-	for ( i in 1 : length ( my.trajectories ) ) {#
-		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
-		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
-		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
-		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 100000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
-	}#
-	# for ( i in 1 : length ( my.trajectories ) ) {#
-		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
-	# }#
-	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
-		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
-			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
-			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
-			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
-			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
-			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
-		# }#
-		# print ( i )#
-	# }#
-	# return ( list ( sig.sq , r.sq ) )#
-}
-run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
-run.ms.f<-function( n.sam , f , s , no.sweep , reps , N , n.loc ){#
-	#recover()#
-	source ( "/Users/JeremyBerg/Documents/Academics/StandingSweep/Scripts/SweepFromStandingSim.R")#
-	setwd("/Users/JeremyBerg/Documents/Academics/StandingSweep")#
-	freqs <- SweepFromStandingSim ( N , s , f , reps , no.sweep , cond.on.loss = T , cond.on.fix = T , display.rep.count = T ) [[ 1 ]]#
-	my.trajectories <- apply ( freqs , 1 , function ( x ) cbind ( 0 : ( length ( x [ x != 0 ] ) ) / ( 4*N ) , c ( rev ( x [ x != 0 ]  ) , 0 ) ) )#
-	#recover()#
-	ld.stats <- list ()#
-	for ( i in 1 : length ( my.trajectories ) ) {#
-		header.material <- c ( "1" , "1" , paste ( "n:" , nrow ( my.trajectories [[ i ]] ) ) )#
-		write ( header.material , file = paste ( "Working/freq.traj." , i , sep = "" ) )#
-		write.table ( my.trajectories [[  i ]] , file = paste ( "Working/freq.traj." , i , sep = "" ) , quote = F , row.names = F , col.names = F , append = T , sep = "\t" )#
-		system(paste("Scripts/msseldir/mssel ",n.sam," 1 0 ",n.sam," Working/freq.traj.",i," 20 -t 10000.0 -r 2000.0 " , n.loc , " > Output/myseqdata" , i ,sep="") )#
-	}#
-	# for ( i in 1 : length ( my.trajectories ) ) {#
-		# ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		# ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
-	# }#
-	# sig.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# r.sq <- matrix ( NA , nrow = n.loc , ncol = n.loc )#
-	# for ( i in levels ( ld.stats [[1]][[4]]) ) {#
-		# for ( j in levels ( ld.stats [[1]][[4]]) ) {#
-			# site.one <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == i ) )#
-			# site.two <- lapply ( ld.stats , function ( x ) which ( x [[ 4 ]] == j ) )#
-			# temp <- mapply ( function ( x , y , z ) { D.stat.sq <- x [[ 1 ]] [ y , z ] ; denom <- x [[ 2 ]] [ y , z ]; return ( list ( D.stat.sq , denom ) ) } , x = ld.stats , y = site.one , z = site.two )#
-			# sig.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) ) / mean ( unlist ( temp [ 2 , ] ) )#
-			# r.sq [ which ( levels ( ld.stats [[1]][[4]]) == i ) , which ( levels ( ld.stats [[1]][[4]]) == j ) ] <- mean ( unlist ( temp [ 1 , ] ) / unlist ( temp [ 2 , ] ) )	#
-		# }#
-		# print ( i )#
-	# }#
-	# return ( list ( sig.sq , r.sq ) )#
-}
-run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
-run.ms.f ( n.sam = 20 , f = 0.001 , s = 0.01 , no.sweep = T , reps = 100 , N = 10000 , n.loc = 40 )
-for ( i in 1 : length ( my.trajectories ) ) {#
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
+ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+ESF.prob.k
+my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma
+my.StirlingNumbers
+my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )
+for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
 	}
-for ( i in 1 : 100 ) {#
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+expected.t.l
+my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+my.runs
+Q
+my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] ,f.index=1, n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] ,f.index=1, n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)
+recom
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , get.site.density = FALSE )
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , get.site.density = FALSE )
+i
+header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , header.material )
+write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+cat( i ," " )
+recom
+recoms<- seq(1,200,length=20)
+recoms
+recoms/200
+recoms/(40000)
+recoms=100
+recom=100
+system ( paste ( "Sims/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
+paste ( "Sims/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" )
+header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
+paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" )
+Q
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
+header.material
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , header.material )
+write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, , ext , ".traj" , sep = "" ) , header.material )
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ext , ".traj" , sep = "" ) , header.material )
+ext
+paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ext , ".traj" , sep = "" )
+paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext , ".traj" , sep = "" )
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext , ".traj" , sep = "" ) , header.material )
+write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." , ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+cat( i ," " )
+system ( paste ( "Sims/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+getwd()
+system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." ,ext, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." ,ext, ".traj" , sep = "" )
+paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" )
+system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
+paste("grep segsites ", path,"myseqdata",sep="")
+path
+get.freq.spec<-function(n,num.sims, path){#
+	a<-system(paste("grep segsites ","Sims/myseqdata",sep=""),intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){		#
+		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}#
+		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)#
+#		print(positions[1])#
+#		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		seqs.raw<-scan(paste(path, "Sims/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+return(freq.specs)#
 }
-LDSimCalc <- function ( file.name ) {#
+get.freq.spec<-function(n,num.sims, path){#
+	recover()#
+	a<-system(paste("grep segsites ","Sims/myseqdata",sep=""),intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){		#
+		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}#
+		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)#
+#		print(positions[1])#
+#		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		seqs.raw<-scan(paste(path, "Sims/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+return(freq.specs)#
+}
+spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
+a<-system(paste("grep segsites ","Sims/myseqdata",sep=""),intern=TRUE)
+a
+seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
+seg.sites
+polymorph<- seg.sites>0
+seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])
+freq.specs<-sapply(0:(num.sims-1),function(iter){		#
+		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}#
+		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)#
+#		print(positions[1])#
+#		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		seqs.raw<-scan(paste(path, "Sims/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})
+freq.specs
+num.sims
+seg.sites
+length(seg.sites)
+polymorph
+c
+Q
+get.freq.spec<-function(n,num.sims, path){#
 	#recover()#
-	my.con <- file ( file.name )#
-	open ( my.con )#
-	my.lines <- readLines ( my.con )#
-	close ( my.con )#
-	pos.line.id <- grep ( "pos" , my.lines )#
-	pos.line <- my.lines [ pos.line.id ]#
-	positions <- as.numeric ( strsplit ( pos.line , " ")[[ 1 ]] [ -1 ] )#
-	geno.lines <- my.lines [ ( pos.line.id + 1 ) : length ( my.lines ) ]#
-	split.geno.lines <-  lapply ( strsplit ( geno.lines , "" ) , as.numeric )#
-	geno.mat <- do.call ( rbind , split.geno.lines )#
-	D.stat.sq <- cov ( geno.mat )^2#
-	freqs <- colMeans ( geno.mat )#
-	rt.vars <- sqrt ( freqs * ( 1 - freqs ) )#
-	var.prod.mat <- rt.vars %o% rt.vars#
-	return ( list ( D.stat.sq , var.prod.mat , positions ) )#
+	a<-system(paste("grep segsites ","Sims/myseqdata",sep=""),intern=TRUE)#
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})#
+	polymorph<- seg.sites>0#
+	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	#
+	freq.specs<-sapply(0:(num.sims-1),function(iter){		#
+		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}#
+		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)#
+#		print(positions[1])#
+#		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		#
+		seqs.raw<-scan(paste(path, "Sims/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)#
+		seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})#
+		colnames(seqs)<-NULL#
+		seqs<-t(seqs)#
+		these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label#
+		if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}#
+		seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.#
+		if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}#
+		mut.freq<-colSums(seqs)#
+		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})#
+		return(freq.spec)#
+	})#
+return(freq.specs)#
 }
-for ( i in 1 : 100 ) {#
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path , ext = "", get.site.density = TRUE , recom = FALSE ) {#
+	#recover()#
+	options ( "scipen" = 100 , "digits" = 4 )#
+	f.lab <- strsplit ( as.character ( f ) , "\\." ) [[ 1 ]] [ 2 ]#
+	s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]#
+	my.file <- paste ( path , "Sims/mssel_f" , n.sam ,  f.lab  , s.lab , N  , ".out" , sep = "" )#
+	num.sims<-20#
+	system ( paste ( "rm " , my.file ) )#
+	#for ( run in 1:5 ) {#
+	#	load ( paste ( "run_cond_lost_" , run , ".Robj" , sep = "" ) )#
+#
+	if (! get.site.density ) {#
+		my.specs <- matrix ( NA , nrow = n.sam , ncol = num.sims * nrow ( runs ) )#
+	}#
+	for ( i in 1: nrow ( runs ) ) {#
+#
+		my.freqs <- runs [ i , runs [ i , ] > 0 ]#
+		my.times <- 0 : length ( my.freqs )#
+		my.freqs <- c ( my.freqs , 0 )#
+		my.times <- my.times / ( 4*N  )#
+#
+		#recover()#
+		header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )#
+		write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext , ".traj" , sep = "" ) , header.material )#
+		write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." ,ext, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )#
+		cat( i ," " )#
+		if ( get.site.density ) { #
+			system ( paste ( path , "Scripts/msseldir/mssel " , n.sam , " 20 0 " , n.sam , " " , path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> " , my.file , sep = "" ) )#
+		}	else	{   ##setup for the mo. to do freq. spectrum#
+			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) ) #
+			spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )#
+			my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec#
+			counter<-counter+1#
+			#recover()#
+		}#
+	}#
+	if (! get.site.density ) return(my.specs)#
 }
-ld.stats = list()
-for ( i in 1 : 100 ) {#
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
+write ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext , ".traj" , sep = "" ) , header.material )
+write.table ( file = paste ( path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N , "." ,ext, ".traj" , sep = "" ) , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
+cat( i ," " )
+system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 20 , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, "." ,ext, ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata" , sep = "" ) )
+spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
+(1+(counter-1)*num.sims):(counter*num.sims)
+spec
+my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec
+my.specs
+counter<-counter+1
+Q
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+my.freqs.specs
+rowSums ( my.freqs.specs )
+blah <- rowSums ( my.freqs.specs )
+blah / sum ( blah)
+plot ( blah / sum ( blah) , pch = 20 )
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+my.freqs.specs
+rowSums(my.freqs.specs)
+rowSums(my.freqs.specs)/sum ( rowSums(my.freq.specs))
+rowSums(my.freqs.specs)
+rowSums(my.freqs.specs)/sum(my.freqs.spec)
+rowSums(my.freqs.specs)/sum(my.freqs.specs)
+plot ( rowSums(my.freqs.specs)/sum(my.freqs.specs) , pch = 20 )
+setwd("..")
+ls
+getwd()
+setwd("DataResources/Software/treemix/src/")
+source("plotting_funcs.R")
+source("plotting_funcs.R")
+ls()
+rm ( list = ls())
+source("plotting_funcs.R")
+ls()
+plot_tree
+setwd("../../../HGDP/")
+plot_tree("out_stem")
+plot_tree("out_stem")
+600/30
+600/20
+600/25
+expected.freq.times.standing<-function(n,N,r,distance,f){#
+	#recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
+source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
+source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
+expected.freq.times.standing<-function(n,N,r,distance,f){#
+	#recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
+expected.freq.times.standing(n=10,N=10000,r = 0.1 , f = 0.05 )
+expected.freq.times.standing(n=10,N=10000,r = 0.5 , f = 0.05 )
+blah <- expected.freq.times.standing(n=10,N=10000,r = 0.5 , f = 0.05 )
+blah / sum ( blah )
+1/10
+1/9
+expected.freq.times.standing<-function(n,N,r,distance,f){#
+	recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
+ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+ESF.prob.k
+my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma
+my.StirlingNumbers
+my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )
+my.counter
+for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+expected.t.l
+stirling.bit
+p_l_given_k
+j=7
+k=8
+l=9
+my.StirlingNumbers[l,j]
+n
+c
+expected.freq.times.standing<-function(n,N,r,distance,f){#
+	recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(n)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	expected.t.l<-rep(NA,n-1)#
+	p_l_given_k <- array ( NA , dim = c ( n - 1 , n - 1 , n - 1 ) )#
+	for(l in 1:(n-1)){#
+		freq.specs<-sapply(1:n,function(k){#
+			freq.spec<-rep(NA,n)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,n)#
+		for(k in 2: ( n - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[n,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(n,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[n,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(n=10,N=10000,r = 0.0025 , f = 0.05 )
+ESF.prob.k<-EwensDist( n=n , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+/n
+\n
+Q
+expected.freq.times.standing<-function(nsam,N,r,distance,f){#
+	recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( nsam=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(nsam=10,N=10000,r = 0.0025 , f = 0.05 )
+nsam
+ESF.prob.k<-EwensDist( nsam=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+Q
+expected.freq.times.standing<-function(nsam,N,r,distance,f){#
+	recover()#
+	#my.StirlingNumbers<-StirlingNumbers(n) #
+	ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+#
+	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}#
+	return(expected.t.l)#
+}#
+expected.freq.times.standing(nsam=10,N=10000,r = 0.0025 , f = 0.05 )
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )
+for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[n-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+p_l_given_k
+r=0.5
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+p_l_given_k
+ESF.prob.k
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+ESF.prob.k
+r
+r=1
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+ESF.prob.k
+r=5
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+ESF.prob.k
+my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+expected.t.l
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam - 1 ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+my.counter
+expected.t.l
+p_l_given_k
+freq.specs
+freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)
+freq.specs
+freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)
+freq.specs
+terms.in.sum<-rep(0,nsam)
+stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
+stirling.bit
+j
+k
+stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
+p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)
+stirling.bit
+p_l_given_k [ l , k , j ]
+p_l_given_k
+expected.t.l
+l
+my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2: ( nsam ) ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+stirling.bit
+p_l_given_k
+expected.t.l
+1/9
+(1/9)/sum(1/(1:9))
+1/sum(1/(1:9))
+1/sum(1/(1:10))
+r
+r=10
+expected.t.l
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2 : nsam ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+expected.t.l
+r=0.0025
+ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]#
+	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma#
+	my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )#
+	expected.t.l<-rep(NA,nsam-1)#
+	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam , nsam - 1 ) )#
+	for(l in 1:(nsam-1)){#
+		freq.specs<-sapply(1:nsam,function(k){#
+			freq.spec<-rep(NA,nsam)#
+			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )#
+			return(freq.spec)#
+		}#
+		)	#
+		freq.specs<-t(freq.specs)#
+	#	recover()#
+		terms.in.sum<-rep(0,nsam)#
+		for(k in 2 : nsam ) {#
+			##runs from 2 otherwise there are no polymorphism#
+			for(j in 1:(k-1)){#
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]#
+				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)#
+				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?#
+				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]#
+				stopifnot(is.finite(terms.in.sum[k])) #
+			}		#
+		}#
+		expected.t.l[l]<-sum(terms.in.sum)#
+	}
+expected.t.l
+sum(expected.t.l)
+Q
+recoms<- seq(1,200,length=20)#
+f.freq.spec<-list()#
+for(f.index in 1:length(real.fs)){#
+	print(f.index)#
+	collect.freq.spec<-numeric()#
+	for(recom in recoms){#
+		cat("recom",recom,"\n")#
+		my.freqs.specs<- run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] ,f.index=1, n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)#
+		collect.freq.spec<-cbind(collect.freq.spec,rowMeans(my.freqs.specs))#
+		save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)#
+	}#
+	f.freq.spec[[f.index]]<-collect.freq.spec#
+	save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)#
 }
-n.loc=40
-for ( i in 1 : 100 ) {#
-		ld.stats [[ i ]] <- LDSimCalc ( paste ( "Output/myseqdata" , i , sep = "" ) )#
-		ld.stats [[ i ]] [[ 4 ]] <- cut ( ld.stats [[ i ]] [[ 3 ]] , 0:n.loc/n.loc , include.lowest = T )#
+real.fs <- c ( 0.001 , 0.005 , 0.01 , seq ( 0.02 , 0.2 , length = 10 ) )
+real.fs <- c ( 0.001 ,  0.01 , 0.05 , 0.1 )
+real.fs
+recoms<- seq(1,200,length=20)#
+f.freq.spec<-list()#
+for(f.index in 1:length(real.fs)){#
+	print(f.index)#
+	collect.freq.spec<-numeric()#
+	for(recom in recoms){#
+		cat("recom",recom,"\n")#
+		my.freqs.specs<- run.ms.f ( runs = my.runs [[ f.index ]] [[ 1 ]] ,f.index=1, n.sam = 10 , N = 10000 , path = path,get.site.density = FALSE , recom = recom)#
+		collect.freq.spec<-cbind(collect.freq.spec,rowMeans(my.freqs.specs))#
+		save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)#
+	}#
+	f.freq.spec[[f.index]]<-collect.freq.spec#
+	save(file=paste(path,"Sims/Freq_spec.Robj",sep=""),collect.freq.spec,f.freq.spec)#
 }
-ld.stats
-length(ld.stats[[1]])
-dim(length(ld.stats[[1]][[1]]))
-dim(ld.stats[[1]][[1]])
-dim(ld.stats[[1]][[2]])
-dim(ld.stats[[1]][[3]])
-dim(ld.stats[[1]][[4]])
-dim(ld.stats[[1]][[3]])
-ld.stats[[1]][[3]]
-ld.stats[[1]][[4]]
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+setwd ( "~/Documents/Academics/StandingSweeps/" )  ##Jeremy's machine
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
+my.freqs.specs
+dim(my.freqs.specs)
+rowSums(my.freqs.specs)
+rowSums(my.freqs.specs)/sum(rowSums(my.freqs.specs))
+plot ( rowSums(my.freqs.specs)/sum(rowSums(my.freqs.specs)) , pch = 20 )

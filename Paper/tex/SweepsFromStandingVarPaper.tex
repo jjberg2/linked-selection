@@ -218,7 +218,7 @@ Next, we write $q_{j,k}$ to denote the probability that $j$ out of the $k$ recom
 Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an expression for the frequency spectrum conditional on no recombination in the sweep phase as
 
 \begin{equation}
-p(l \mid i=n) =  \sum_{k=1}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^k q(j\mid k) p(l \mid j,~k, ~n)
+	p(l \mid i=n) =  \sum_{k=2}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^{k-1} q(j\mid k) p(l \mid j,~k, ~n)
 \end{equation}
 %
 %To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where the frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \cite{Pennings:2006fs} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations (see the ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section). We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
@@ -230,7 +230,7 @@ p(l \mid i=n) =  \sum_{k=1}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^k q(j\mid k) 
 
 When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
 \begin{equation}
-p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{i=1}^{l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
+p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{gc=1}^{l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
 \end{equation}
 where A$\wedge$B denotes min(A,B) and
 \begin{equation}
