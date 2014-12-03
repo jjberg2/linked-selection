@@ -27,7 +27,7 @@ setwd ( "~/Documents/Academics/StandingSweeps/" )  ##Jeremy's machine
 expected.freq.times.standing<-function(nsam,N,r,distance,f){
 	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n) 
-	ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+	ESF.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	expected.t.l<-rep(NA,nsam-1)
 	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
@@ -71,6 +71,7 @@ par ( mfrow = c ( 5 , 3 ) )
 my.rs <- rev ( c ( 0.0001 , 0.001 , 0.01 , 0.1 , 0.5 ) )
 blah <- list ()
 specs <- list ()
+norm.spec <- list ()
 
 for ( i in 1 : length ( my.rs ) ) {
 	blah [[ i ]] <- expected.freq.times.standing(nsam=10,N=10000,r = my.rs [ i ] , f = 0.05 )
@@ -79,19 +80,26 @@ for ( i in 1 : length ( my.rs ) ) {
 	my.spec <- ifelse ( specs [[ i ]] == 0 , NA , specs [[ i ]] )
 	matplot ( t ( my.spec ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 , ylim = c ( 0 , 0.4 ) , xlim = c ( 1 , 9 ) )
 
-	norm.spec <- specs [[ i ]] / rowSums ( specs [[ i ]] )
-	norm.spec <- ifelse ( norm.spec == 0 , NA , norm.spec )
-	matplot ( t ( norm.spec ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
+	norm.spec [[ i ]] <- specs [[ i ]] / rowSums ( specs [[ i ]] )
+	norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
+	matplot ( t ( norm.spec [[ i ]]) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
 
-	norm.spec <- specs [[ i ]] / sum ( specs [[ i ]] )
-	norm.spec <- ifelse ( norm.spec == 0 , NA , norm.spec )
-	matplot ( t ( norm.spec ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
+	norm.spec [[ i ]] <- specs [[ i ]] / sum ( specs [[ i ]] )
+	norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
+	matplot ( t ( norm.spec [[ i ]] ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
 	
 	if ( i == 1 ) {
 		legend ( "topright" , legend = sapply ( c ( 2 : 10 ) , function ( x ) paste ( "k = " , x , sep = "" ) ) , col = 1:9 , bty = "n" , lty = 1 )
 	}
 }
 dev.off()
+
+
+
+
+pdf ( )
+
+
 
 
 
@@ -144,10 +152,14 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f){
 
 
 
-my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.01 , reps = 10000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.01 , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 
-my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.05 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
 
+my.test <- matrix ( 1 , nrow = 1000 , ncol = 1000 )
+
+my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.01 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+
+my.freqs.specs<- run.ms.f ( runs = my.test , f = 0.01 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
 
 
 

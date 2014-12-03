@@ -20,7 +20,7 @@ run.ms.f <- function ( runs , n.sam = 2  , f , s , N , path , ext = "", get.site
 	
 	for ( i in 1: nrow ( runs ) ) {
 
-		my.freqs <- runs [ i , runs [ i , ] > 0 ]
+		my.freqs <- rev ( runs [ i , runs [ i , ] > 0 ] )
 		my.times <- 0 : length ( my.freqs )
 		my.freqs <- c ( my.freqs , 0 )
 		
@@ -64,6 +64,7 @@ get.freq.spec<-function(n,num.sims, path){
 	polymorph<- seg.sites>0
 	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	
 	freq.specs<-sapply(0:(num.sims-1),function(iter){		
+		#recover()
 		if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}
 		positions<-read.table(paste(path, "Sims/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)
 #		print(positions[1])
@@ -80,7 +81,8 @@ get.freq.spec<-function(n,num.sims, path){
 		freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})
 		return(freq.spec)
 	})
-return(freq.specs)
+	#freq.specs <- rowSums ( freq.specs )
+	return(freq.specs)
 }
 
 

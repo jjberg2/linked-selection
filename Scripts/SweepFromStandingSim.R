@@ -729,6 +729,20 @@ EwensDist <- function ( n , N , r , distance , f ) {
 }
 
 
+EwensCondDist <- function ( n , N , r , distance , f ) {
+	#recover()	
+	param <- 4 * N * r * distance * f * ( 1- f )
+	my.prod  <- cumprod ( param + 0 : ( n - 1 ) )
+	denom <- my.prod - param*factorial ( 0:( n - 1 ) )
+	stirling.numbers <- StirlingNumbers ( n )
+	ewens.dist <- t ( param^(1:n) * t ( stirling.numbers / denom ) )
+	ewens.dist [ , 1 ] <- ewens.dist [ 1 , ] <- 0
+	return ( ewens.dist ) 
+
+}
+
+
+
 MakeHapsPretty <- function ( seqs ) {
 	if ( !is.numeric ( nrow ( seqs ) ) | !is.numeric ( ncol ( seqs ) ) ) recover()
 	new.seqs <- matrix ( 0 , nrow = nrow ( seqs ) , ncol = ncol ( seqs ) )

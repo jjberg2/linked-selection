@@ -230,7 +230,7 @@ Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an express
 
 When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
 \begin{equation}
-p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{gc=1}^{l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
+p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{g=0}^{j \wedge l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
 \end{equation}
 where A$\wedge$B denotes min(A,B) and
 \begin{equation}
