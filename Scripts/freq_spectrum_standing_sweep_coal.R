@@ -35,7 +35,7 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f){
 	for ( i in 2 : nsam ) {		
 		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
 	}
-	freq.specs<-t(freq.specs)
+	freq.specs <- t ( freq.specs )
 	terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
 	for(l in 1:(nsam-1)){	
 	#	recover()
@@ -65,7 +65,7 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f){
 	return(terms.in.sum)
 }
 
-pdf ( file = "Figures/Spec_Problems.pdf" , width = 15 , height = 40 )
+pdf ( file = "Figures/Spec_ProblemsCond.pdf" , width = 15 , height = 40 )
 par ( mfrow = c ( 5 , 3 ) )
 
 my.rs <- rev ( c ( 0.0001 , 0.001 , 0.01 , 0.1 , 0.5 ) )
@@ -74,23 +74,23 @@ specs <- list ()
 norm.spec <- list ()
 
 for ( i in 1 : length ( my.rs ) ) {
-	blah [[ i ]] <- expected.freq.times.standing(nsam=10,N=10000,r = my.rs [ i ] , f = 0.05 )
-	specs [[ i ]] <- rowSums ( blah [[ i ]] , dims = 2)
+	blah [[ i ]] <- expected.freq.times.standing(nsam=10,N=10000,r = my.rs [ i ] , f = 0.01 )
+	specs [[ i ]] <- colSums ( blah [[ i ]] , dims = 2)
 
-	my.spec <- ifelse ( specs [[ i ]] == 0 , NA , specs [[ i ]] )
-	matplot ( t ( my.spec ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 , ylim = c ( 0 , 0.4 ) , xlim = c ( 1 , 9 ) )
+	# my.spec <- ifelse ( specs [[ i ]] == 0 , NA , specs [[ i ]] )
+	# matplot ( t ( my.spec ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 , ylim = c ( 0 , 0.4 ) , xlim = c ( 1 , 9 ) )
 
-	norm.spec [[ i ]] <- specs [[ i ]] / rowSums ( specs [[ i ]] )
-	norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
-	matplot ( t ( norm.spec [[ i ]]) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
+	# norm.spec [[ i ]] <- specs [[ i ]] / rowSums ( specs [[ i ]] )
+	# norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
+	# matplot ( t ( norm.spec [[ i ]]) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
 
-	norm.spec [[ i ]] <- specs [[ i ]] / sum ( specs [[ i ]] )
-	norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
-	matplot ( t ( norm.spec [[ i ]] ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
+	# norm.spec [[ i ]] <- specs [[ i ]] / sum ( specs [[ i ]] )
+	# norm.spec [[ i ]] <- ifelse ( norm.spec [[ i ]] == 0 , NA , norm.spec [[ i ]] )
+	# matplot ( t ( norm.spec [[ i ]] ) [ 1:9 , 2 : 10 ] , type = "o" , lty = 1 , col = 1:9 , pch = 20 )
 	
-	if ( i == 1 ) {
-		legend ( "topright" , legend = sapply ( c ( 2 : 10 ) , function ( x ) paste ( "k = " , x , sep = "" ) ) , col = 1:9 , bty = "n" , lty = 1 )
-	}
+	# if ( i == 1 ) {
+		# legend ( "topright" , legend = sapply ( c ( 2 : 10 ) , function ( x ) paste ( "k = " , x , sep = "" ) ) , col = 1:9 , bty = "n" , lty = 1 )
+	# }
 }
 dev.off()
 
@@ -103,46 +103,68 @@ pdf ( )
 
 
 
-####freq. spectrum with no rec. during sweeps.
+####freq. spectrum with rec. during sweeps.
 
-expected.freq.times.standing<-function(nsam,N,r,distance,f){
-	#recover()
+expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
+	recover()
 	#my.StirlingNumbers<-StirlingNumbers(n) 
 	ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
-	my.counter <- array ( NA , dim = c ( nsam - 1 , nsam - 1 , nsam - 1 ) )
 	expected.t.l<-rep(NA,nsam-1)
-	p_l_given_k <- array ( NA , dim = c ( nsam - 1 , nsam , nsam - 1 ) )
-	for(l in 1:(nsam-1)){
-		freq.specs<-sapply(1:nsam,function(k){
-			freq.spec<-rep(NA,nsam)
-			freq.spec[1:k] <- ( 1 / ( 1 : k ) ) / ( sum ( 1 / ( 1 : k )  ) )
-			return(freq.spec)
-		}
-		)	
-		freq.specs<-t(freq.specs)
+	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam ) )
+	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
+	for ( i in 2 : nsam ) {		
+		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+	}
+	freq.specs <- t ( freq.specs )
+	terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam ) )
+	H <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam ) )
+	jg.tracker <- array ( NA , dim = c ( nsam , nsam , nsam , nsam , nsam ) )
+	kg.tracker <- array ( NA , dim = c ( nsam , nsam , nsam , nsam , nsam ) ) 
+	for(l in 1:(nsam-1)){	
 	#	recover()
-		terms.in.sum<-rep(0,nsam)
-		for(k in 2 : nsam ) {
-			##runs from 2 otherwise there are no polymorphism
-			for(j in 1:(k-1)){
-				
-				
-				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
-				p_l_given_k [ l , k , j ] <- stirling.bit*choose(nsam,l)/choose(k,j)
-				if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?
-				terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]
-				stopifnot(is.finite(terms.in.sum[k])) 
-			}		
+	#	terms.in.sum<-rep(0,nsam)
+		for ( i in 0 : nsam ) {	
+			for(k in 1 : i ) {
+				terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
+				for(j in 1:(k + nsam - i  - 1 )){
+					for ( g in max ( 0 , ( j - k ) ) : min ( l , nsam - i , j ) ) {
+					
+						
+						if ( FALSE ) {
+						if ( k == 1 ) {
+							if ( nsam - i == l ) 					p_l_given_k [ k , j , l ] <- 1
+							if ( l - g  == 0 & j - g == 0 ) 	p_l_given_k [ k , j , l ] <- 1
+							
+						} else if ( k > 1) {
+						#	if ( k - ( j - g ) < 0 ) next
+							if ( nsam - i - ( l - g ) < 0 ) next
+							stirling.bit <- my.StirlingNumbers[ l - g , j - g ] * my.StirlingNumbers[nsam - i - ( l - g ) , k - ( j - g ) ]  / my.StirlingNumbers[ nsam - i ,k - g ]
+							p_l_given_k [ g , j , k , l ] <- stirling.bit * choose ( nsam - i , l - g ) / choose ( k - g , j - g )
+						}
+						#if(!is.finite(p_l_given_k [ l , k , j ])){ stop ("is infinite") }  ##cat("problem",l,k,j," "); ##is this right?
+						
+						H [ g , j , k , nsam - i ] <- choose ( j , g ) / choose ( k + nsam - i , j )
+						terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs[ k + nsam - i  , j ] * H [ g , j , k , nsam - i ]
+					#	terms.in.sum[k]<-terms.in.sum[k]+ESF.prob.k[nsam,k] *p_l_given_k [ l , k , j ]*freq.specs[k,j]
+						terms.in.sum [ k , j, l , i  ] <- ESF.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]			
+						stopifnot( H <= 1 , H >= 0 )
+						}
+					
+						jg.tracker [ k , j , g , i ,  l ]	 <- j - g
+						kg.tracker [ k , j , g , i , l ]	 <- k - ( j - g )
+					}
+				}		
+			}
 		}
-		expected.t.l[l]<-sum(terms.in.sum)
+	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
 	
-	return(expected.t.l)
+	return(terms.in.sum)
 }
 
-
-
+expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = 0.5 , f = 0.01 )
 
 
 
@@ -157,7 +179,7 @@ my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.01 , reps = 1000
 
 my.test <- matrix ( 1 , nrow = 1000 , ncol = 1000 )
 
-my.freqs.specs<- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.01 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+my.freqs.specs <- run.ms.f ( runs = my.runs [[ 1 ]] , f = 0.01 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 40 )
 
 my.freqs.specs<- run.ms.f ( runs = my.test , f = 0.01 , s = 0.05 , n.sam = 10 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
 

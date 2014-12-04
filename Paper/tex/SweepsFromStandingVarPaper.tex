@@ -208,7 +208,7 @@ and the expected number of segregating sites can be found by taking $\mu$ times 
 
 We can also obtain an expression for the frequency spectrum at sites surrounding a standing sweep. To break the problem into approachable components, we first condition on an absence of recombination during the sweep phase, and a fixed number $k$ recombinant families which are created by coalescence and recombination in the standing phase (both of these will be relaxed momentarily). Each of the $k$ recombinant families represents an independent draw from the population frequency prior to the \textbf{B} allele entering the population. Borrowing a trick from \cite{Pennings:2006fs} (equation 14 of their paper), if we condition on $j$ out of $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $n$ lineages sampled at fixation carry the derived allele by summing over all possible partitions of the $n$ tips into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day as
 \begin{equation}
-p(l \mid j, ~k,~i=n) = \sum_{\substack{i_1+\cdots +i_j=l \\i_{j+1}+\cdots + i_k=n-l}} p(\{i_1,\dots,i_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose l} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
+p(l \mid j, ~k,~i=n) = \sum_{\substack{i_1+\cdots +i_j=l \\i_{j+1}+\cdots + i_k=n-l}} p(\{i_1,\dots,i_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose j} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
 \end{equation}
 
 Next, we write $q_{j,k}$ to denote the probability that $j$ out of the $k$ recombinant families carry the derived mutation. For our purposes, we will assume this distribution follows that of the standard neutral coalescent expectation (i.e. $q(j \mid k) = \frac{1/j}{\sum_{\ell=1}^{k-1}1/\ell}$ gives the probability of $j$ derived alleles in a sample of $k$, conditional on segregation), although one could easily use an empirical frequency spectrum measured from genome-wide data, as in \citep{NielsenKim}. The probability that the derived allele is present in $l$ out of $n$ sampled lineages, conditional on there having been $k$ recombinant families, is then 
@@ -230,11 +230,11 @@ Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an express
 
 When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
 \begin{equation}
-p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{g=0}^{j \wedge l \wedge \left(n-i\right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k,n-i)
+p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , l , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k-g,n-i)
 \end{equation}
 where A$\wedge$B denotes min(A,B) and
 \begin{equation}
-	H(g \mid j,k,n-i) = \frac{{j \choose g}{n-i \choose g}}{{k + n - i \choose j}}
+	H(g \mid j,k,n-i) = \frac{{j \choose g}}{{k + n - i \choose j}}
 \end{equation}
 gives the probability that $g$ out of $j$ derived alleles are found on singleton recombinants created during the sweep, given that there are $n-i$ singletons, and $k$ recombinant families created during the standing phase. Here $n-i$ lineages recombine out during the selected phase, while the remaining $i$ lineages are partitioned into $k$ families due to recombination and coalescence in the standing phase. Out of the $n-i$ singleton lineages, $g$ of them carry the derived allele, while the remaining $j-g$ copies of the derived allele which existed just prior to the arrival of the beneficial allele give rise to $l-g$ derived alleles in the present day, resulting in $l$ out of $n$ sampled lineages carrying the derived allele. %Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
 
