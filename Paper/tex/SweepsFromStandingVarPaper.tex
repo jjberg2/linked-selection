@@ -230,11 +230,11 @@ Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an express
 
 When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
 \begin{equation}
-p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{k+n-i-1} q(j\mid k+n-i) \sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , l , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(l-g \mid j-g,k-g,n-i)
+p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{\text{min}\left(k+n-i-1,\ell\right)} q(j\mid k+n-i) \sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , \ell , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(\ell-g \mid j-g,k,i)
 \end{equation}
 where A$\wedge$B denotes min(A,B) and
 \begin{equation}
-	H(g \mid j,k,n-i) = \frac{{j \choose g}}{{k + n - i \choose j}}
+	H(g \mid j,k,n-i) = \frac{{n-i \choose g}{k \choose j - g}}{{k + n - i \choose j}}
 \end{equation}
 gives the probability that $g$ out of $j$ derived alleles are found on singleton recombinants created during the sweep, given that there are $n-i$ singletons, and $k$ recombinant families created during the standing phase. Here $n-i$ lineages recombine out during the selected phase, while the remaining $i$ lineages are partitioned into $k$ families due to recombination and coalescence in the standing phase. Out of the $n-i$ singleton lineages, $g$ of them carry the derived allele, while the remaining $j-g$ copies of the derived allele which existed just prior to the arrival of the beneficial allele give rise to $l-g$ derived alleles in the present day, resulting in $l$ out of $n$ sampled lineages carrying the derived allele. %Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
 
