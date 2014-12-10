@@ -154,20 +154,19 @@ expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
 	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	expected.t.l<-rep(NA,nsam-1)
 	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
+	H <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
+	cond.freq.specs <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
 	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
 	for ( i in 2 : nsam ) {
 		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
 	}
 	freq.specs <- t ( freq.specs )
-	terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam ) )
-	H <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam , nsam ) )
-	jg.tracker <- array ( NA , dim = c ( nsam , nsam , nsam , nsam , nsam ) )
-	kg.tracker <- array ( NA , dim = c ( nsam , nsam , nsam , nsam , nsam ) )
 	for ( l in 1 : ( nsam - 1 ) ) {
 	#	recover()
 	#	terms.in.sum<-rep(0,nsam)
 		for ( i in 0 : nsam ) {
-			for ( k in 1 : i ) {
+			
+			for ( k in min ( 1 , i ) : i ) {
 				terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
 				for ( j in 1 : min ( k + nsam - i  - 1 , l ) ) {
 					if ( max ( 0 , ( j - k ) ) > min ( l , nsam - i , j ) ) next
@@ -176,15 +175,16 @@ expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
 						# if the number of lineages sitting under the beneficial mutatation is smaller than the number we need to get to l, the prob is zero
 						if ( i < ( l - g ) ) next
 						
+						
 						p_l_given_k [ k , j , g , i + 1 , l ] <- plbarjkn ( l - g , j - g , k , i )
 						
 
 						H [ k , j , g , i + 1 , l ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
 						
-						freq.specs [ k + nsam - i , j ] * H [ k , j , g , i + 1 , l ] * p_l_given_k [ k , j , g , i , l ]
+						cond.freq.specs [ k , j , g , i + 1 , l ] <- freq.specs [ k + nsam - i , j ] * H [ k , j , g , i + 1 , l ] * p_l_given_k [ k , j , g , i + 1 , l ]
 						
 						if ( FALSE ) {
-						terms.given.j [ j , k ] <-  [ k , j , l ]*freq.specs[ k + nsam - i  , j ] * H [ g , j , k , nsam - i ]
+						terms.given.j [ j , k ] <-  freq.specs[ k + nsam - i  , j ] * H [ g , j , k , nsam - i ]
 					
 						terms.in.sum [ k , j, l , i  ] <- ESF.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
 						stopifnot( H <= 1 , H >= 0 )
