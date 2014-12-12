@@ -120,10 +120,11 @@ plbarjkn <- function ( l , j , k , n ) {
 	
 	if ( l == 0 & j == 0 ) 	return ( 1 )
 	if ( j == k & n == l )	return ( 1 )
+	if ( k == n & j == l )	return ( 1 )
 	if ( j == k & n != l )	return ( 0 )
 	if ( l > 0 & j == 0 ) 	return ( 0 )
 	if ( l == 0 & j > 0 ) 	return ( 0 )
-	if ( l > j + n - k )		return ( 0 )
+	if ( l > j + n - k )	return ( 0 )
 	if ( k == 1 ) {
 		if ( n == l & j == 1 ) return ( 1 )
 		if ( l != n ) return ( 0 )
@@ -136,7 +137,7 @@ plbarjkn <- function ( l , j , k , n ) {
 	####################
 	stirling.bit <- my.StirlingNumbers[ l , j ] * my.StirlingNumbers[n - l , k - j ]  / my.StirlingNumbers[ n , k ]
 	
-	stirling.bit * choose ( nsam , l ) / choose ( k , j )
+	stirling.bit * choose ( n , l ) / choose ( k , j )
 	
 }
 
@@ -146,21 +147,28 @@ plbarjkn <- function ( l , j , k , n ) {
 
 ####freq. spectrum with rec. during sweeps.
 
-expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
-	recover()
-	#my.StirlingNumbers<-StirlingNumbers(n)
-	ESF.prob.k<-EwensDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
-	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
-	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f,s){
+	#recover()
+	my.StirlingNumbers<<-StirlingNumbers(nsam)
+	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	ESF.prob.k <- rbind ( c ( 1 , rep ( 0 , nsam ) ) , cbind ( rep ( 0 , nsam ) , ESF.prob.k ) )
+	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
+	T_f <- log ( (2*N -1 ) * ( 1 - f ) / f ) / s
+	my.logistic <- function ( x ) 1 / (2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 ) )
+	T_sf <- integrate ( my.logistic , 0 , T_f )$value
+	P_NR <- exp ( - r * T_sf )
 	expected.t.l<-rep(NA,nsam-1)
-	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
-	H <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
-	cond.freq.specs <- array ( 0 , dim = c ( nsam , nsam , nsam , nsam + 1 , nsam ) )
+	
+	p_l_given_k <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	H <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	cond.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
 	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
 	for ( i in 2 : nsam ) {
 		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
 	}
 	freq.specs <- t ( freq.specs )
+	my.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
 	for ( l in 1 : ( nsam - 1 ) ) {
 	#	recover()
 	#	terms.in.sum<-rep(0,nsam)
@@ -168,7 +176,7 @@ expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
 			
 			for ( k in min ( 1 , i ) : i ) {
 				terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
-				for ( j in 1 : min ( k + nsam - i  - 1 , l ) ) {
+				for ( j in 1 : min ( k + nsam - i , l ) ) {
 					if ( max ( 0 , ( j - k ) ) > min ( l , nsam - i , j ) ) next
 					g.sec <- seq ( max ( 0 , ( j - k ) ) ,  min ( l , nsam - i , j ) , 1 )
 					for ( g in g.sec ) {
@@ -176,22 +184,25 @@ expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
 						if ( i < ( l - g ) ) next
 						
 						
-						p_l_given_k [ k , j , g , i + 1 , l ] <- plbarjkn ( l - g , j - g , k , i )
+						p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- plbarjkn ( l - g , j - g , k , i )
 						
 
-						H [ k , j , g , i + 1 , l ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
+						H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
 						
-						cond.freq.specs [ k , j , g , i + 1 , l ] <- freq.specs [ k + nsam - i , j ] * H [ k , j , g , i + 1 , l ] * p_l_given_k [ k , j , g , i + 1 , l ]
+						cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- freq.specs [ k + nsam - i , j ] * H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] * p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 						
+						if ( 0 < g | i != nsam ) {
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.prob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+						} else{
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+
+						}
 						if ( FALSE ) {
 						terms.given.j [ j , k ] <-  freq.specs[ k + nsam - i  , j ] * H [ g , j , k , nsam - i ]
 					
 						terms.in.sum [ k , j, l , i  ] <- ESF.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
 						stopifnot( H <= 1 , H >= 0 )
 						}
-
-						jg.tracker [ k , j , g , i ,  l ]	 <- j - g
-						kg.tracker [ k , j , g , i , l ]	 <- k - ( j - g )
 					}
 				}
 			}
@@ -199,12 +210,15 @@ expected.freq.times.standing.w.sweep<-function(nsam,N,r,distance,f){
 	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
 
-	return(terms.in.sum)
+	return ( my.freq.specs )
 }
 
-expected.freq.times.standing.w.sweep ( nsam = 12 , N = 10000 , r = 0.0001 , f = 0.05 )
+blah <- expected.freq.times.standing.w.sweep ( nsam = 12 , N = 10000 , r = 0.0001 , f = 0.05 , s = 0.05 )
 
 
+for ( l in 1 : dim ( blah ) [ 5 ] ) {
+	this.freq.spec [ l ] <- sum ( blah [ , , , , l ] )	
+}
 
 
 
