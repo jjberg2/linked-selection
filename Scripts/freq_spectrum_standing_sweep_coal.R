@@ -222,6 +222,56 @@ for ( l in 1 : dim ( blah ) [ 5 ] ) {
 
 
 
+#### so, how many sweeps actually fit our model, anyway?
+
+
+N <- 100000
+
+spec.cond.on.fix <- function ( x , N , s ) ( 1 - exp ( -4*N*s*x) ) / (x * ( 1 - exp (-4*N*s) ) )
+neutral.spec <- function ( x ) 1/x
+
+SSVProb <- function ( N , s ) {
+	#recover()
+	blah1 <- list ()
+	blah2 <- list ()
+	normalizing.constant <- list ()
+	my.prob1 <- list ()
+	my.prob2 <- list ()
+	upper <- c ( seq ( max ( 0.05 , 5 / (4*N*s) + 0.01 ) , 0.95 , by = 0.01 ) , ( 2 * N - 1 ) / ( 2 * N ) )
+	for ( i in 1 : length ( upper ) ) {
+		blah1 [[ i ]] <- integrate ( function ( y ) spec.cond.on.fix ( x = y , N = N , s = s ), max ( 5 / ( 4 * N * s ) , 500 / (2*N) ) , upper [ i ] )$value
+		blah2 [[ i ]] <- integrate ( function ( y ) spec.cond.on.fix ( x = y , N = N , s = s ), 1 / ( 2 * N ) , max ( 5 / ( 4 * N * s ) , 500 / ( 2 * N ) ) )$value
+		normalizing.constant [[ i ]] <- integrate ( function ( y ) spec.cond.on.fix ( x = y , N = N , s = s ), 1 / ( 2 * N ) , upper  [ i ] )$value
+		my.prob1 [[ i ]] <- ( blah1 [[ i ]] ) / ( normalizing.constant [[ i ]] )
+		my.prob2 [[ i ]] <- ( blah2 [[ i ]] ) / ( normalizing.constant [[ i ]] )	
+	}
+	my.soft.probs <- cbind ( upper , unlist ( my.prob1 ) , unlist ( my.prob2 ) )
+	
+}
+my.soft.probs <- list ()
+my.s <- c ( 0.001 , seq ( 0.01 , 0.1 , by = 0.02 ) )
+for ( i in 1 : length ( my.s ) ) {
+
+	my.soft.probs [[ i ]] <- SSVProb ( N = 100000 , s = my.s [ i ] )
+
+}
+plot ( NA , xlim = c ( 0 , 0.15 ) , ylim = c ( 0 , 1 ) , bty = "n" , xlab = "Upper Bound on f" , ylab = "Probability our Model Applies" )
+for ( i in 1 : length ( my.soft.probs ) ) {
+	
+	lines ( x = my.soft.probs [[ i ]] [ , 1 ] , my.soft.probs [[ i ]] [ , 2 ] , lwd = 2 , col = i )
+	
+}
+legend ( "bottomright" , legend = my.s , col = 1:length(my.s) , bty = "n" , lwd = 2 )
+
+
+
+my.freqs <- seq ( 1 / ( 2 * N ) , ( 2 * N -1 ) / ( 2 * N ) , by = 0.0001 )
+cond.fix.spec <- spec.cond.on.fix ( my.freqs , N , s )
+neutral.spec <- neutral.spec ( my.freqs )
+
+plot ( x = my.freqs , y = cond.fix.spec / sum ( cond.fix.spec ) , type = "l" , lwd = 2 , xlim = c ( 0 , 1 ) )
+lines ( x = my.freqs , y = neutral.spec / sum ( neutral.spec ) , type = "l" , lwd = 2 , col = "red" )
+
 
 
 
