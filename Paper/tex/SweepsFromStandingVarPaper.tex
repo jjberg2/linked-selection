@@ -50,26 +50,17 @@ $^3$ Department of Evolution and Ecology, University of California, Davis\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+\jb{boiler plate}
 
-Understanding the major processes which shape genetic variation within species and the signatures they leave behind in observable data (e.g. sequence data) is a major goal of evolutionary biology. One major process of interest is that of positive directional selection, whereby mutations are driven to high frequency, and perhaps to fixation, as a result of differential reproductive success of carriers relative to non-carriers. Alleles with selection coefficients strong enough that their rate of frequency change exceeds the typical rate of change under drift leave behind a characteristic pattern in DNA sequence data. First described by \cite{Smith1974}, this ``selective sweep'' pattern can in some cases allow researchers to identify the individual regions of the genome that have been recent targets of positive selection, thus yielding insight into the genetic details of the adaptive process.
+Understanding the major processes which shape genetic variation within species and the signatures they leave behind in observable data (e.g. sequence data) is a major goal of evolutionary biology. One major process of interest is that of positive directional selection, whereby mutations are driven to high frequency, and perhaps to fixation, as a result of differential reproductive success of carriers relative to non-carriers. These mutations represent the raw material of the adaptive process, and are thus of key interest for biologists seeking to understand how populations respond to their changing environments. 
 
-By now, the original model first studied by \cite{Smith1974}, in which a single co-dominant mutation arises and is driven swiftly to fixation, is well studied \jb{cite a whole lot of people}. but recent work has re-emphasized the fact that likely not all adaptation occurs via this simple model, and different models predict different diagnostic signatures \citep{Innan:2004bk,Przeworski2005,Hermisson2005,Pennings2006a,Pennings2006,Coop:2012ec}. A large class of these models, in there may be one or many beneficial mutations present on multiple haplotypes, go by the name of ``soft sweeps''
+A great deal of effort in the population genetics literature over the last few decades has been focused on the approach of using the transient, but characteristic pattern of a ``selective sweep'' which arises from genetic hitchhiking of neutral alleles while the adaptive variant is transiting through the population. The classical model of this phenomenon imagines that a single mutation arises, is immediately beneficial, and then transits through the population until fixation. The result is that a core region surrounding the adaptive allele is swept clear of genetic variation, with a steady recovery as one moves away from the selected site due to recombination events during the course of the sweep. This model has been studied by a great number of authors \jb{lots of citations here}, and a wide array of statistical tools have been developed to use genotype or sequence data to identify loci which have experienced recent selective sweeps.
 
+While the development of these methods has led to a burgeoning cottage industry in sweep hunting, and has been instrumental in identifying a number of adaptive variants whose functions are now well understood \jb{citations}, there has been a recent trend in the literature to emphasize the fact that not all adaptation occurs via \textit{de novo} mutations sweeping to fixation under strong selection \jb{a bunch of citations}. While the possible genetic mechanisms of adaptation are many, two principle models for adaptation at a single locus have emerged as alternatives to the classic ``hard sweep'' model. 
 
-\jb{insert text I wrote at work and forgot to push yesterday}
+In the multiple simultaneous mutation model popularized by \jb{Hermison and Pennings}, ongoing mutation during the course of the sweep leads to multiple independent origins of the beneficial mutation, all with identical fitness effects. Under this model, no individual mutation fixes, but the class of beneficial alleles does. \cite{Pennings2006a} have shown that the distribution on the number and frequency of beneficial alleles of independent origin is given approximately by the Ewens sampling formula \citep{Ewens1972}, with a clustering parameter given by the population scaled beneficial mutation rate for the locus in question.
 
-Before going any further, it is worth clarifying exactly what has been meant by the term ``soft sweeps'' 
-
-
-
-Now commonly recognized phenomenon resulting from strongish natural selection is the selective sweep, which leaves characteristic signature in DNA data.
-
-Historical focus on ``hard sweep'' model, (one allele, one haplotype). Widely varying opinions on whether we've found more or fewer of these than we expected to.
-
-More recent interest in alternative modes of adaptation, and whether they might be detectable, e.g. multiple mutation sweeps, sweeps from standing variation.
-
-Here we take a look at standing sweeps and the patterns they generate.
-
+An alternate model which yields pattern that deviate from the standard ``hard sweep'' model is that of a single identical-by-descent neutral mutation which is segregating at an appreciable frequency when a change in the environment causes it to become beneficial and sweep to fixation. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 
