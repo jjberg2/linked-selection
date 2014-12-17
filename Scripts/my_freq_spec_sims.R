@@ -12,11 +12,11 @@ my.fs <- c ( 0.001 , 0.01 , 0.025 , 0.05 , 0.075 , 0.1 )
 my.s <- my.fs
 
 
-nosweep.freq.spec.list <- list ()
-for ( i in 1:8 ) {nosweep.freq.spec.list [[ i ]] <- list()}
-
-i <- 1
-for ( f in my.fs ) {
+#nosweep.freq.spec.list <- list ()
+#for ( i in 1:8 ) {nosweep.freq.spec.list [[ i ]] <- list()}
+load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/nosweep.freq.spec.list.Rdata")
+i <- 31
+for ( f in my.fs  [ 4:6 ] ) {
 
 	my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 
@@ -50,11 +50,11 @@ for ( f in my.fs ) {
 	}
 }
 
-
+if ( FALSE ) {
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/nosweep.freq.spec.list.Rdata")
 
 
-for ( i in 1 : length ( my.fs ) ) {
+for ( i in 1 : length ( my.fs [ 1:3] ) ) {
 	
 	this.f <- my.fs [ i ]
 	
@@ -76,13 +76,15 @@ for ( i in 1 : length ( my.fs ) ) {
 	par ( mfrow = c ( 11, 1 ) )
 	for ( i in 1 : ncol ( neut.scale.true.spec ) ) {
 	
-		plot ( my.rs , neut.scale.true.spec [ , i ] , type = "l" , bty = "n" , col = "black" , lwd = 2 , lty = 1 , ylim = c ( 0 , 6 ) , xlim = c ( 0 , 0.1 )  , xlab = "r" , ylab = "Fold change in Frequency Spectrum" , yaxt = "n" )
+		plot ( my.rs , neut.scale.true.spec [ , i ] , type = "l" , bty = "n" , col = "black" , lwd = 2 , lty = 1 , ylim = c ( 0 , 6 ) , xlim = c ( 0 , 0.02 )  , xlab = "r" , ylab = "" , yaxt = "n" )
 		lines ( my.rs , neut.scale.const.spec [ , i ] , col = "black" , lwd = 2 , lty = 2 )
-		if ( r != 0 ) {
-		lines ( my.rs , neut.scale.approx.spec [ , i ] , col = "red" , lwd = 2 , lty = 1 )	
-		} else {
-			lines ( my.rs [ -1 ] , neut.scale.approx.spec [ -1 , i ] , col = "red" , lwd = 2 , lty = 1 )
-		}
+		lines ( my.rs [ -1 ] , neut.scale.approx.spec [ -1 , i ] , col = "red" , lwd = 2 , lty = 1 )
+		abline ( h = 1 , lwd = 1 , lty = 3 , col = "blue" )
+		# if ( r != 0 ) {
+		# lines ( my.rs , neut.scale.approx.spec [ , i ] , col = "red" , lwd = 2 , lty = 1 )	
+		# } else {
+
+		# }
 		axis ( 2 , at = seq ( 0 , 6 , 1 ) )
 	
 	}
@@ -93,7 +95,7 @@ for ( i in 1 : length ( my.fs ) ) {
 
 
 
-if ( FALSE ) {
+
 
 
 
