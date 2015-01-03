@@ -15,8 +15,8 @@ my.s <- my.fs
 #nosweep.freq.spec.list <- list ()
 #for ( i in 1:8 ) {nosweep.freq.spec.list [[ i ]] <- list()}
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/nosweep.freq.spec.list.Rdata")
-i <- 31
-for ( f in my.fs  [ 4:6 ] ) {
+i <- 41
+for ( f in my.fs  [ 5:6 ] ) {
 
 	my.runs <-  SweepFromStandingSim ( N = 10000 , s = 0.05 , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 
