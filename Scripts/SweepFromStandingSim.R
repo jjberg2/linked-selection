@@ -774,7 +774,7 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , f = 0.01 , reps = 100 , n.tips = 12 , r = 10^-8 , sim.distance = 0.015 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , f = 0.025 , reps = 1000 , n.tips = 12 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
 
 
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 1/20000, sim.distance = 0.01)
