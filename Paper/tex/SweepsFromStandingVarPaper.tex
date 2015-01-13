@@ -85,10 +85,18 @@ It is this model that is the primary focus of this paper. We first develop a coa
 \section{Results}
 
 \subsection{Non-technical description}
+Consider an allele which arises in a population of $N$ diploid individuals and is initially neutral. This allele, assuming it escapes loss from the population due to drift, may drift up to some frequency $f$ in the population, at which point we posit a change in the environment, such that the allele becomes beneficial with an additive selection coefficient of $s/2$, and rapidly sweeps from frequency $f$ up to fixation. We are interested in obtaining a detailed description as we can of patterns of genetic and haplotypic diversity in the sequence surrounding the beneficial mutation at the conclusion of the sweep.
 
+In order to do this, we take a coalescent approach, first by finding the expected structure of the genealogy at the locus of the beneficial mutation, and then considering mutations and recombinations in the sequence surrounding the beneficial allele as events conditional on that genealogy. In general, we focus on the ancestry of a sample of $n$ sequences taken at the moment a sweep fixes in a population. Before continuing, it may be useful to consider existing coalescent approximations which have been developed to describe the genealogy at a locus that has recently experienced a standard full sweep, as this will provide a good jumping off point to introduce our model. 
+
+The simplest approximation to the genealogy of a sweep is to assume a perfectly star-like phylogeny, where coalescence is prohibited throughout the majority of sweep, until all $n$ lineages coalesce at once in what is effectively a single multiple merger event at the base of the tree. If selection is strong ($Ns \gg 1$; also the only case in which the star-like approximation approaches validity), then the trajectory of the beneficial allele through the population can approximated by a logistic curve, such that the duration of the sweep is approximately $\frac{2 ln\left(2N\right)}{s}$. 
+
+We can then consider a neutral locus some genetic distance $r$ away from the beneficial mutation, and ask what is the probability that a recombination event moves the allele at this neutral locus from the selected background into the non selected background at some point during the course of the sweep. The probability of a recombination event in a given generation is just $r$, but we are only interested recombination events that move our neutral locus onto a non-beneficial background. If the frequency of the beneficial allele at generation $t$ in the past is $X\left(t\right)$, then the probability that a neutral lineage which has failed to recombine up to generation $t$ does so in generation $t$ is $r\left(1-X\left(t\right)\right)$. Because the trajectory of a sweep is symmetric 
 
 
 \subsection{more technical}
+
+
 
 We consider two loci, labeled \fancyN and \fancyB, which are separated on the chromosome by a recombination distance $r$. The ancestral allele at the \fancyB locus is b, and we imagine that a new allele, B, arises at the \fancyB locus and segregates at low frequency for some period of time (either due to neutral fluctuations, or because it is balanced at low frequency), before a change in the environment causes it to become beneficial and sweep to fixation. All variation at the \fancyN locus is assumed to be neutral, and its history can be therefore be determined by considering a structured neutral coalescent conditional on the behavior of the \fancyB locus.
 
@@ -111,7 +119,7 @@ P_{NR} = \prod_{t=0}^{\tau_{f}} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \i
 \end{equation}
 for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau_{f}}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep from frequency $f$ can be written $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If the effect of our beneficial allele on relative fitness is strictly additive, such that heterozygotes enjoy a selective advantage of $s/2$ and heterozygotes an advantage of $s$, then the trajectory of the beneficial allele through the population can be approximated deterministically by the logistic function, such that 
 \begin{equation}
-	\mathcal{T}_{\left(s,f\right)} = \frac{ln\left(\frac{N_e - 1}{f}-N_e + 1\right)}{s}. \textrm{\jb{this is the 1/2N approx; need to verify that this is correct}}
+	\mathcal{T}_{\left(s,f\right)} = \frac{ln\left(\frac{N_e - 1}{f}-N_e + 1\right)}{s}.
 \end{equation}
 
 We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage either recombines off the B background, or fails to do so, independently of all other lineages, so that the probability that $i$ out of $n$ lineages fail to escape off the sweeping background is
