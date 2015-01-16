@@ -4,7 +4,7 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
+StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
 	#options ( error = recover )
 	
 	
@@ -13,7 +13,7 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	
 	if ( constant.freq == FALSE ) {
 	
-		temp <- SweepFromStandingSim ( N = N , s = s , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix , display.rep.count )
+		temp <- SweepFromStandingSim ( N = N , s = s , h = h , dominance = dominance , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix , display.rep.count )
 		frequencies <- temp [[ 1 ]]
 		if ( no.sweep == FALSE ) {	
 			sweep.start <- temp [[ 2 ]]
@@ -103,14 +103,31 @@ StructuredCoalescentSweep <- function ( N , s , f , reps , n.tips , r , sim.dist
 	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , standing.hap.dist = standing.hap.dist , T.total = T.total , sim.distance.bp = sim.distance/r) )
 }
 
-SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
+s_of_u <- function ( u ) {
+	
+	exp ( - integrate ( 
+				f = function ( x ) {4 * N * s * x * ( 1 - x ) * ( x + h * ( 1 - 2 * x ) ) / ( x * ( 1 - x ) )} ,
+				lower = 0 ,
+				upper = u 
+				)$value 
+		)
+	
+}
+
+
+SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
 	#options ( error = recover )
 	#recover()
 	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
 	neutral.freq.matrix <- list ( rep ( f , reps ) )
 	not.all.sweeps.fixed <- TRUE
-	not.all.neutral.fixed <- TRUE
+	if ( f == 1 / ( 2 * N ) ) {
+		not.all.neutral.fixed <- FALSE
+		neutral.freq.matrix [[ 2 ]] <- rep ( 0 , reps )
+	} else {
+		not.all.neutral.fixed <- TRUE
+	}
 	#recover()
 	i = 1
 	while ( not.all.sweeps.fixed  | not.all.neutral.fixed ) {
@@ -118,13 +135,22 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 			update <- rep ( 0 , reps )
 			sweep.not.fixed <- sweep.freq.matrix [[ i ]] %% 1 != 0
 			sweep.fixed <- sweep.freq.matrix [[ i ]] %% 1 == 0
-			mu.S <- ifelse ( rep ( cond.on.fix , reps ) ,
-									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) / tanh ( 2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) ,
-									2 * N * s * sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] )
+			current.seg.freqs <- sweep.freq.matrix [[ i ]] [ sweep.not.fixed ]
+			#recover()
+			mu.S <- ifelse ( rep ( dominance , reps ) , 
+						ifelse ( rep ( cond.on.fix , reps ) ,
+									2 * N * s * current.seg.freqs * ( 1 - current.seg.freqs )  * ( current.seg.freqs + h * ( 1 - 2 * current.seg.freqs ) ) + sapply ( current.seg.freqs , s_of_u ) * ( 2 * current.seg.freqs * ( 1 - current.seg.freqs ) ) / sapply ( current.seg.freqs , function ( x ) integrate ( function ( y ) sapply ( y , s_of_u ) , lower = 0 , upper = x )$value ) ,
+									2 * N * s * current.seg.freqs * ( 1 - current.seg.freqs )  * ( current.seg.freqs + h * ( 1 - 2 * current.seg.freqs ) )
 									)
+			,
+						ifelse ( rep ( cond.on.fix , reps ) ,
+									2 * N * s * current.seg.freqs * ( 1 - current.seg.freqs ) / tanh ( 2 * N * s * current.seg.freqs ) ,
+									2 * N * s * current.seg.freqs * ( 1 - current.seg.freqs )
+									)
+					)
 			sel <- mu.S * delta.T
-			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T ) )
-		#	sweep.drift.mag <- sqrt ( sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] * ( 1 - sweep.freq.matrix [[ i ]] [ sweep.not.fixed ] ) * delta.T)
+			update [ sweep.not.fixed ] <- rnorm ( sum ( sweep.not.fixed ) , sel , sd = sqrt ( current.seg.freqs * ( 1 - current.seg.freqs ) * delta.T ) )
+		#	sweep.drift.mag <- sqrt ( current.seg.freqs * ( 1 - current.seg.freqs ) * delta.T)
 		#	plus.minus <- sample ( c ( 0 , 1 ) , sum ( sweep.not.fixed ) , replace = TRUE )
 		#	drift.sweep <- ifelse ( plus.minus == 1 , sweep.drift.mag , -1 * sweep.drift.mag )
 		#	update [ sweep.not.fixed ] <- sel + drift.sweep			
@@ -137,7 +163,7 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 
 		
 		}
-		if ( not.all.neutral.fixed ) {	
+		if ( not.all.neutral.fixed & f != 1 / ( 2 * N ) ) {	
 			update <- rep ( 0 , reps )
 			neutral.not.fixed <- neutral.freq.matrix [[ i ]] %% 1 != 0
 			neutral.fixed <- neutral.freq.matrix [[ i ]] %% 1 == 0
@@ -159,11 +185,20 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )
 		
 		}
-		if ( i %% 5000 == 0 & display.rep.count) {
-				lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )
-				my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )
-				cat ( "p = " , my.freq , ",  " , sep = "" )
-				cat ( lineages.remaining , "not fixed \n")
+		if ( i %% 50 == 0 & display.rep.count) {
+				
+				if ( i <= length ( neutral.freq.matrix) ) {
+					lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )
+					my.freq <- max ( neutral.freq.matrix [[ i + 1 ]] [ neutral.freq.matrix [[ i + 1 ]] < 1 ] )
+					cat ( "p = " , my.freq , ",  " , sep = "" )
+					cat ( lineages.remaining , "not fixed \n")
+				} else {
+					lineages.remaining <- sum ( sweep.freq.matrix [[ i + 1 ]] %% 1 != 0 )
+					my.freq <- max ( sweep.freq.matrix [[ i + 1 ]] [ sweep.freq.matrix [[ i + 1 ]] < 1 ] )
+					cat ( "p = " , my.freq , ",  " , sep = "" )
+					cat ( lineages.remaining , "sweeps not fixed \n")
+				}
+				
 		}		
 		if ( i == time.factor * 16 * N ){
 			break
@@ -205,7 +240,6 @@ SweepFromStandingSim <- function ( N , s , f , reps , no.sweep, cond.on.loss , c
 		freq.trajectories <- neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 1 ]
 		return ( list ( freq.trajectories , 0 ) )
 	}
-	
 	# temp1 <- apply ( freq.trajectories , 1 , function ( x ) rev ( x[x !=1] ) )
 	# add.zeros <- max ( unlist ( lapply ( temp1 , length) ) ) - unlist ( lapply ( temp1 , length) )
 	# temp2 <- mapply ( function ( x , y ) c ( rev ( c ( x , rep ( 0 , y ) ) ) , 1 ) , x = temp1 , y = add.zeros , SIMPLIFY = FALSE )
@@ -774,7 +808,9 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 #function to get haplotype distribution plots from function output
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , f = 0.01 , reps = 100 , n.tips = 12 , r = 10^-8 , sim.distance = 0.015 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
+
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , h = 0.5 , dominance = TRUE , f = 0.01 , reps = 100 , n.tips = 12 , r = 10^-8 , sim.distance = 0.015 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
+
 
 
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 1/20000, sim.distance = 0.01)
@@ -819,49 +855,6 @@ if ( FALSE) SequenceIBDPlots ( temp$trees[[1]] )
 par ( mfrow = c ( 3 ,2 ) )
 for ( i in 1 : 6 ) SequenceIBDPlots ( temp$trees[[i]] )
 
-
-
-
-
-
-
-##########################################
-#### Let's think about inference w/ genealogies ####
-##########################################
-coal.times <- lapply ( 1 : nrow ( fands ) , function ( x ) temp[[x]]$coal.times )
-
-
-LikelihoodFunction <- function ( my.times , s.f , N ) {
-	
-	s <- as.numeric ( s.f [ 1 ] )
-	f <- as.numeric ( s.f [ 2 ] )
-	
-	#recover()	
-	tau_s <- log ( ( N * (1-f) + ( 1 - f ) ) / f ) / s
-	n.sam <- length ( my.times ) + 1
-	
-	# likelihood for sweep portion 
-	coals.in.sweep <-  my.times [ my.times<tau_s ]
-	n.sam.end.sweep <- n.sam - length ( coals.in.sweep )
-	sweep.event.times <- c ( 0 , coals.in.sweep , tau_s )
-	inv.Nt.Int <- exp (s*sweep.event.times) / ((N - 1)*N*s ) + sweep.event.times/N
-	exponents <- diff ( inv.Nt.Int )
-	sweep.log.likelihood.prohibit.coals = -choose ( n.sam:n.sam.end.sweep , 2 )*exponents
-	sweep.log.likelihood.coals = log ( 1 / (N - (N*exp ( s * coals.in.sweep)/(N-1+exp(s*coals.in.sweep)))) )
-	sweep.log.likelihood = sum ( sweep.log.likelihood.prohibit.coals , sweep.log.likelihood.coals )
-	
-	#likelihood for neutral portion
-	lin.remaining <- n.sam - which ( my.times>=tau_s ) + 1
-	coals.in.neutral <- my.times [ my.times>=tau_s ]
-	neutral.event.times <- c ( tau_s , coals.in.neutral )
-	neutral.wait.times <- diff ( neutral.event.times )
-	neutral.log.likelihood.prohibit.coals =  - choose ( lin.remaining , 2 ) * neutral.wait.times / ( N*f )
-	neutral.log.likelihood.coals = length ( lin.remaining ) * log ( 1 / (N*f) )
-	neutral.log.likelihood = sum ( neutral.log.likelihood.coals , neutral.log.likelihood.prohibit.coals )
-	
-	log.like <- sum ( sweep.log.likelihood , neutral.log.likelihood )
-	return ( c ( s.f , log.like ) )
-}
 
 s.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
 f.vect <- seq ( 1/20000 , 0.05 , 1e-4 )

@@ -107,7 +107,7 @@ dev.off()
 
 
 
-pdf ( )
+
 
 
 ##### some component function to make the code cleaner
