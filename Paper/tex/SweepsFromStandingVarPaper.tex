@@ -178,53 +178,61 @@ Note that this does not depend on $R_f$, which gives the classic result that the
 % The probability of there being $k$ alleles (recombinant lineages) in our sample of $n$
 
 \subsubsection*{Patterns of neutral diversity surrounding standing sweeps}
-This approximate model of the coalescent for a sweep from standing variation allows us to calculate a number of basic summaries of sequence variation in the region surrounding the sweep. For now we neglect mutations which occur over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes negligibly to the total amount of time in the genealogy. This corresponds to an assumption that $2N \mu f \ll 2N\mu$, in line with our previous assumption that $f \ll 1$ (see below for a partial relaxation of this assumption). So long as this assumption holds, we can consider patterns of diversity in our sample at a given site simply by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
+This approximate model of the coalescent for a sweep from standing variation allows us to calculate a number of basic summaries of sequence variation in the region surrounding the sweep. For now we neglect mutations which occur over the time-scale of our shrunken coalescent tree, and assume that all diversity comes from mutations that occurred prior to the sweep, or equivalently that this part of the genealogy contributes negligibly to the total amount of time in the genealogy. This corresponds to an assumption that $2N \mu f \ll 2N\mu$, in line with our previous assumption that $f \ll 1$ (see the appendix for a partial relaxation of this assumption). So long as this assumption holds, we can consider patterns of diversity in our sample at a given site simply by considering properties of the recombinant lineages in our sample, which correspond to alleles drawn independently from a neutral population prior to the start of our sweep.
+%
+%For example, excluding recombination events during the sweep for a moment, the expected pairwise coalescent time for lineages a distance $r$ away from the sweep is
+%\begin{equation}
+%	\mathbb{E}(T_2)\approx \frac{1}{1 + R_f} \times 0 + \frac{R_f}{1 + R_f} \times 2N
+%\end{equation}
+%where the two terms correspond to the contribution from failing to recombine during the standing phase (thereby coalescing very rapidly), and alternately to one or both lineages escaping from the beneficial background and coalescing $2N$ generations ago.
+%
+%Now incorporating recombination during the sweep, the expected pairwise coalescent time a distance $r$ away from the sweep is
+%\begin{equation}
+%	\mathbb{E}(T_2) \approx \left(1-\frac{1}{1 + R_f} P_{NR}^2  \right) \times 2N
+%\end{equation}
+%as to avoid (near) instantaneous coalescence our pair of lineages could either recombine during the sweep or during the standing phase. The expected level of pairwise diversity as we move away from a sweep is given by $2\mu \mathbb{E}(T_2)$ (see Figure \ref{pi_plot} for a comparison of this approximation with coalescent simulations done using $ms$). 
+%
 
-For example, excluding recombination events during the sweep for a moment, the expected pairwise coalescent time for lineages a distance $r$ away from the sweep is
-\begin{equation}
-	\mathbb{E}(T_2)\approx \frac{1}{1 + R_f} \times 0 + \frac{R_f}{1 + R_f} \times 2N
-\end{equation}
-where the two terms correspond to the contribution from failing to recombine during the standing phase (thereby coalescing very rapidly), and alternately to one or both lineages escaping from the beneficial background and coalescing $2N$ generations ago.
-
-Now incorporating recombination during the sweep, the expected pairwise coalescent time a distance $r$ away from the sweep is
-\begin{equation}
-	\mathbb{E}(T_2) \approx \left(1-\frac{1}{1 + R_f} P_{NR}^2  \right) \times 2N
-\end{equation}
-as to avoid (near) instantaneous coalescence our pair of lineages could either recombine during the sweep or during the standing phase. The expected level of pairwise diversity as we move away from a sweep is given by $2\mu \mathbb{E}(T_2)$ (see Figure \ref{pi_plot} for a comparison of this approximation with coalescent simulations done using $ms$). 
+%
+%\jb{I feel like maybe we should do only diversity and the frequency spectrum in the main body of the paper. Doing pi, S, and SFS feels a bit much.}
 
 \begin{figure}
 	\includegraphics[width = \textwidth]{../Paper_Figures/pi_density.pdf} \label{pi_plot}
 \end{figure}
 
-\jb{I feel like maybe we should do only diversity and the frequency spectrum in the main body of the paper. Doing pi, S, and SFS feels a bit much.}
+We first take interest in determining the expected total time in the genealogy, at a given distance from the selected site, which allows us to obtain approximations for simple summary statistics such as the pairwise diversity and expected number of segregating sites. Conditional on $m$ independent lineages escaping the sweep, the expected total time in the genealogy is $2N \sum_{j=1}^{m-1} 1/j$, the standard result for a neutral coalescent with $m$ lineages \citep{Watterson:1975ur}. Ignoring for a moment recombination during the sweep phase, the probability that $k$ independent lineages escape during the standing phase is the probability of $k$ alleles in a sample of $n$ under the ESF, $p_{ESF}(k\mid R_f,n)$. If we condition on observing $n-i$ singleton recombinants escape during the sweep phase, then the expected time in the genealogy is
+\begin{equation}
+	\mathbb{E}(T_{TOT} \mid n-i \textrm{ singleton recombinants})  \approx 2N \sum_{k=2}^i p_{ESF}(k\mid R_f,n)   \sum_{j=1}^{k+n-i-1} 1/j.
+\end{equation}
+%Reincorporating recombination during the sweep phase, the probability that $k$ distinct lineages have recombined off of the beneficial background between the two phases together is
+%\begin{equation}
+%	\sum_{i=0}^{k} {n \choose i} P_{NR}^{i} (1-P_{NR})^{n-i} p_{ESF}\left(k-m\mid R_f, i\right),
+%\end{equation}
+%because if $m$ recombinant lineages are generated during the sweep, then the remaining $k-m$ recombinant lineages have to come from recombination events in the standing phase (we take $p_{ESF}\left(0 \mid R_f,0\right)=1$, and $p_{ESF}\left(0 \mid R_f,i\right)=0\ \forall\ i > 0$). 
+Summing over all possible numbers of singleton recombinants during the sweep phase, the expected total time in the genealogy is therefore
+\begin{equation}
+	\mathbb{E}(T_{TOT})  \approx 2N \sum_{i=0}^{n} {n \choose m} P_{NR}^{i} (1-P_{NR})^{n-i} \sum_{k=1}^i p_{ESF}(k\mid R_f,n)   \sum_{j=1}^{k+n-i-1} 1/j.
+\end{equation}
+(note that we have taken $p_{ESF}\left(0 \mid R_f,0\right)=1$, and $p_{ESF}\left(0 \mid R_f,i\right)=0\ \forall\ i > 0$; whereas it is typically impossible to obtain a sample with zero alleles, in our case we must define these probabilities to accommodate the case in which all $n$ lineages recombine out during the sweep phase).
+and the expected number of segregating sites can be found by multiplying this quantity by the mutation rate. 
 
-We can extend this idea of conditioning on the number of lineages that escape the sweep to calculate the expected total time in the genealogy as we move away from the selected locus. Conditional on $k$ independent lineages escaping the sweep, the expected total time in the genealogy is $2N \sum_{\ell=1}^{k-1} 1/\ell$, the standard result for a neutral coalescent with $k$ lineages \citep{Watterson}. Ignoring for a moment recombination during the sweep phase, the probability that $k$ lineages escape the sweep is the probability of $k$ alleles in a sample of $n$ under the ESF, $p_{ESF}(k\mid R_f,n)$ (under our approximation). The expected time in the genealogy a distance $r$ away from the selected site is therefore
+For a sample of $n = 2$, we can obtain a simple expression for the expected reduction in pairwise diversity relative to the neutral expectation as
 \begin{equation}
-	\mathbb{E}(T_{TOT})  \approx 2N \sum_{k=2}^n p_{ESF}(k\mid R_f,n)   \sum_{j=1}^{k-1} 1/j.
-\end{equation}
-Reincorporating recombination during the sweep phase, the probability that $k$ distinct lineages have recombined off of the beneficial background between the two phases together is
-\begin{equation}
-	\sum_{m=0}^{k} {n \choose m} P_{NR}^{m} (1-P_{NR})^{n-m} p_{ESF}\left(k-m\mid R_f, n-m\right),
-\end{equation}
-because if $m$ recombinant lineages are generated during the sweep, then the remaining $k-m$ recombinant lineages have to come from recombination events in the standing phase (we take $p_{ESF}\left(0 \mid R_f,0\right)=1$, representing the extreme case where $k=n$ and all lineages manage to recombine during the sweep phase). The expected total time in the genealogy is therefore
-\begin{equation}
-	\mathbb{E}(T_{TOT})  \approx 2N\sum_{m=0}^{k} {n \choose m} P_{NR}^{m} (1-P_{NR})^{n-m} p_{ESF}\left(k-m\mid R_f, n-m\right)   \sum_{\ell=1}^{k-1} 1/\ell
-\end{equation}
-and the expected number of segregating sites can be found by taking $\mu$ times this. In Figure XXX we show this approximation, and coalescent simulations done using $ms$. 
-
-We can also use our approximation to obtain an expression for the frequency spectrum at sites surrounding a standing sweep. To break the problem into approachable components, we first condition on an absence of recombination during the sweep phase, and a fixed number $k$ recombinant families which are created by coalescence and recombination in the standing phase (both of these will be relaxed momentarily). Each of the $k$ recombinant families represents an independent draw from the population frequency prior to the \textbf{B} allele entering the population. Borrowing a trick from \cite{Pennings:2006fs} (equation 14 of their paper), if we condition on $j$ out of $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $n$ lineages sampled at fixation carry the derived allele by summing over all possible partitions of the $n$ tips into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day as
-\begin{equation}
-p(l \mid j, ~k,~i=n) = \sum_{\substack{i_1+\cdots +i_j=l \\i_{j+1}+\cdots + i_k=n-l}} p(\{i_1,\dots,i_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose j} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
+	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1-\frac{1}{1 + R_f} P_{NR}^2  \right).
 \end{equation}
 
-Next, we write $q_{j,k}$ to denote the probability that $j$ out of the $k$ recombinant families carry the derived mutation. For our purposes, we will assume this distribution follows that of the standard neutral coalescent expectation (i.e. $q(j \mid k) = \frac{1/j}{\sum_{\ell=1}^{k-1}1/\ell}$ gives the probability of $j$ derived alleles in a sample of $k$, conditional on segregation), although one could easily use an empirical frequency spectrum measured from genome-wide data, as in \citep{NielsenKim}. The probability that the derived allele is present in $l$ out of $n$ sampled lineages, conditional on there having been $k$ recombinant families, is then 
+We can also use our approximation to obtain an expression for the full frequency spectrum at sites surrounding a sweep from standing variation. To break the problem into approachable components, we first consider the frequency spectrum of an allele that is polymorphic within the set of lineages which do not recombine during the sweep (ignoring it's frequency in the sweep phase recominants), and we condition on a fixed number $k$ recombinant families from the standing phase. Borrowing from \cite{Pennings2006} (equation 14 of their paper), if we condition on $j$ out of these $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $i$ sampled lineages carry the derived allele by summing over all possible partitions of the $i$ lineages into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day
 \begin{equation}
-	p(l \mid k, i = n ) = \sum_{j=1}^k p(l \mid j,~k, ~n)q(j\mid k).
+p(l \mid j, ~k,~i) = \sum_{\substack{i_1+\cdots +i_j=l \\i_{j+1}+\cdots + i_k=n-l}} p(\{i_1,\dots,i_k\} \mid k, n) = \frac{ {n \choose l} }{ {k \choose j} }\frac{ S(l,j)  S(n-l,k-j)  }{ S(n,k) } \label{ESF_gives_freq_spec}
+\end{equation}
+
+Next, we write $q\left(j \mid k\right)$ to denote the probability that $j$ out of the $k$ recombinant families carry the derived mutation. For our purposes, we will assume this distribution follows that of the standard neutral coalescent expectation (i.e. $q(j \mid k) = \frac{1/j}{\sum_{\ell=1}^{k-1}1/\ell}$ gives the probability of $j$ derived alleles in a sample of $k$, conditional on segregation), although an empirical frequency spectrum measured from genome-wide data, as in \cite{Nielsen:2005bla} could also be used. The probability that the derived allele is present in $l$ out of $n$ sampled lineages, conditional on there having been $k$ recombinant families, is then 
+\begin{equation}
+	p(l \mid k, i ) = \sum_{j=1}^k p(l \mid j,~k, ~i)q(j\mid k).
 \end{equation}	
-Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an expression for the frequency spectrum conditional on no recombination in the sweep phase as
-
+Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an expression for the frequency spectrum conditional on segregation in the set of $i$ lineages which do not recombine during the sweep as
 \begin{equation}
-	p(l \mid i=n) =  \sum_{k=2}^{n}  p_{ESF}(k \mid R_f,n)  \sum_{j=1}^{k-1} q(j\mid k) p(l \mid j,~k, ~n)
+	p(l \mid i) =  \sum_{k=2}^{n}  p_{ESF}(k \mid R_f,i)  \sum_{j=1}^{k-1} q(j\mid k) p(l \mid j,~k, ~i)
 \end{equation}
 %
 %To do this we make use of a trick borrowed from \cite{Kimandstephan}, and subsequently used by \cite{NielsenKimetc}, where the frequency spectrum after a sweep reflects the fact that $k$ recombinant lineages survive through the sweep and these $k$ lineages reflect independent draws from the population frequency. This trick was also used by \cite{Pennings:2006fs} to obtain the frequency spectrum of fully linked variation surrounding a soft sweep from multiple mutations (see the ``Frequency distribution of ancestral variation'' subsection in their ``Analytical Derivations'' section). We will denote the probability of sampling $j$ derived copies of a neutral allele out of a sample of $k$ by $q_{j,k}$, i.e. the neutral frequency spectrum in a sample of $k$. At a neutral site at demographic equilibrium $q_{j,k} = 1/j$ \gc{actually what do we want to do here? Do we want site to be segregating? }, otherwise it could be replaced by the empirical frequency spectrum calculated genome-wide \citep[as in ][]{NielsenKimetc}
@@ -234,15 +242,17 @@ Summing over the distribution of $k$ given by \eqref{ESF1}, we obtain an express
 %\end{equation}
 %where $  p(l \mid k,n) $ is the probability that our $k$ recombinant lineages lead to a sample containing into $l$ derived alleles and $n-l$ alleles when the neutral allele segregates at a frequency of $j/k$ in the population before the sweep. To find this we have to sum over the possible configurations $\{a_1,\dots,a_k\}$ as follows
 
-When we allow for recombination during the sweep, this expression becomes more complex, but the same logic can be followed and write
+When we allow for recombination during the sweep, the expression becomes more complex, as we must take into account the fact a mutation may be polymorphic after the sweep even if it is fixed in the set of lineages which hitchhike. Nonetheless, we obtain an expression for the frequency spectrum of 
 \begin{equation}
-p(l \mid n) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-S) \sum_{j=1}^{\text{min}\left(k+n-i-1,\ell\right)} q(j\mid k+n-i) \sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , \ell , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(\ell-g \mid j-g,k,i)
+p(l \mid n ) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} P_{ESF}(k \mid R_f,n-i) \sum_{j=1}^{\text{min}\left(k+n-i-1,\ell\right)} q(j\mid k+n-i) \sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , \ell , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(\ell-g \mid j-g,k,i) \label{rearrange-anc-freq-spec}
 \end{equation}
-where A$\wedge$B denotes min(A,B) and
+where
 \begin{equation}
 	H(g \mid j,k,n-i) = \frac{{n-i \choose g}{k \choose j - g}}{{k + n - i \choose j}}
 \end{equation}
-gives the probability that $g$ out of $j$ derived alleles are found on singleton recombinants created during the sweep, given that there are $n-i$ singletons, and $k$ recombinant families created during the standing phase. Here $n-i$ lineages recombine out during the selected phase, while the remaining $i$ lineages are partitioned into $k$ families due to recombination and coalescence in the standing phase. Out of the $n-i$ singleton lineages, $g$ of them carry the derived allele, while the remaining $j-g$ copies of the derived allele which existed just prior to the arrival of the beneficial allele give rise to $l-g$ derived alleles in the present day, resulting in $l$ out of $n$ sampled lineages carrying the derived allele. %Then in order to give rise to a sample configuration $l,~n-l$ the remaining $n-S$ lineages, who are partitioning into $k$ families, have to be paritioned into $l-i,n-S-i$ carrying 1 and 0 respectively, this happens with probability $p(l-i \mid j-i,k,n-S )$ given by eqn. \eqref{ESF_gives_freq_spec}.   
+gives the probability that $g$ out of $j$ derived alleles are found on singleton recombinants created during the sweep, given that there are $n-i$ singletons, and $k$ recombinant families created during the standing phase. Here $n-i$ lineages recombine out during the selected phase, while the remaining $i$ lineages are partitioned into $k$ families due to recombination and coalescence in the standing phase. Out of the $n-i$ singleton lineages, $g$ of them carry the derived allele, while the remaining $j-g$ copies of the derived allele give rise to $l-g$ derived alleles following the sweep, resulting in a final frequency of  $\frac{l}{n}$ in the present day sample. 
+
+This expression is reasonably accurate except for at sites very near to the selected locus. The reason for this is that our approximation assumes that all variation is ancestral to the beneficial mutation at the selected locus, whereas very close the selected locus, it is unlikely that there have been any recombination events at all, and so any segregating variants which do exist are likely to have arisen as new mutations on the genealogy which sits under the mutation that gave rise to the beneficial allele. Because this genealogy is simply a sample from the standard neutral coalescent with the external branches lengthened by an amount corresponding to the duration of the sweep phase, the frequency spectrum very near to the selected locus is approximately the neutral frequency spectrum with a slight excess of singletons. In the appendix, we give an \textit{ad hoc} expression which takes into account new mutations near the selected locus, and markedly improves our prediction of the frequency spectrum in this region. In figure BLAH, we show a comparison of simulations done in \textit{ms} with the approximation in \eqref{rearrange-anc-freq-spec} and the improved approximation in the appendix.
 
 %\subsubsection{Linkage Disequilibrium}
 %\jb{obviously needs more explication of the history of studying LD across sweeps, but will deal with later.}
