@@ -1,3 +1,4 @@
+setwd("~/Documents/Academics/StandingSweeps/")
 source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
 source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
 
@@ -8,13 +9,13 @@ my.runs <- lapply ( real.fs , function ( x ) SweepFromStandingSim ( N = 10000 , 
 many.sim.freqs <- list ( my.runs , real.fs )
 save ( many.sim.freqs  ,  file = "~/Documents/Academics/StandingSweeps/Sims/freqs.traj.s05.Rdata"  )
 for ( i in 1 : length ( real.fs ) ) {
-	run.ms.f ( runs = my.runs [[ i ]] [[ 1 ]] , n.sam = 12 , f = real.fs [ i ] , s = 0.05 , N = 10000 , path = "~/Documents/Academics/StandingSweeps/" )
+	run.ms.f ( runs = my.runs [[ i ]] [[ 1 ]] , n.sam = 20 , f = real.fs [ i ] , s = 0.05 , N = 10000 , path = "~/Documents/Academics/StandingSweeps/" )
 }
 
 
 
-plot ( c ( 0 , 200 ) , c ( 0 , 1 ) , type = "n" , xlab = "4NR" , ylab = expression ( S [ R ] / S [ 0 ] ) , cex.lab = 1.5 )
 
+if ( FALSE ) {
 setwd("~/Documents/Academics/StandingSweeps/Sims")
 
 s = 0.05
@@ -82,7 +83,7 @@ for ( i in 1 : length ( real.fs ) ) {
 
 lines ( R , std.time , lty = 3 , lwd = 2 , col = "black" )
 
-
+}
 
 
 

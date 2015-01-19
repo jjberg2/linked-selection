@@ -732,24 +732,37 @@ GetTips <- function ( branch , n.tips , edges ) {
 		
 }
 
+# StirlingNumbers <- function ( n ) {
+	
+	# library ( randtoolbox )
+	# second.kind <- lapply ( 1 : n , stirling )
+	# second.kind.matrix <- matrix ( nrow = n , ncol = n )
+	# for ( i in 1 : n ) {
+		# if ( i < n ) {
+			# second.kind.matrix [ i , ] <- c ( second.kind [[ i ]] [ -1 ], rep ( 0 , n - length ( second.kind [[ i ]] ) + 1 ) )
+		# } else if ( i == n ) {
+			# second.kind.matrix [ i , ] <- second.kind [[ i ]] [ -1 ]
+		# }
+	# }
+	# #recover()
+	# first.kind.matrix <- abs ( solve ( second.kind.matrix ) )
+	# first.kind.matrix [ first.kind.matrix < 0.99 ] <- 0
+		
+	# return ( first.kind.matrix )
+	
+# }
+
 StirlingNumbers <- function ( n ) {
 	
-	library ( randtoolbox )
-	second.kind <- lapply ( 1 : n , stirling )
-	second.kind.matrix <- matrix ( nrow = n , ncol = n )
+	nums <- matrix ( NA , nrow = n + 1 , ncol = n + 1 )
+	nums [ 1 ,  ] <- nums [  , 1 ] <- 0
+	nums [ 1 , 1 ] <- 1
 	for ( i in 1 : n ) {
-		if ( i < n ) {
-			second.kind.matrix [ i , ] <- c ( second.kind [[ i ]] [ -1 ], rep ( 0 , n - length ( second.kind [[ i ]] ) + 1 ) )
-		} else if ( i == n ) {
-			second.kind.matrix [ i , ] <- second.kind [[ i ]] [ -1 ]
-		}
+		for ( k in 1 : n ) {	
+			nums [ i + 1 , k + 1 ] <- ( i -1 ) * nums [ i  , k + 1 ] + nums [ i , k  ]
+		}	
 	}
-	#recover()
-	first.kind.matrix <- abs ( solve ( second.kind.matrix ) )
-	first.kind.matrix [ first.kind.matrix < 0.99 ] <- 0
-		
-	return ( first.kind.matrix )
-	
+	return ( nums [ -1 , - 1 ] )
 }
 
 EwensDist <- function ( n , N , r , distance , f ) {
