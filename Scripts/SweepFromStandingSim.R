@@ -185,7 +185,7 @@ SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no
 			not.all.neutral.fixed <- any ( neutral.freq.matrix [[ i ]] %% 1 != 0 )
 		
 		}
-		if ( i %% 50 == 0 & display.rep.count) {
+		if ( i %% 500 == 0 & display.rep.count) {
 				
 				if ( i <= length ( neutral.freq.matrix) ) {
 					lineages.remaining <- sum ( neutral.freq.matrix [[ i + 1 ]] %% 1 != 0 )
