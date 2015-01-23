@@ -80,7 +80,7 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 
 	for ( i in 1 : reps ) { 
 		trees [[ i ]] [[ "freqs" ]] <- new.freqs[i,new.freqs[i,] != 0 ]
-		trees [[ i ]] [[ "sweep.start"]] <- sweep.start [ i ]
+		if ( !no.sweep ) trees [[ i ]] [[ "sweep.start"]] <- sweep.start [ i ]
 	}
 
 	if ( build.seq == TRUE ) {

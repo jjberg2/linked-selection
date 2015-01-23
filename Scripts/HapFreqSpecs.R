@@ -2,18 +2,18 @@ setwd("~/Documents/Academics/StandingSweeps")
 source ( "Scripts/SweepFromStandingSim.R")
 
 
-msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density = TRUE , num.sims , len.bp , r.bp , mu.bp , hap.count.interval ) {
-	#recover()
+msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density = TRUE , num.sims , len.bp , r.bp , mu.bp , ext = "out" , hap.count.interval ) {
+	recover()
 	options ( "scipen" = 100 , "digits" = 4 )
 	f.lab <- strsplit ( as.character ( f ) , "\\." ) [[ 1 ]] [ 2 ]
 	s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]
-	counter <- 1
 	
-	my.file <- paste ( path , "/mssel_f" , n.sam , "." ,  f.lab , "."  , s.lab , "." , N  , ".out" , sep = "" )
+	my.file <- paste ( path , "/mssel_f" , n.sam , "." ,  f.lab , "."  , s.lab , "." , N  , "." , ext ,  sep = "" )
 	system ( paste ( "rm " , my.file ) )
 	#for ( run in 1:5 ) {
 	#	load ( paste ( "run_cond_lost_" , run , ".Robj" , sep = "" ) )
 	hap.counts <- list ()
+	hap.counts.no.sing <- list ()
 	for ( i in 1:nrow ( runs ) ) {
 		
 		my.freqs <- c ( runs [ i , runs [ i , ] > 0 ] , 0 )
@@ -28,8 +28,8 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 		system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file ,  " 0 -t " , 2 * N * len.bp * mu.bp , " -r " , 2 * N * len.bp * r.bp , " " , len.bp , " > " , path, "/myseqdata" , sep = "" ) ) 
 			
 		seqs <- GetSeqs ( n.sam , num.sims , path )
-		temp <- 
 		hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
+		hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
 	}
 	marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
 	return ( list ( marginal.hap.freqs , hap.counts ) )
@@ -70,7 +70,7 @@ CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 	for ( i in 1 : length ( positions ) ) {
 		#if ( i == 18 ) break
 		this.site <- which ( these.seqs [[ 2 ]] [ , i ] == 1 )
-		if ( any ( unlist ( lapply ( my.part ,  function ( x ) all ( x %in% this.site ) ) ) ) ) { 
+		if ( any ( unlist ( lapply ( my.part ,  function ( x ) all ( this.site %in% x ) ) ) ) ) { 
 			if ( i < length ( positions ) ) {
 				hap.freqs [ 1 : length ( my.part ) , pos.cuts >= positions [ i ] & pos.cuts < positions [ i + 1 ] ] <- sort ( unlist ( lapply ( my.part , length ) ) , d = T )
 			}
@@ -119,7 +119,8 @@ CountHapsNoSing <- function ( these.seqs , len.bp , hap.count.interval ) {
 	for ( i in 1 : length ( positions ) ) {
 		#if ( i == 18 ) break
 		this.site <- which ( these.seqs [[ 2 ]] [ , i ] == 1 )
-		if ( any ( unlist ( lapply ( my.part ,  function ( x ) all ( x %in% this.site ) ) ) ) |  length ( this.site ) == 1 ) { 
+		if ( i == 94 ) break
+		if ( any ( unlist ( lapply ( my.part ,  function ( x ) all ( x %in% this.site ) & all ( this.site %in% x ) ) ) ) |  length ( this.site ) == 1 ) { 
 			hap.freqs [ 1 : length ( my.part ) , pos.cuts >= positions [ i ] & pos.cuts < positions [ i + 1 ] ] <- sort ( unlist ( lapply ( my.part , length ) ) , d = T )
 			next
 		} else {
@@ -189,8 +190,8 @@ CountHapsNoSing <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 200 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 1000 )
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 1000 )
 
 
 
