@@ -71,8 +71,7 @@ The role of soft sweeps is shaping genome-wide patterns of variation has been de
 
 \section{Results}
 
-\subsection{more technical}
-
+%\subsection{more technical}
 
 We consider two linked loci separated on the chromosome by a recombination distance of $r$. At one of these loci a new allele, B, arises in a background of ancestral b alleles. This allele segregates at low frequency for some period of time (either due to neutral fluctuations, or because it is a balanced polymorphism), before a change in the environment causes it to become beneficial and sweep to fixation. Our aim is to describe some features of the genealogy at the second, neutral locus, and to use this understanding to build intuition regarding the process of a sweep from standing variation, as well as to derive the patterns of DNA sequence variation we expect to observe near a recently completed sweep from standing variation.
 
@@ -417,5 +416,30 @@ We also anticipate the generation of considerable linkage disequilibrium both be
 \renewcommand{\thetable}{S\arabic{table}}
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{S\arabic{figure}}
+
+
+\begin{figure}
+	\includegraphics[width = \textwidth]{../Paper_Figures/n_two_coal_time.pdf} \label{n_2_supp_plot}
+\caption{The expected pairwise coalescent time, in units of $2N$ generation, on the background of a derived neutral allele with frequency $f$ in the population.  The dashed $x=y$ line shows our approximation $\E[T_2]=2Nf$. The red dots show the mean of our pairwise coalescent simulations featuring an explicit stochastic trajectories. The solid line shows the analytical expectation from XXXX  
+$\E[T_2] \int_0^1 x/(f (x+(1-x)f))(2-f+2(1-f) \log(1-f)/f) dx $.
+}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width = \textwidth]{../Paper_Figures/mean_coal_times_derived.pdf} \label{mean_coal_times_supp_plot}
+\caption{Expected inter-coalescent time intervals for $10$ lineages sampled in the current day on the background of a derived neutral allele with frequency $f$ in the population. 
+The colored dots give means of $T_k$ from our simulations using stochastic trajectories. The solid lines show the expected coalescent times 
+under our approximation $\E[T_k] = 2Nf/{k \choose 2}$. Note the good agreement except for $k=2$. Presumably our approximation over estimates this time as it fails to acknowledge that the allele is derived, and hence is decreasing in frequency backward in time. }
+
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width = \textwidth]{../Paper_Figures/coeff_var_coal_times.pdf} \label{coeff_var_coal_times_supp_plot}}
+\caption{The coefficient of variation (CV) of the inter-coalescent time intervals for $10$ lineages sampled in the current day on the background of a derived neutral allele with frequency $f$ in the population. The colored dots give the CVs of $T_k$ from our simulations using stochastic trajectories. Under our approximation the coalescent time intervals are exponential, and so have CV=1. The deeper coalescent time-intervals (low $k$s) are more variable than our predictions presumably because neutral trajectories are highly variable so increasing the variance of the coalescent times. More recent time-intervals (high k) are in better agreement with our approximation, as the trajectory with not have strayed far from a frequency $f$ a short way back in time. }
+\end{figure}
+
+% n_two_coal_time.pdf
+%coeff_var_coal_times.pdf
+%mean_coal_times_derived.pdf
 
 \end{document}
