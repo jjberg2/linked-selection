@@ -397,7 +397,7 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 			}
 			
 		} 
-		if ( ncol ( right.sequence.temp ) == 1 ) {
+		if ( sum ( right.sequence.temp ) == 0 ) {
 			right.sequence <- right.sequence.temp
 			rec.right.off.background <- rec.right
 		} else if ( length ( to.remove ) != 0 ){			
@@ -446,7 +446,7 @@ BuildOnOffHaps <- function ( trees , freqs , r , sim.distance , n.tips , f , fix
 				}
 			}
 		} 
-		if ( ncol ( left.sequence.temp ) == 1 ) {
+		if ( sum ( left.sequence.temp ) == 0 ) {
 			left.sequence <- left.sequence.temp
 			rec.left.off.background <- rec.left
 		} else if ( length ( to.remove ) != 0 ) {
