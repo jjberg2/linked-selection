@@ -1,7 +1,59 @@
-#### plot of pi and segregating sites
 setwd ( "~/Documents/Academics/StandingSweeps" )
 source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R')
 source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
+
+
+#################
+## extra functions ##
+#################
+
+
+# MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 )  )
+
+MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 5 * N * s ) * exp(s * x ) / ( 1 + 1 / ( 5 * N * s  ) * ( exp ( s * x )  - 1 )  )
+
+
+#################
+#################
+
+
+
+##### trajectories vs approx
+f <- 0.01
+s <- 0.01
+# my.freq.trajs <- SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+# save ( my.freq.trajs , file = "Sims/10trajectoriesForTrajFigure.Robj")
+load ( file = "Sims/10trajectoriesForTrajFigure.Robj")
+freqs <- t ( my.freq.trajs[[1]] )
+freqs <- apply ( freqs , 2 , rev )
+
+i <- 1
+det.freqs <- 1 / ( 20000 * 0.01 )
+while ( det.freqs [ i ] < ( 1 - f ) ) {	
+	det.freqs [ i + 1 ] <- MyLogistic ( i , N = 10000 , s = s)
+	i <- i + 1 
+}
+det.freqs <- c ( rep ( f , nrow ( freqs) - length ( det.freqs ) ) , rev ( 1 - det.freqs ) )
+matplot ( freqs , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
+lines ( det.freqs , lwd = 2 )
+
+my.at <- length ( det.freqs ) - seq ( 0 , 3500 , 500)
+axis ( 1 , at = my.at , labels = seq ( 0 , 3500 , 500) )
+
+
+new.freqs <- matrix ( 0 , nrow = max ( my.freq.trajs [[ 2 ]] ) - my.freq.trajs [[ 2 ]] [ which ( my.freq.trajs [[ 1 ]] [ , ncol ( my.freq.trajs [[ 1 ]] ) ] != 0 ) ] + ncol ( my.freq.trajs [[ 1 ]] ) , ncol = nrow ( my.freq.trajs [[ 1 ]] ) )
+
+for ( i in 1 : nrow ( my.freq.trajs [[ 1 ]] ) ) {
+	temp <- c ( rep ( 1 , max ( my.freq.trajs [[ 2 ]] ) -  my.freq.trajs [[ 2 ]] [ i ] ) , my.freq.trajs [[ 1 ]] [ i , ]  )
+	if ( length ( temp ) > nrow ( new.freqs ) ) {
+		new.freqs [ , i ] <- rev ( temp [ 1 : nrow ( new.freqs ) ] )
+	 } else { 
+	 	new.freqs [ , i ] <- rev ( c ( temp , rep ( 0 , nrow ( new.freqs ) - length ( temp ) ) ) )
+	 }
+}
+
+matplot ( new.freqs , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
+lines ( det.freqs , lwd = 2 )
 
 
 ##### num haps
