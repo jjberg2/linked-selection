@@ -25,7 +25,7 @@ save ( EwensHaps10Sim , file = "Sims/EwensHaps10Sim.Robj" )
 # }
 
 
-
+##made by Coal_Sims_w_traj.Robj
 show(load("~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
 
 fs<-(1:10)/100
