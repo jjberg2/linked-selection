@@ -1,6 +1,6 @@
 setwd ( "~/Documents/Academics/StandingSweeps/" )
 source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R', chdir = TRUE)
-source('~/Documents/Academics/StandingSweeps/Scripts/freq_spectrum_standing_sweep_coal.R', chdir = TRUE)
+source ( '~/Documents/Academics/StandingSweeps/Scripts/freq_spectrum_standing_sweep_coal.R' )
 source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir = TRUE)
 options ( scipen = 400 )
 
@@ -57,18 +57,28 @@ for ( f in my.fs ) {
 
 
 if ( FALSE ) {
-	
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/withsweep.freq.spec.list.Rdata")
+i <- 1 
+for ( f in my.fs ) {
+	
+	for ( r in my.rs ) {
+		
+		withsweep.freq.spec.list [[ 8 ]] [[ i ]] <- expected.freq.times.standing.w.sweep (nsam = 12 , N = 10000 , r = r , f = f , s = 0.05 )
+		i <- i + 1
+	}
+	
+}
+save ( withsweep.freq.spec.list , file = "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/withsweep.freq.spec.list.Rdata" )	
 
 f <- 0.025
 
-these.f <- unlist ( nosweep.freq.spec.list[[2]] ) == f
+these.f <- unlist ( withsweep.freq.spec.list[[2]] ) == f
 
 unlist ( nosweep.freq.spec.list [[ 1 ]] ) [ these.f ]
 
-exact.sim.freq.spec <- do.call ( rbind , nosweep.freq.spec.list [[ 6 ]] ) [ these.f , ]
-flat.sim.freq.spec <- do.call ( rbind , nosweep.freq.spec.list [[ 7 ]] ) [ these.f , ]
-approx.sim.freq.spec <- do.call ( rbind , nosweep.freq.spec.list [[ 8 ]] ) [ these.f , ]
+exact.sim.freq.spec <- do.call ( rbind , withsweep.freq.spec.list [[ 6 ]] ) [ these.f , ]
+flat.sim.freq.spec <- do.call ( rbind , withsweep.freq.spec.list [[ 7 ]] ) [ these.f , ]
+approx.sim.freq.spec <- do.call ( rbind , withsweep.freq.spec.list [[ 8 ]] ) [ these.f , ]
 
 for ( i in 1 : nrow ( exact.sim.freq.spec ) ) {
 	blah <- rbind ( exact.sim.freq.spec [ i , -ncol ( exact.sim.freq.spec ) ] , approx.sim.freq.spec [ i , -ncol ( exact.sim.freq.spec ) ] )
