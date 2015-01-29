@@ -654,7 +654,7 @@ StandingHapCountDist <- function ( input , r = 10^-8 , sim.distance , interval.w
 }
 
 
-MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE) {
+MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE,do.legend=FALSE) {
 	
 	#par ( mfrow = c ( 2 , 1 ) )
 	#matplot ( t ( cum.probs ) , type = "l" , lty = 1 , lwd = 0.7 , col = "black" , ylab = "Cumulative Probability" , xlab = "kb" , main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , bty = "n")
@@ -667,24 +667,24 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	ewens.dist.matrix <- matrix ( nrow = n.tips , ncol = length ( intervals ) )
 
 	#stirling.numbers <- StirlingNumbers ( n = n.tips ) [ n.tips , ]
-	# for ( i in 1 : length ( intervals ) ) {
+	 for ( i in 1 : length ( intervals ) ) {
 		
-		# if ( i == 1 & intervals [ 1 ] == 0 ) {
+		 if ( i == 1 & intervals [ 1 ] == 0 ) {
 			
-			# ewens.dist.matrix [ , i ] <- c ( 1 , rep ( 0 , n.tips - 1 ) )
+			 ewens.dist.matrix [ , i ] <- c ( 1 , rep ( 0 , n.tips - 1 ) )
 			
-		# } else { 
+		 } else { 
 		
-			# ewens.dist.matrix [ , i ] <- EwensDist ( n = n.tips , N = N , r = r , distance = intervals [ i ] , f = f  ) [ n.tips , ]
+			 ewens.dist.matrix [ , i ] <- EwensDist ( n = n.tips , N = N , r = r , distance = intervals [ i ] , f = f  ) [ n.tips , ]
 			
-		# }
+		}
 		
-	# }
+	 }
 	#recover()
 #recover()
 	if(plot.cumulative){ ewens.cum.probs <-  apply ( ewens.dist.matrix , 2 , cumsum )}
 	if(!plot.cumulative){ewens.cum.probs <-ewens.dist.matrix; }
-	recover()
+#	recover()
 	matplot ( 
 		t ( ewens.dist.matrix ) , 
 		type = "n" , 
@@ -698,10 +698,10 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 		ylim = c ( 0 , 1 ) , 
 		xaxt = "n"
 	)
-	axis ( 1 , seq ( 1 , ncol ( ewens.dist.matrix ) , by = 10e5/interval.width ) , seq ( 0 , tail ( intervals , 1 ) / 1000 , by = 1000 )  )
+	axis ( 1 , seq ( 1 , ncol ( ewens.dist.matrix ) , by = 10e5/interval.width ) , 4*N*r * 1000*seq ( 0 , max ( intervals , 1 )/1000  , by = 1000 )  )  # seq ( 0 , tail ( intervals , 1 ) / 1000 , by = 1000 )  )
 	#recover()
 	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-	#legend("topright", legend=paste("j=",1:n.tips), lty=1,col= col.vect,lwd=2)
+	if(do.legend) legend("topright", legend=paste("j=",1:n.tips), lty=1,col= col.vect,lwd=2)
 	for ( i in  ( nrow ( cum.probs ) - 1 ):1 ) {
 			#i = i + 1
 			X.ax <- 1:ncol ( cum.probs ) #which ( cum.probs [ i , ] != cum.probs [ i + 1 , ] )
