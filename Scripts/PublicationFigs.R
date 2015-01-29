@@ -43,7 +43,7 @@ mtext(side=3,line=0,text="f=1%")
 #mtext(side=2,line=2,text="Probability")
 mtext(side=1,line=2,text="4Nr")
 mtext(side=3,line=0,text="f=5%")
-	dev.copy2pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Figures/Prob_hap_distribution.pdf")
+dev.copy2pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/Prob_hap_distribution.pdf")
 
 	my.cols<- rainbow(10)
 
