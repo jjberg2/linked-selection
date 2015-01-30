@@ -2,8 +2,8 @@ setwd("~/Documents/Academics/StandingSweeps")
 source ( "Scripts/SweepFromStandingSim.R")
 
 
-msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density = TRUE , num.sims , len.bp , r.bp , mu.bp , ext = "out" , hap.count.interval ) {
-	recover()
+msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density = TRUE , num.sims , len.bp , r.bp , mu.bp , ext = "out" , hap.count.interval , both.sides = FALSE ) {
+	#recover()
 	options ( "scipen" = 100 , "digits" = 4 )
 	f.lab <- strsplit ( as.character ( f ) , "\\." ) [[ 1 ]] [ 2 ]
 	s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]
@@ -14,6 +14,7 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 	#	load ( paste ( "run_cond_lost_" , run , ".Robj" , sep = "" ) )
 	hap.counts <- list ()
 	hap.counts.no.sing <- list ()
+	window.hap.counts <- list ()
 	for ( i in 1:nrow ( runs ) ) {
 		
 		my.freqs <- c ( runs [ i , runs [ i , ] > 0 ] , 0 )
@@ -25,13 +26,20 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 		write ( file = traj.file , header.material )
 		write.table ( file = traj.file , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
 		cat( i ," " )
-		system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file ,  " 0 -t " , 2 * N * len.bp * mu.bp , " -r " , 2 * N * len.bp * r.bp , " " , len.bp , " > " , path, "/myseqdata" , sep = "" ) ) 
-			
-		seqs <- GetSeqs ( n.sam , num.sims , path )
-		hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
-		hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
+		if ( both.sides == FALSE ) {
+			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file ,  " 0 -t " , 2 * N * len.bp * mu.bp , " -r " , 2 * N * len.bp * r.bp , " " , len.bp , " > " , path, "/myseqdata" , sep = "" ) ) 
+			seqs <- GetSeqs ( n.sam , num.sims , path )
+			hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
+			hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
+			marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
+		} else {
+			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file , " " , len.bp/2 , " -r " , 2 * N * len.bp * r.bp , " " , len.bp ," -t " , 2 * N * len.bp * mu.bp  , " " , " > " , path, "/myseqdata" , sep = "" ) ) 
+			seqs <- GetSeqs ( n.sam , num.sims , path )
+			window.hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs  , TwoSideCountHaps , len.bp , hap.count.interval )
+			marginal.hap.freqs <- Reduce ( "+" , window.hap.counts ) / length ( window.hap.counts )
+		}
 	}
-	marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
+	
 	return ( list ( marginal.hap.freqs , hap.counts ) )
 }
 
@@ -47,6 +55,7 @@ GetSeqs <- function ( n , num.sims , path ) {
 	polymorph<- seg.sites>0
 	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	
 	my.seqs <- lapply ( 0 : ( num.sims - 1 ) , function ( iter ) {		
+		#recover()
 		positions <- read.table ( paste ( path , "/myseqdata" ,sep = "" ) , skip = 5 + 4 * iter + seq.lines [ iter + 1 ] , nrow = 1 )
 		seqs.raw <- scan ( paste ( path , "/myseqdata" , sep = "" ) , skip = 6 + 4 * iter + seq.lines [ iter + 1 ] , nline = n , what = character ( ) , quiet = TRUE )
 		seqs <- sapply ( seqs.raw , function ( seq ) { as.numeric ( strsplit ( seq , "" ) [[ 1 ]] ) } )
@@ -110,7 +119,7 @@ CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 CountHapsNoSing <- function ( these.seqs , len.bp , hap.count.interval ) {
-	recover ()
+	#recover ()
 	positions <- as.numeric ( these.seqs [[ 1 ]] )
 	my.part <- list ( seq ( 1 : nrow ( these.seqs [[ 2 ]] ) ) )
 	hap.freqs <- matrix ( 0 , nrow = nrow ( these.seqs [[ 2 ]] ) , ncol = len.bp / hap.count.interval + 1 )
@@ -155,6 +164,42 @@ CountHapsNoSing <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 
+
+TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
+	#recover ()
+	positions <- as.numeric ( these.seqs [[ 1 ]] )
+	c.positions <- positions - 1/2
+	my.part <- list ( seq ( 1 : nrow ( these.seqs [[ 2 ]] ) ) )
+	hap.freqs <- matrix ( 0 , nrow = nrow ( these.seqs [[ 2 ]] ) , ncol = len.bp / hap.count.interval + 1 )
+	pos.cuts <- seq ( 0 , 0.5 , by = hap.count.interval / (2*len.bp) )
+	pb <- txtProgressBar ( min = 0 , max = ncol ( hap.freqs ) , style = 3 )
+	for ( i in seq_along ( pos.cuts ) ) {
+		my.window <- c.positions > -pos.cuts [ i ] & c.positions < pos.cuts [ i ]
+		
+		if ( all ( my.window == FALSE ) ) {
+			
+			hap.freqs [ 1 , i ]	<- nrow ( these.seqs [[ 2 ]] )
+		
+		} else if ( sum ( my.window ) == 1 ){
+			
+			freqs <- as.numeric ( sort ( table ( these.seqs [[ 2 ]] [ , my.window ] ) , decreasing = T ) )
+			hap.freqs [ seq_along ( freqs ) , i ] <- freqs
+			
+		} else {
+			#break
+			blah <- apply ( these.seqs [[ 2 ]] [ , my.window ] , 1 , paste , collapse = " " )
+			freqs <- sort ( rle ( sort ( as.numeric ( factor ( blah , unique ( blah ) , ordered = T ) ) ) )$lengths , decreasing = T )
+			hap.freqs [ seq_along ( freqs ) , i ] <- freqs
+	
+		}
+		setTxtProgressBar ( pb, i )
+	}
+	
+	return ( hap.freqs )
+}
+
+
+
 # get.freq.spec<-function(n,num.sims, path){
 	# recover()
 	# a<-system(paste("grep segsites ", path , "/myseqdata",sep=""),intern=TRUE)
@@ -190,17 +235,17 @@ CountHapsNoSing <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 100 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 1000 )
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 1000 , both.side = T )
 
 
 
-standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 200 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 1000 )
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 50 , f = 0.05 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
 par ( mfrow = c ( 1 , 2 ) )
 matplot ( t ( hard.sweep [[ 1 ]]) , type = "l" , lty = 1 , lwd = 1.5 )
 lines ( t ( hard.sweep [[ 2 ]] [ 1 , ] ))
-matplot ( t ( standing.sweep ) , type = "l" , lty = 1 , lwd = 1.5 )
+matplot ( t ( standing.sweep [[ 1 ]] ) , type = "l" , lty = 1 , lwd = 1.5 )
 
 
 
