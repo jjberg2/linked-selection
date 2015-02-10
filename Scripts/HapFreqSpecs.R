@@ -249,3 +249,10 @@ matplot ( t ( standing.sweep [[ 1 ]] ) , type = "l" , lty = 1 , lwd = 1.5 )
 
 
 
+
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 50 , f = 0.05 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
+
+
+
+
