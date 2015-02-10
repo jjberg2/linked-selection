@@ -5,11 +5,13 @@ source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir 
 
 ####freq. spectrum w. no rec. during sweeps.
 
-expected.freq.times.standing<-function(nsam,N,r,distance,f){
+expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NULL){
 	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n)
 	ESF.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
-	my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	if ( my.StirlingNumbers == NULL ) {
+		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	}
 	expected.t.l<-rep(NA,nsam-1)
 	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
 	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
@@ -73,9 +75,11 @@ plbarjkn <- function ( l , j , k , n ) {
 
 ####freq. spectrum with rec. during sweeps.
 
-expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s ) {
+expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.StirlingNumbers = 0 ) {
 	#recover()
-	my.StirlingNumbers<<-StirlingNumbers(nsam)
+	if ( all ( my.StirlingNumbers == 0 ) ) {
+		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	}
 	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
 	ESF.prob.k <- rbind ( c ( 1 , rep ( 0 , nsam ) ) , cbind ( rep ( 0 , nsam ) , ESF.prob.k ) )
 	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
@@ -144,7 +148,7 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s ) {
 
 
 if ( FALSE ) {
-blah <- expected.freq.times.standing.w.sweep ( nsam = 12 , N = 10000 , r = 0.0001 , f = 0.05 , s = 0.05 )
+blah <- expected.freq.times.standing.w.sweep ( nsam = 50 , N = 10000 , r = 0.000001 , f = 0.05 , s = 0.05 )
 
 
 #### so, how many sweeps actually fit our model, anyway?
@@ -204,7 +208,7 @@ lines ( x = my.freqs , y = neutral.spec / sum ( neutral.spec ) , type = "l" , lw
 
 
 
-my.freqs.specs<- run.ms.f ( runs = my.test , f = 0.05 , s = 0.05 , n.sam = 12 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
+my.freqs.specs <- run.ms.f ( runs = my.test , f = 0.05 , s = 0.05 , n.sam = 12 , N = 10000 , path = "" , ext = "fr.spec", get.site.density = FALSE , recom = 100 )
 
 
 

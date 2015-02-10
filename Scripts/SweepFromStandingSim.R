@@ -4,7 +4,7 @@ library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
 
-StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
+StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , standing.haps = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
 	#options ( error = recover )
 	
 	
@@ -93,10 +93,10 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 		trees <- BuildOnOffHaps ( trees = trees , freqs = new.freqs , sim.distance = sim.distance , r = r , n.tips = n.tips , f = f  )
 	
 		hap.dist <- HapCountDistribution ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
-		
-		#recover()
-		
-		standing.hap.dist <- StandingHapCountDist ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
+
+		if ( standing.haps ) {
+			standing.hap.dist <- StandingHapCountDist ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
+		}
 		
 		
 	}
@@ -507,12 +507,13 @@ HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.w
 				# right side
 				if ( sum ( my.rec.events$rec.right.off.background$sequence.location < k ) != 0 ) {
 					last.rec.event <- sum ( my.rec.events$rec.right.off.background$sequence.location < k )
-					
 					n.haps.right [ j , i ] <-  length ( unique ( my.seqs$right.seq [ , last.rec.event + 1 ] ) )
 					no.sing.haps.right [ j , i ] <- sum ( table ( my.seqs$right.seq [ , last.rec.event + 1 ] ) > 1 )
+					sing.haps.right [ j , i ] <- sum ( table ( my.seqs$right.seq [ , last.rec.event + 1 ] ) == 1 )
 				} else {
 					n.haps.right [ j , i ] <- 1
 					no.sing.haps.right [ j , i ] <- 1
+					sing.haps.right [ j , i ] <- 0
 				}
 				
 				# left.side
@@ -520,9 +521,11 @@ HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.w
 					last.rec.event <- sum ( my.rec.events$rec.left.off.background$sequence.location < k )
 					n.haps.left [ j , i ] <-  length ( unique ( my.seqs$left.seq [ , last.rec.event + 1 ] ) )
 					no.sing.haps.left [ j , i ] <- sum ( table ( my.seqs$left.seq [ , last.rec.event + 1 ] ) > 1 )
+					sing.haps.left [ j , i ] <- sum ( table ( my.seqs$left.seq [ , last.rec.event + 1 ] ) == 1 )
 				} else {
 					n.haps.left [ j , i ] <- 1
 					no.sing.haps.left [ j , i ] <- 1
+					sing.haps.left [ j , i ] <- 0
 				}
 			
 			}	
@@ -654,6 +657,92 @@ StandingHapCountDist <- function ( input , r = 10^-8 , sim.distance , interval.w
 }
 
 
+SingHapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.width = 1000 , f , N , make.plot ) {
+	recover()
+	sim.distance.bp <- sim.distance / r 
+	intervals <- seq ( 0 , sim.distance.bp , interval.width )
+	n.tips <- length ( input [[ 1 ]]$tree$tip.label )
+	reps <- length ( input )
+	# number of rows in "sequence" matrix = number of samples
+	if ( turn.on.recovers ) {
+		recover()
+	}
+	
+	sing.haps.right <- sing.haps.left <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
+	n.haps.right <- n.haps.left <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
+	#recover()
+	cat ( "Counting up haplotypes. \n \n")
+	pb <- txtProgressBar ( min = 0 , max = length ( intervals ) , style = 3 )
+	for ( i in 1 : length ( intervals ) ) {
+		
+		k <- intervals [ i ]
+
+		if ( k == 0 ) {
+			
+			# there is only one haplotype at the selected sight		
+			n.haps.right [ , i ] <- n.haps.left [ , i ] <- 1
+			no.sing.haps.right [ , i ] <- no.sing.haps.left [ , i ] <- 1
+			
+		} else {
+			
+			# now we loop through the simulated data to work out the number of haplotypes at various intervals away from the selected sight
+			#recover ( )
+			for ( j in 1 : length ( input ) ) {
+				
+				my.seqs <- input [[ j ]] $ sequence.structure
+				my.rec.events <- input [[ j ]] $ rec.events.off.background
+				
+				# right side
+				if ( sum ( my.rec.events$rec.right.off.background$sequence.location < k ) != 0 ) {
+					last.rec.event <- sum ( my.rec.events$rec.right.off.background$sequence.location < k )
+					
+					n.haps.right [ j , i ] <-  length ( unique ( my.seqs$right.seq [ , last.rec.event + 1 ] ) )
+					no.sing.haps.right [ j , i ] <- sum ( table ( my.seqs$right.seq [ , last.rec.event + 1 ] ) > 1 )
+				} else {
+					n.haps.right [ j , i ] <- 1
+					no.sing.haps.right [ j , i ] <- 1
+				}
+				
+				# left.side
+				if ( sum ( my.rec.events$rec.left.off.background$sequence.location < k ) != 0 ) {
+					last.rec.event <- sum ( my.rec.events$rec.left.off.background$sequence.location < k )
+					n.haps.left [ j , i ] <-  length ( unique ( my.seqs$left.seq [ , last.rec.event + 1 ] ) )
+					no.sing.haps.left [ j , i ] <- sum ( table ( my.seqs$left.seq [ , last.rec.event + 1 ] ) > 1 )
+				} else {
+					n.haps.left [ j , i ] <- 1
+					no.sing.haps.left [ j , i ] <- 1
+				}
+			
+			}	
+		}	
+	
+		setTxtProgressBar(pb, i)
+		
+	}
+	close(pb)
+
+	#recover()
+	n.haps <- rbind ( n.haps.right , n.haps.left )
+	no.sing.haps <- rbind ( no.sing.haps.right , no.sing.haps.left )
+	
+	hap.counts.by.interval <- apply ( n.haps , 2 , function ( x ) table ( factor ( x , 1 : n.tips ) ) )
+	hap.count.freqs.by.interval <- apply ( hap.counts.by.interval , 2 , function ( x ) x / nrow ( n.haps ) )
+	
+	no.sing.hap.counts.by.interval <- apply ( no.sing.haps , 2 , function ( x ) table ( factor ( x , 0 : n.tips ) ) )
+	no.sing.hap.count.freqs.by.interval <- apply ( no.sing.hap.counts.by.interval , 2 , function ( x ) x / nrow ( no.sing.haps ) )
+	
+	if ( make.plot ) {
+		MakeHapPlots ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000 )
+	}
+	
+	return ( list ( hap.count.freqs.by.interval = hap.count.freqs.by.interval , no.sing.hap.count.freqs.by.interval = no.sing.hap.count.freqs.by.interval , n.haps = n.haps , no.sing.haps = no.sing.haps ) )
+	
+}
+
+
+
+
+
 MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE,do.legend=FALSE) {
 	
 	#par ( mfrow = c ( 2 , 1 ) )
@@ -738,26 +827,6 @@ GetTips <- function ( branch , n.tips , edges ) {
 		
 }
 
-# StirlingNumbers <- function ( n ) {
-	
-	# library ( randtoolbox )
-	# second.kind <- lapply ( 1 : n , stirling )
-	# second.kind.matrix <- matrix ( nrow = n , ncol = n )
-	# for ( i in 1 : n ) {
-		# if ( i < n ) {
-			# second.kind.matrix [ i , ] <- c ( second.kind [[ i ]] [ -1 ], rep ( 0 , n - length ( second.kind [[ i ]] ) + 1 ) )
-		# } else if ( i == n ) {
-			# second.kind.matrix [ i , ] <- second.kind [[ i ]] [ -1 ]
-		# }
-	# }
-	# #recover()
-	# first.kind.matrix <- abs ( solve ( second.kind.matrix ) )
-	# first.kind.matrix [ first.kind.matrix < 0.99 ] <- 0
-		
-	# return ( first.kind.matrix )
-	
-# }
-
 StirlingNumbers <- function ( n ) {
 	
 	nums <- matrix ( NA , nrow = n + 1 , ncol = n + 1 )
@@ -825,10 +894,19 @@ colnames ( fands ) <- c ( "f" , "s")
 temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000 , s = x[2] , f = x[1] , reps = 200 , n.tips = 12 , r = 10^-8 , sim.distance = 0.01 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = FALSE ,  time.factor = 1 ) )
 
 #function to get haplotype distribution plots from function output
-MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000, f = 0.01, sim.distance = 0.02)
+
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.025 , dominance = FALSE , f = 0.025 , reps = 1000 , n.tips = 50 , r = 10^-8 , sim.distance = 0.02 , interval.width = 2000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
 
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , h = 0.5 , dominance = TRUE , f = 0.01 , reps = 100 , n.tips = 12 , r = 10^-8 , sim.distance = 0.015 , interval.width = 1000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
+singleton.haps <- SingHapCountDistribution ( temp$trees , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , f = 0.025 , N = 10000 , make.plot = FALSE )
+
+
+
+
+
+MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000 , f = 0.025 , sim.distance = 0.02 )
+
+
 
 
 
