@@ -42,7 +42,7 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 
 
 ##### a component function to make the code cleaner
-plbarjkn <- function ( l , j , k , n ) {
+plbarjkn <- function ( l , j , k , n , my.StirlingNumbers ) {
 	#recover()
 	####################
 	#### special cases ####
@@ -82,14 +82,13 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 	}
 	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
 	ESF.prob.k <- rbind ( c ( 1 , rep ( 0 , nsam ) ) , cbind ( rep ( 0 , nsam ) , ESF.prob.k ) )
-	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
-	ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
+	#ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	#ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
 	T_f <- log ( (2*N -1 ) * ( 1 - f ) / f ) / s
 	my.logistic <- function ( x ) 1 / (2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 ) )
 	T_sf <- integrate ( my.logistic , 0 , T_f )$value
 	P_NR <- exp ( - r * T_sf )
 	expected.t.l<-rep(NA,nsam-1)
-	
 	p_l_given_k <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
 	H <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
 	cond.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
@@ -116,7 +115,7 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 						if ( i < ( l - g ) ) next
 						
 						
-						p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- plbarjkn ( l - g , j - g , k , i )
+						p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- plbarjkn ( l - g , j - g , k , i , my.StirlingNumbers )
 						
 
 						H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
