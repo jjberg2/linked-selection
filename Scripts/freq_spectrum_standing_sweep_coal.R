@@ -146,9 +146,52 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 }
 
 
+
+freq.spec.de.novo <- function ( nsam , N , r , s ) {
+	#recover()
+	p <- 1-exp ( - 2 * r / s *log ( 2*N*s) )
+	spec.by.n.recombs <- matrix ( 0 , nrow = nsam -1 , ncol = nsam )
+	for ( i in 1 : nrow ( spec.by.n.recombs ) ) {
+		
+		for ( j in 1 : ncol ( spec.by.n.recombs ) ) {
+			
+			p_i_over_j_plus1 <- (1 / i ) / sum ( 1 / ( 1 : ( j + 1 ) ) )
+			p_core_not_hit <- ifelse ( i > j , 0 , choose ( j , i ) / choose ( min ( j + 1 , nsam ) , i ) )
+			
+			if ( j < nsam & i >= nsam -j ) {
+				
+				p_core_hit <- choose ( j , i-(nsam -j )+1 ) / choose ( j + 1 , i-(nsam -j )+1 )
+				p_inj1_over_j_plus1 <- ( 1 / ( i - ( nsam - j ) + 1 ) ) / sum ( 1 / ( 1 : ( j + 1 ) ) )
+			
+			} else {
+				
+				p_core_hit <- 0
+				p_inj1_over_j_plus1 <- 0
+				
+			}
+			
+			spec.by.n.recombs [ i , j ] <- p_i_over_j_plus1 * p_core_not_hit + p_inj1_over_j_plus1 * p_core_hit
+			
+		}
+		
+	}
+	
+	norm.spec.by.n.recombs <- t ( t ( spec.by.n.recombs ) / colSums ( spec.by.n.recombs ) )
+	rec.probs <- dbinom ( 1:10 , 10 , p )
+	freq.spec <- colSums ( t ( norm.spec.by.n.recombs ) * rec.probs )
+	freq.spec[1] <- freq.spec[1] + dbinom ( 0 , 10 , p )
+	
+	return ( freq.spec )
+	
+}
+
+
+
+
+
 if ( FALSE ) {
 blah <- expected.freq.times.standing.w.sweep ( nsam = 50 , N = 10000 , r = 0.000001 , f = 0.05 , s = 0.05 )
-
+blah2 <- freq.spec.de.novo ( 10 , 10000 , 0.0001 , 0.01 )
 
 #### so, how many sweeps actually fit our model, anyway?
 
