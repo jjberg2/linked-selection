@@ -32,11 +32,14 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 			hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
 			hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
 			marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
+		
 		} else {
+		
 			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file , " " , len.bp/2 , " -r " , 2 * N * len.bp * r.bp , " " , len.bp ," -t " , 2 * N * len.bp * mu.bp  , " " , " > " , path, "/myseqdata" , sep = "" ) ) 
 			seqs <- GetSeqs ( n.sam , num.sims , path )
 			window.hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs  , TwoSideCountHaps , len.bp , hap.count.interval )
 			marginal.hap.freqs <- Reduce ( "+" , window.hap.counts ) / length ( window.hap.counts )
+		
 		}
 	}
 	
@@ -200,52 +203,16 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 
-# get.freq.spec<-function(n,num.sims, path){
-	# recover()
-	# a<-system(paste("grep segsites ", path , "/myseqdata",sep=""),intern=TRUE)
-	# seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
-	# polymorph<- seg.sites>0
-	# seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	
-	# freq.specs<-sapply(0:(num.sims-1),function(iter){		
-		# #recover()
-		
-		# #####
-		# # if(!polymorph[1+iter]) {freq.spec<-rep(0,n);return(freq.spec)}
-		
-		# positions<-read.table(paste(path, "/myseqdata",sep=""),skip=5+4*iter+seq.lines[iter+1],nrow=1)
-# #		print(positions[1])
-# #		if(length(positions)==1){freq.spec<-rep(0,n);return(freq.spec)}		
-		# seqs.raw<-scan(paste(path, "/myseqdata",sep=""),skip=6+4*iter+seq.lines[iter+1],nline=n,what=character(),quiet=TRUE)
-		# seqs<-sapply(seqs.raw,function(seq){as.numeric(strsplit(seq,"")[[1]])})
-		# colnames(seqs)<-NULL
-		# seqs<-t(seqs)
-		# these.pos<-positions[-1]>0.5   ###why the -1 here? oh because positions has label
-		# if(sum(these.pos)==0){freq.spec<-rep(0,n);return(freq.spec)}
-		# seqs<-seqs[,these.pos] ##throw out first 1/2 of seq.
-		# if(sum(these.pos)==1){freq.spec<-(1:n==sum(seqs)); return(freq.spec)}
-		# mut.freq<-colSums(seqs)
-		# freq.spec<- sapply(1:n,function(i){sum(mut.freq==i)})
-		# return(freq.spec)
-	# })
-	# #freq.specs <- rowSums ( freq.specs )
-	# return(freq.specs)
-# }
+
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = T )
+save ( hard.sweep , file = "Sims/HapSims/both.sides.n100.f05.Robj" )
+
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
+save ( standing.sweep , file = "Sims/HapSims/both.sides.n100.f05.Robj" )
 
 
-
-
-
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 1000 , both.side = T )
-
-
-
-standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 50 , f = 0.05 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 2 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
-par ( mfrow = c ( 1 , 2 ) )
-matplot ( t ( hard.sweep [[ 1 ]]) , type = "l" , lty = 1 , lwd = 1.5 )
-lines ( t ( hard.sweep [[ 2 ]] [ 1 , ] ))
-matplot ( t ( standing.sweep [[ 1 ]] ) , type = "l" , lty = 1 , lwd = 1.5 )
 
 
 
