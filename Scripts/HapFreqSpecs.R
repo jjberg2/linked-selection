@@ -206,11 +206,11 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
 hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = T )
-save ( hard.sweep , file = "Sims/HapSims/both.sides.n100.f05.Robj" )
+save ( hard.sweep , file = "Sims/HapSims/both.sides.hard.n100.f05.Robj" )
 
 standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
 standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
-save ( standing.sweep , file = "Sims/HapSims/both.sides.n100.f05.Robj" )
+save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.Robj" )
 
 
 
