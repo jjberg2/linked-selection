@@ -137,9 +137,11 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 		}
 	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
+	singleton.reweighted.freq.spec <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2*N ) , rep ( 0 , nsam - 2 ) )
+	singleton.reweighted.freq.spec <- singleton.reweighted.freq.spec / sum ( singleton.reweighted.freq.spec )
 	this.freq.spec <- numeric ( nsam - 1 )
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
-		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) + dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * freq.specs [ nsam , l - 1 ]
+		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) + dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
 	}
 
 	return ( this.freq.spec )

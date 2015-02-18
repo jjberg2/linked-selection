@@ -25,12 +25,12 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 		traj.file <- paste ( path , "/my.standing" , "." , f.lab , "." , s.lab , "." , N , ".traj" , sep = "" )
 		write ( file = traj.file , header.material )
 		write.table ( file = traj.file , cbind ( my.times , my.freqs ) , append = TRUE , sep = "\t" , quot = FALSE , col.nam = FALSE , row.name = FALSE )
-		cat( i ," " )
+		message ( i )
 		if ( both.sides == FALSE ) {
 			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file ,  " 0 -t " , 2 * N * len.bp * mu.bp , " -r " , 2 * N * len.bp * r.bp , " " , len.bp , " > " , path, "/myseqdata" , sep = "" ) ) 
 			seqs <- GetSeqs ( n.sam , num.sims , path )
 			hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
-			hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
+			#hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
 			marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
 		
 		} else {
@@ -71,7 +71,7 @@ GetSeqs <- function ( n , num.sims , path ) {
 }
 
 
-## needs work
+
 CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 	#recover ()
 	positions <- as.numeric ( these.seqs [[ 1 ]] )
@@ -79,10 +79,14 @@ CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 	hap.freqs <- matrix ( 0 , nrow = nrow ( these.seqs [[ 2 ]] ) , ncol = len.bp / hap.count.interval + 1 )
 	pos.cuts <- seq ( 0 , 1 , by = hap.count.interval / len.bp )
 	hap.freqs [ 1 , pos.cuts < positions [ 1 ] ] <- nrow ( these.seqs [[ 2 ]] )
+	pb <- txtProgressBar ( min = 0 , max = length ( positions ) , style = 3 )
 	for ( i in 1 : length ( positions ) ) {
-		#if ( i == 18 ) break
-		this.site <- which ( these.seqs [[ 2 ]] [ , i ] == 1 )
-		if ( any ( unlist ( lapply ( my.part ,  function ( x ) all ( this.site %in% x ) ) ) ) ) { 
+		setTxtProgressBar ( pb, i )
+		this.site <- which ( these.seqs [[ 2 ]] [ , i ] == 1 )	
+		#lapply ( my.part , function ( x ) all ( sort ( x ) == sort ( this.site ) ) )
+		#lapply ( my.part , function ( x ) length ( x ) == length ( this.site ) )
+		
+		if ( any ( unlist ( lapply ( my.part , function ( x ) all ( sort ( x ) == sort ( this.site ) ) ) ) ) ) { 
 			if ( i < length ( positions ) ) {
 				hap.freqs [ 1 : length ( my.part ) , pos.cuts >= positions [ i ] & pos.cuts < positions [ i + 1 ] ] <- sort ( unlist ( lapply ( my.part , length ) ) , d = T )
 			}
@@ -94,14 +98,15 @@ CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 			new.part <- list ()
 			for ( j in 1 : length ( my.part ) ) {
 				x <- my.part [[ j ]]
-				if ( length ( x [ x %in% this.site ] ) > 0 ) {
+				
+				if ( all ( my.part [[ j ]] %in% this.site ) | length ( x [ x %in% this.site ] ) == 0 ) {
+					new.part [[ length ( new.part ) + 1 ]] <- x
+				} else {
 					new.part [[ length ( new.part ) + 1 ]] <- x [ x %in% this.site ]
 					new.part [[ length ( new.part ) + 1 ]] <- x [ !(x %in% this.site) ]
-				} else {
-					new.part [[ length ( new.part ) + 1 ]] <- x
 				}
 			}
-			my.part <- new.part
+			my.part <- new.part [ lapply ( my.part , length ) != 0 ]
 		}
 		if ( i < length ( positions ) ) {
 			hap.freqs [ 1 : length ( my.part ) , pos.cuts >= positions [ i ] & pos.cuts < positions [ i + 1 ] ] <- sort ( unlist ( lapply ( my.part , length ) ) , d = T )
@@ -116,6 +121,7 @@ CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 			break
 		}
 	}
+	cat ( "\n" )
 	return ( hap.freqs )
 }
 
@@ -203,14 +209,28 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 
 
-
+## one side
 hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = T )
-save ( hard.sweep , file = "Sims/HapSims/both.sides.hard.n100.f05.Robj" )
+hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = F )
+save ( hard.sweep , file = "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 
 standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 1 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
-save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.Robj" )
+standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = F )
+save ( standing.sweep , file = "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+
+
+
+
+
+
+## both sides
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = T )
+save ( hard.sweep , file = "Sims/HapSims/both.sides.hard.n100.denovo.s01.Robj" )
+
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = TRUE )
+save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.s01.Robj" )
 
 
 
