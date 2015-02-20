@@ -71,6 +71,34 @@ GetSeqs <- function ( n , num.sims , path ) {
 }
 
 
+GetSeqsMultMut <- function ( n , num.sims , path , muts ) {
+	#recover()
+	a<-system(paste("grep segsites ", path , "/myseqdata.mult.mut",sep=""),intern=TRUE)
+	seg.sites<-sapply(a,function(b){as.numeric(strsplit(b,":")[[1]][2])})
+	polymorph<- seg.sites>0
+	seq.lines<-c(0,cumsum(polymorph*n)[-length(polymorph)])	
+	my.seqs <- list ()
+	for ( iter in 0 : ( num.sims - 1 ) ) {
+		positions <- read.table ( paste ( path , "/myseqdata.mult.mut" ,sep = "" ) , skip = 5 + 5 * iter + seq.lines [ iter + 1 ] , nrow = 1 )
+		seqs.raw <- scan ( paste ( path , "/myseqdata.mult.mut" , sep = "" ) , skip = 6 + 5 * iter + seq.lines [ iter + 1 ] , nline = ( n + 2 ) , what = character ( ) , quiet = TRUE )
+		n.muts <- strsplit ( seqs.raw [ length ( seqs.raw ) ] , ":" )[[1]][2]
+		if ( n.muts != muts ) {
+			next
+		}
+		seqs <- sapply ( seqs.raw [ - length ( seqs.raw ) ] , function ( seq ) { as.numeric ( strsplit ( seq , "" ) [[ 1 ]] ) } )
+		colnames ( seqs ) <- NULL
+		seqs <- t ( seqs )
+		
+		my.seqs [[ length ( my.seqs ) + 1 ]] <- list ( positions [ - 1 ] , seqs , n.muts )
+	}
+	#freq.specs <- rowSums ( freq.specs )
+	return ( my.seqs )
+}
+
+
+
+
+
 
 CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 	#recover ()
@@ -208,6 +236,37 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 }
 
 
+### multiple mutations
+blah <- list ()
+while ( length ( blah ) < 1000 ) {
+	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 22 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
+	seqs <- GetSeqsMultMut ( 100 , 10 , "Sims" ,  3 )
+	if ( length ( seqs ) == 0 ) next
+	tmp <- lapply ( seqs , CountHaps , 500000 , 5000 )
+	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
+	message ( length ( blah ) )
+	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+}
+
+
+
+if ( FALSE ) {
+### neutral sims
+blah <- list ()
+for ( i in 1 : 100 ) {
+	message ( i )
+	system ( paste ( "Scripts/msdir/ms 100 10 -t 200 -r 200 500000 > Sims/myseqdata" , sep = "" ) )
+	seqs <- GetSeqs ( 100 , 10 , "Sims" )
+	blah [ ( i - 1 )*10 + ( 1 : 10 ) ] <- lapply ( seqs , CountHaps , 500000 , 5000 )
+	save ( blah , file = "Sims/HapSims/neutral.n100.Robj" )
+}
+neutral <- list ()
+neutral [[ 1 ]] <- Reduce ( "+" , blah ) / length ( blah )
+neutral [[ 2 ]] <- blah
+save ( neutral , file = "Sims/HapSims/neutral.n100.Robj" )
+
+
+
 
 ## one side
 hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
@@ -223,6 +282,25 @@ save ( standing.sweep , file = "Sims/HapSims/one.side.standing.n100.f05.s01.Robj
 
 
 
+load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
+load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+load ( "Sims/HapSims/neutral.n100.Robj" )
+## neutral <- Reduce ( "+" , blah ) / length ( blah)
+
+par ( mfrow = c ( 1 , 3 ) )
+matplot (  t ( standing.sweep [[ 1 ]] / hard.sweep [[ 1 ]] ) [ , 1 : 80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.sweep [[ 1 ]] / neutral [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.sweep [[ 1 ]] / neutral [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+
+
+par ( mfrow = c ( 1 , 3 ) )
+matplot (  t ( hard.sweep [[ 1 ]] ) [ , 1 : 20 ] , type = "l" , lwd = 1 , lty = 1  )
+matplot (  t ( standing.sweep [[ 1 ]] ) [ , 1 : 20 ] , type = "l" , lwd = 1 , lty = 1 )
+matplot (  t ( neutral ) [ , 1 : 20 ] , type = "l" , lwd = 1 , lty = 1 )
+
+
+
+
 ## both sides
 hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
 hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 2000000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = T )
@@ -233,6 +311,6 @@ standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s
 save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.s01.Robj" )
 
 
-
+}
 
 

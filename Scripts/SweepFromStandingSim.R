@@ -96,6 +96,8 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 
 		if ( standing.haps ) {
 			standing.hap.dist <- StandingHapCountDist ( input = trees , r = r , sim.distance = sim.distance , interval.width = interval.width , f = f , N = N , make.plot )
+		} else {
+			standing.hap.dist <- NULL
 		}
 		
 		
@@ -482,6 +484,7 @@ HapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.w
 	
 	no.sing.haps.right <- no.sing.haps.left <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
 	n.haps.right <- n.haps.left <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
+	sing.haps.left <- sing.haps.right <- matrix ( nrow = length ( input ) , ncol = length ( intervals ) )
 	#recover()
 	cat ( "Counting up haplotypes. \n \n")
 	pb <- txtProgressBar ( min = 0 , max = length ( intervals ) , style = 3 )
@@ -658,7 +661,7 @@ StandingHapCountDist <- function ( input , r = 10^-8 , sim.distance , interval.w
 
 
 SingHapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interval.width = 1000 , f , N , make.plot ) {
-	recover()
+	#recover()
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
 	n.tips <- length ( input [[ 1 ]]$tree$tip.label )
@@ -895,13 +898,7 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 
 #function to get haplotype distribution plots from function output
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.025 , dominance = FALSE , f = 0.025 , reps = 1000 , n.tips = 50 , r = 10^-8 , sim.distance = 0.02 , interval.width = 2000 , no.sweep = FALSE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 1 )
-
-
-singleton.haps <- SingHapCountDistribution ( temp$trees , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , f = 0.025 , N = 10000 , make.plot = FALSE )
-
-
-
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.025 , dominance = FALSE , f = 0.05 , reps = 10 , n.tips = 50 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
 
 
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000 , f = 0.025 , sim.distance = 0.02 )
