@@ -90,113 +90,21 @@ save ( EwensHaps10Sim , file = "Sims/EwensHaps10Sim.Robj" )
 source (  "Scripts/freq_spectrum_standing_sweep_coal.R")
 library ( RColorBrewer)
 
-stirlings <- StirlingNumbers(50)
-neutral.f.spec <- 1 / ( 1 : 49 ) / ( sum ( 1 / ( 1:49 ) ) )
-f.specs.range <- list ()
-my.rs <- c ( 0.000001 , 0.00001 , 0.00005 , seq ( 0.0001 , 0.001 , by = 0.0001 ) , 0.005 , 0.01 )
-for ( i in seq_along ( my.rs ) ) {
+###### sweeps from a few different freqs
+load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s01.Rdata")
 
-	f.specs.range [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 50 , N = 10000 , r = my.rs [ i ] , f = 0.05 , s = 0.01 , my.StirlingNumbers = stirlings )
-	save ( f.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.Robj")
-
-}
-my.f.specs <- do.call ( rbind , f.specs.range )
-matplot ( log ( t ( t ( my.f.specs ) / neutral.f.spec ) ) , type = "l" )
-my.f.specs / neutral.f.spec
-
-
-
-
-stirlings <- StirlingNumbers(20)
-neutral.f.spec <- 1 / ( 1 : 19 ) / ( sum ( 1 / ( 1:19 ) ) )
-f.specs.range <- list ()
-my.rs <- c ( 0.000001 , 0.00001 , 0.00005 , seq ( 0.0001 , 0.001 , by = 0.0001 ) , 0.005 , 0.01 )
-for ( i in seq_along ( my.rs ) ) {
-
-	f.specs.range [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 20 , N = 10000 , r = my.rs [ i ] , f = 0.05 , s = 0.01 , my.StirlingNumbers = stirlings )
-	save ( f.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n20.Robj")
-
-}
-
-my.f.specs <- do.call ( rbind , f.specs.range )
-matplot ( log ( t ( t ( my.f.specs ) / neutral.f.spec ) ) , type = "l" )
-
-
-
-
-
+## denovo
 stirlings <- StirlingNumbers(10)
 neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
-f.specs.range <- list ()
-my.rs <- seq ( 0.0000001 , 0.02 , by = 0.00001 )
+denovo.specs.range.s01 <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
-	f.specs.range [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , s = 0.01 , my.StirlingNumbers = stirlings )
+	denovo.specs.range.s01 [[ i ]] <- freq.spec.de.novo  ( nsam = 10 , N = 10000 , r = my.rs [ i ] , s = 0.01 )
 	message ( i )
 }
-save ( f.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n10.Robj")
+save ( denovo.specs.range.s01 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s01N10000n10.Robj")
 
-load ( file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n10.Robj")
-my.f.specs.standingf05 <- do.call ( rbind , f.specs.range[1:300] )
-
-par ( mfrow = c ( 1 , 3 ) )
-matplot ( my.rs[1:300] , my.f.specs  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , t ( t ( my.f.specs ) / neutral.f.spec ) , , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , log ( t ( t ( my.f.specs ) / neutral.f.spec ) ) , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Log Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-legend ( "topright" , legend = 1:9 , lty = 1 , col = brewer.pal ( 9 , "Set1" )  , bty = "n" )
-
-
-
-
-
-
-neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
-f.specs.range <- list ()
-my.rs <- seq ( 0.0000001 , 0.02 , by = 0.00001 )
-for ( i in seq_along ( my.rs ) ) {
-
-	f.specs.range [[ i ]] <- freq.spec.de.novo ( nsam = 10 , N = 10000 , r = my.rs [ i ] , s = 0.01 )
-	message ( i )
-}
-save ( f.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s01N10000n10.Robj")
-
-
-
-my.f.specs.denovo <- do.call ( rbind , f.specs.range[1:300] )
-
-
-
-
-
-
-
-par ( mfrow = c ( 2 , 3 ) )
-matplot ( my.rs[1:300] , my.f.specs.standingf05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , t ( t ( my.f.specs.standingf05 ) / neutral.f.spec ) , , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , log ( t ( t ( my.f.specs.standingf05 ) / neutral.f.spec ) ) , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Log Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-legend ( "topright" , legend = 1:9 , lty = 1 , col = brewer.pal ( 9 , "Set1" )  , bty = "n" )
-
-
-
-matplot ( my.rs[1:300] , my.f.specs.denovo  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , t ( t ( my.f.specs.denovo ) / neutral.f.spec ) , , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , log ( t ( t ( my.f.specs.denovo ) / neutral.f.spec ) ) , lty = 1 , type = "l" , col = brewer.pal ( 9 , "Set1" ) , ylab = "Log Fold Change from Neutral Frequency" , xlab = "Genetic Distance" , bty = "n" )
-legend ( "bottomright" , legend = 1:9 , lty = 1 , col = brewer.pal ( 9 , "Set1" )  , bty = "n" )
-
-
-
-par ( mfrow = c ( 1 , 2 ) )
-matplot ( my.rs[1:300] , my.f.specs.standingf05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
-matplot ( my.rs[1:300] , my.f.specs.denovo  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
-
-
-
-
-
-
-
-
-###### sweeps from a few different freqs
 
 
 ## f = 0.005
@@ -244,44 +152,45 @@ save ( f03.specs.range.s01 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.
 ## f = 0.05 
 stirlings <- StirlingNumbers(10)
 neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
-f05.specs.range <- list ()
+f05.specs.range.s01 <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
-	f05.specs.range [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , s = 0.01 , my.StirlingNumbers = stirlings )
+	f05.specs.range.s01 [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , s = 0.01 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
-save ( f05.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n10.Robj")
+save ( f05.specs.range.s01 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n10.Robj")
 
 
 
 ## f = 0.07
 stirlings <- StirlingNumbers(10)
 neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
-f07.specs.range <- list ()
+f07.specs.range.s01 <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
-	f07.specs.range [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.07 , s = 0.01 , my.StirlingNumbers = stirlings )
+	f07.specs.range.s01 [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.07 , s = 0.01 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
-save ( f07.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07s01N10000n10.Robj")
+save ( f07.specs.range.s01 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07s01N10000n10.Robj")
 
 
 load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s01N10000n10.Robj" )
 load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef005s01N10000n10.Robj" )
 load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef01s01N10000n10.Robj" )
 load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef03s01N10000n10.Robj" )
-
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s01N10000n10.Robj" )
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07s01N10000n10.Robj" )
 
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 
-my.f.specs.denovo.s01 <- do.call ( rbind , f.specs.range ) [ 1:300 , ]
+my.f.specs.denovo.s01 <- do.call ( rbind , denovo.specs.range.s01 )
 my.specs.f005.s01 <- do.call ( rbind , f005.specs.range.s01 )
 my.specs.f01.s01 <- do.call ( rbind , f01.specs.range.s01 )
 my.specs.f03.s01 <- do.call ( rbind , f03.specs.range.s01 )
-my.specs.f05.s01 <- do.call ( rbind , f05.specs.range )
-my.specs.f07.s01 <- do.call ( rbind , f07.specs.range )
+my.specs.f05.s01 <- do.call ( rbind , f05.specs.range.s01 )
+my.specs.f07.s01 <- do.call ( rbind , f07.specs.range.s01 )
 
 
 sim.rs <- c ( seq ( 0 , 0.001 , length.out = 11 ) , 0.0015 , 0.002 , 0.003 )
@@ -291,6 +200,7 @@ sims.f005.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[2]] , func
 sims.f01.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[3]] , function ( x ) x [[5]]) ) [ , 1:9 ]
 sims.f03.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[4]] , function ( x ) x [[5]]) ) [ , 1:9 ]
 sims.f05.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[5]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f07.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[6]] , function ( x ) x [[5]]) ) [ , 1:9 ]
 
 
 library ( RColorBrewer )
@@ -315,11 +225,13 @@ matplot ( sim.rs , sims.f03.freq.spec , type = "p" , pch = 20 , col = brewer.pal
 mtext ( "f = 0.03" , side = 3 )
 
 
-matplot ( my.rs , my.specs.f05.s01  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( my.rs , my.specs.f05.s01  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 0.8 ) )
+matplot ( sim.rs , sims.f05.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.05" , side = 3 )
 
 
 matplot ( my.rs , my.specs.f07.s01  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f07.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.07" , side = 3 )
 
 
@@ -328,14 +240,14 @@ mtext ( "f = 0.07" , side = 3 )
 
 
 
-f.specs.range.denovo.s05 <- list ()
+denovo.specs.range.s05 <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
-	f.specs.range [[ i ]] <- freq.spec.de.novo ( nsam = 10 , N = 10000 , r = my.rs [ i ] , s = 0.05 )
+	denovo.specs.range.s05 [[ i ]] <- freq.spec.de.novo  ( nsam = 10 , N = 10000 , r = my.rs [ i ] , s = 0.05 )
 	message ( i )
 }
-save ( f.specs.range , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s05N10000n10.Robj")
+save ( denovo.specs.range.s05 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s05N10000n10.Robj")
 
 
 
