@@ -82,7 +82,7 @@ GetSeqsMultMut <- function ( n , num.sims , path , muts ) {
 		positions <- read.table ( paste ( path , "/myseqdata.mult.mut" ,sep = "" ) , skip = 5 + 5 * iter + seq.lines [ iter + 1 ] , nrow = 1 )
 		seqs.raw <- scan ( paste ( path , "/myseqdata.mult.mut" , sep = "" ) , skip = 6 + 5 * iter + seq.lines [ iter + 1 ] , nline = ( n + 2 ) , what = character ( ) , quiet = TRUE )
 		n.muts <- strsplit ( seqs.raw [ length ( seqs.raw ) ] , ":" )[[1]][2]
-		if ( n.muts != muts ) {
+		if ( n.muts != muts & n.muts != ( muts + 1 ) ) {
 			next
 		}
 		seqs <- sapply ( seqs.raw [ - length ( seqs.raw ) ] , function ( seq ) { as.numeric ( strsplit ( seq , "" ) [[ 1 ]] ) } )
@@ -103,10 +103,15 @@ GetSeqsMultMut <- function ( n , num.sims , path , muts ) {
 CountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 	#recover ()
 	positions <- as.numeric ( these.seqs [[ 1 ]] )
-	my.part <- list ( seq ( 1 : nrow ( these.seqs [[ 2 ]] ) ) )
 	hap.freqs <- matrix ( 0 , nrow = nrow ( these.seqs [[ 2 ]] ) , ncol = len.bp / hap.count.interval + 1 )
 	pos.cuts <- seq ( 0 , 1 , by = hap.count.interval / len.bp )
-	hap.freqs [ 1 , pos.cuts < positions [ 1 ] ] <- nrow ( these.seqs [[ 2 ]] )
+	if ( positions [ 1 ] == 0 ) {
+		my.part <- sapply ( unique ( these.seqs [[ 2 ]] [ , 1 ] ) , function ( x ) which ( these.seqs [[ 2 ]] [ , 1 ] == x ) )	
+		hap.freqs [  seq_along ( unique ( these.seqs [[ 2 ]] [ , 1 ] ) ) , 1 ] <- sort ( sapply ( my.part , length ) , d = T )	
+	} else {
+		my.part <- list ( seq ( 1 : nrow ( these.seqs [[ 2 ]] ) ) )
+		hap.freqs [ 1 , pos.cuts < positions [ 1 ] ] <- nrow ( these.seqs [[ 2 ]] )
+	}
 	pb <- txtProgressBar ( min = 0 , max = length ( positions ) , style = 3 )
 	for ( i in 1 : length ( positions ) ) {
 		setTxtProgressBar ( pb, i )
@@ -236,17 +241,61 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 }
 
 
+HapFreqs <- function ( hap.counts ) {
+	
+	sum.counts <- Reduce ( "+" , hap.counts )
+	expect.freqs <- sum.counts / length ( hap.counts )
+	exist.counts <- Reduce ( "+" , lapply ( hap.counts , function ( x ) x > 0 ) )
+	expect.freqs.cond.exist <- sum.counts / exist.counts
+	prob.exist <- exist.counts / length ( hap.counts )
+	
+	return ( list ( expect.freqs , expect.freqs.cond.exist , prob.exist ) )
+	
+}
+
+
 ### multiple mutations
 blah <- list ()
 while ( length ( blah ) < 1000 ) {
-	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 22 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
+	message ( length ( blah ) )
+	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 200 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
 	seqs <- GetSeqsMultMut ( 100 , 10 , "Sims" ,  3 )
+	if ( length ( seqs ) == 0 ) next
+	keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
+	seqs <- seqs [ keep ]
+	if ( length ( seqs ) == 0 ) next
+	tmp <- lapply ( seqs , CountHaps , 500000 , 5000 )
+	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
+	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+}
+
+
+blah <- list ()
+while ( length ( blah ) < 1000 ) {
+	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 2000 -SAa 1000 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
+	seqs <- GetSeqsMultMut ( 100 , 10 , "Sims" ,  3 )
+	if ( length ( seqs ) == 0 ) next
+	keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
+	seqs <- seqs [ keep ]
 	if ( length ( seqs ) == 0 ) next
 	tmp <- lapply ( seqs , CountHaps , 500000 , 5000 )
 	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
 	message ( length ( blah ) )
-	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s05.Robj" )
 }
+
+## one side
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep.n100.N10000.s05 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = F )
+save ( hard.sweep.n100.N10000.s05 , file = "Sims/HapSims/one.side.hard.n100.denovo.s05.Robj" )
+
+
+
+
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep.f05.n100.N10000.s05 <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = F )
+save ( standing.sweep.f05.n100.N10000.s05 , file = "Sims/HapSims/one.side.standing.n100.f05.s05.Robj" )
+
 
 
 
@@ -268,14 +317,9 @@ save ( neutral , file = "Sims/HapSims/neutral.n100.Robj" )
 
 
 
-## one side
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = F )
-save ( hard.sweep , file = "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 
-standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = F )
-save ( standing.sweep , file = "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+
+
 
 
 
@@ -284,13 +328,88 @@ save ( standing.sweep , file = "Sims/HapSims/one.side.standing.n100.f05.s01.Robj
 
 load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+soft.sweep <- blah
 load ( "Sims/HapSims/neutral.n100.Robj" )
 ## neutral <- Reduce ( "+" , blah ) / length ( blah)
 
-par ( mfrow = c ( 1 , 3 ) )
-matplot (  t ( standing.sweep [[ 1 ]] / hard.sweep [[ 1 ]] ) [ , 1 : 80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
-matplot ( t ( standing.sweep [[ 1 ]] / neutral [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
-matplot ( t ( hard.sweep [[ 1 ]] / neutral [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+
+soft.haps <- HapFreqs ( soft.sweep )
+standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
+hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
+neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
+
+
+pdf ( "Figures/HapFreqsExpectAllThree.pdf" , width = 10 , height = 6 )
+matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 1 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , )
+matplot ( t ( standing.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 2 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+dev.off()
+
+
+
+
+
+pdf ( "Figures/HapFreqsExpect.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 2 ) )
+matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot (  t ( standing.haps [[ 1 ]] ) [ , 1 : 50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( neutral.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+dev.off()
+
+pdf ( "Figures/HapFreqsExpectCondExist.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 2 ) )
+matplot ( t ( hard.haps [[ 2 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot (  t ( standing.haps [[ 2 ]] ) [ , 1 : 50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( soft.haps [[ 2 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( neutral.haps [[ 2 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+dev.off()
+
+pdf ( "Figures/HapFreqsExistProbs.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 2 ) )
+matplot ( t ( hard.haps [[ 3 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot (  t ( standing.haps [[ 3 ]] ) [ , 1 : 50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( soft.haps [[ 3 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( neutral.haps [[ 3 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+dev.off()
+
+
+
+
+pdf ( "Figures/HapFreqRatiosUncond.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 3 ) )
+matplot (  t ( standing.haps [[ 1 ]] / hard.haps [[ 1 ]] ) [ , 1 : 80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 1 ]] / soft.haps [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 1 ]] / soft.haps [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 1 ]] / neutral.haps [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.haps [[ 1 ]] / neutral.haps [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( soft.haps [[ 1 ]] / neutral.haps [[ 1 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+dev.off()
+
+pdf ( "Figures/HapFreqRatiosCondExistence.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 3 ) )
+matplot (  t ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] ) [ , 1 : 80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.haps [[ 2 ]] / soft.haps [[ 2 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+dev.off()
+
+pdf ( "Figures/HapExistenceRatios.pdf" , width = 10 , height = 6 )
+par ( mfrow = c ( 2 , 3 ) )
+matplot (  t ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] ) [ , 1 : 80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 3 ]] / soft.haps [[ 3 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.haps [[ 3 ]] / soft.haps [[ 3 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( hard.haps [[ 3 ]] / neutral.haps [[ 3 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+matplot ( t ( soft.haps [[ 3 ]] / neutral.haps [[ 3 ]] ) [ , 1:80 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 5 ) )
+dev.off()
+
+
+
+
 
 
 par ( mfrow = c ( 1 , 3 ) )

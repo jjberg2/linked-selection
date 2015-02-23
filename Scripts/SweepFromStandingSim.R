@@ -239,8 +239,7 @@ SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no
 		}
 		#freq.trajectories <- cbind ( neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ] )
 	} else {
-		freq.trajectories <- neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 1 ]
-		return ( list ( freq.trajectories , 0 ) )
+		return ( list ( neutral.freq.matrix , 0 ) )
 	}
 	# temp1 <- apply ( freq.trajectories , 1 , function ( x ) rev ( x[x !=1] ) )
 	# add.zeros <- max ( unlist ( lapply ( temp1 , length) ) ) - unlist ( lapply ( temp1 , length) )

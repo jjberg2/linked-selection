@@ -5,7 +5,68 @@ source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir 
 options ( scipen = 400 )
 
 
+my.N <- 10000
+my.rs <- seq ( 0 , 0.002 , length.out = 5 )
+s <- 0.05
+my.fs <- c ( 0.005 , 0.01 , 0.03 , 0.05 , 0.07 )
+sim.freq.spec.list <- list ()
+i <- 1
+j <- 1
+for ( f in my.fs ) {
 
+	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = F , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+	sim.freq.spec.list [[ i ]] <- list ()
+	for ( r in my.rs ) {
+
+		
+		sim.freq.spec <- run.ms.f ( runs = my.runs [[ 1 ]] , f = f , s = s , n.sam = 10 , N = 10000 , num.sims = 10 , path = "" , get.site.density = FALSE , recom = 4*10000*r )
+		sim.freq.spec.list [[ i ]] [[ j ]] <- list ()
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 1 ]] <- r
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 2 ]] <- f
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
+		
+		message ( r )
+		message ( f )
+		j <- j + 1
+	}
+	i <- i + 1
+}
+
+
+my.N <- 10000
+sim.freq.spec.list <- list ()
+i <- 1
+j <- 1
+for ( f in my.fs ) {
+
+	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = F , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+	sim.freq.spec.list [[ i ]] <- list ()
+	for ( r in my.rs ) {
+
+		
+		sim.freq.spec <- run.ms.f ( runs = my.runs [[ 1 ]] , f = f , s = s , n.sam = 10 , N = 10000 , num.sims = 10 , path = "" , get.site.density = FALSE , recom = 4*10000*r )
+		sim.freq.spec.list [[ i ]] [[ j ]] <- list ()
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 1 ]] <- r
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 2 ]] <- f
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
+		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.nocondloss.Rdata" )
+		
+		message ( r )
+		message ( f )
+		j <- j + 1
+	}
+	i <- i + 1
+}
+
+
+if ( FALSE ) {
+
+## full stochastic sims
 my.N <- 10000
 my.rs <- c ( seq ( 0 , 0.001 , length.out = 11 ) , 0.0015 , 0.002 , 0.003 , 0.004 , 0.005 )
 s <- 0.05
@@ -27,7 +88,7 @@ for ( f in my.fs ) {
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
-		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.s01.Rdata" )
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.s05.Rdata" )
 		
 		message ( r )
 		message ( f )
@@ -36,8 +97,6 @@ for ( f in my.fs ) {
 	i <- i + 1
 }
 
-
-if ( FALSE ) {
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.Rdata")
 i <- 1 
 for ( f in my.fs ) {
