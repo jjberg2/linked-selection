@@ -26,7 +26,7 @@ for ( f in my.fs ) {
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
-		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.nocondloss.Rdata" )
 		
 		message ( r )
 		message ( f )
@@ -36,13 +36,16 @@ for ( f in my.fs ) {
 }
 
 
+
+
+
 my.N <- 10000
 sim.freq.spec.list <- list ()
 i <- 1
 j <- 1
 for ( f in my.fs ) {
 
-	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = F , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = T , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 	sim.freq.spec.list [[ i ]] <- list ()
 	for ( r in my.rs ) {
 
@@ -54,7 +57,7 @@ for ( f in my.fs ) {
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
-		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.nocondloss.Rdata" )
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
 		
 		message ( r )
 		message ( f )
@@ -62,6 +65,10 @@ for ( f in my.fs ) {
 	}
 	i <- i + 1
 }
+
+
+
+
 
 
 if ( FALSE ) {

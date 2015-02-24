@@ -318,14 +318,6 @@ save ( neutral , file = "Sims/HapSims/neutral.n100.Robj" )
 
 
 
-
-
-
-
-
-
-
-
 load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
 load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
@@ -341,10 +333,46 @@ neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
 
 pdf ( "Figures/HapFreqsExpectAllThree.pdf" , width = 10 , height = 6 )
-matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 1 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , )
-matplot ( t ( standing.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 2 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
-matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 1 , ylim = c ( 0 , 40 ) , col = brewer.pal( 9 , "Set1" ) , )
+matplot ( t ( standing.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 2 , ylim = c ( 0 , 80 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , ylim = c ( 0 , 80 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
 dev.off()
+
+
+pdf ( "Figures/HapFreqsExpectCondExistAllThree.pdf" , width = 10 , height = 6 )
+matplot ( t ( hard.haps [[ 2 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 1 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , )
+matplot ( t ( standing.haps [[ 2 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 2 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+matplot ( t ( soft.haps [[ 2 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , ylim = c ( 0 , 20 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+dev.off()
+
+
+pdf ( "Figures/HapFreqsExistProbAllThree.pdf" , width = 10 , height = 6 )
+matplot ( t ( hard.haps [[ 3 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 1 , ylim = c ( 0 , 1 ) , col = brewer.pal( 9 , "Set1" ) , xlim = c ( 0 , 20 ) )
+matplot ( t ( standing.haps [[ 3 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 2 , ylim = c ( 0 , 1 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+matplot ( t ( soft.haps [[ 3 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , ylim = c ( 0 , 1 ) , col = brewer.pal( 9 , "Set1" ) , add = T )
+dev.off()
+
+
+
+image ( t ( apply ( standing.haps [[ 1 ]] / hard.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13) )
+my.range <- range ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] ,na.rm = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
+image ( t ( apply ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13))
+
+
+image ( t ( apply ( standing.haps [[ 1 ]] / neutral.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13) )
+my.range <- range ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] ,na.rm = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
+image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,1,length.out=13))
+
+
+
+
+image ( t ( apply ( soft.haps [[ 1 ]] / hard.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,4,length.out=13) )
+my.range <- range ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] ,na.rm = T )
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
+image ( t ( apply ( soft.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,4,length.out=13))
+
 
 
 
@@ -352,10 +380,10 @@ dev.off()
 
 pdf ( "Figures/HapFreqsExpect.pdf" , width = 10 , height = 6 )
 par ( mfrow = c ( 2 , 2 ) )
-matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
-matplot (  t ( standing.haps [[ 1 ]] ) [ , 1 : 50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
-matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
-matplot ( t ( neutral.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 8 ) )
+matplot ( t ( hard.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 20 ) )
+matplot (  t ( standing.haps [[ 1 ]] ) [ , 1 : 50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 20 ) )
+matplot ( t ( soft.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 20 ) )
+matplot ( t ( neutral.haps [[ 1 ]] ) [ , 1:50 ] , type = "l" , lwd = 1 , lty = 1 , ylim = c ( 0 , 20 ) )
 dev.off()
 
 pdf ( "Figures/HapFreqsExpectCondExist.pdf" , width = 10 , height = 6 )
