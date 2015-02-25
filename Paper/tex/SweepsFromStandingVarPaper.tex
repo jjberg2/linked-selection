@@ -320,17 +320,20 @@ One possible approach is to modify the prior in recently developed algorithms fo
 
 An alternate possibility which seems potentially fruitful is to identify a set of statistics which can jointly both distinguish swept regions from non-swept regions, and distinguish among different kinds of sweeps. For this task, we follow previous authors \citep{Garud:2015jy} by examining the extent to which the ordered haplotype frequency spectrum (with haplotypes now defined via IBS) can be useful for identifying and distinguishing different varieties of sweeps.
 
-For a window of size $L$, we define the the ordered haplotype frequency spectrum (OHFS) as $\mathcal{H}_L = \{h_1,h_2,\dots,h_{P}\}$, where $h_p$ gives the frequency of the $p^{th}$ most common haplotype and there are a total of $P$ distinct haplotypes within the window. As an example of how features of the OHFS can be used both to identify and distinguish between different kinds of sweeps, consider the methods proposed by \cite{Garud:2015jy} as a means to identify multiple mutation soft sweeps. \cite{Garud:2015jy} define the following set of haplotype homozygosity statistics
+For a window of size $L$, we define the the ordered haplotype frequency spectrum (OHFS) as $\mathcal{H}_L = \{h_1,h_2,\dots,h_{P}\}$, where $h_p$ gives the frequency of the $p^{th}$ most common haplotype and there are a total of $P$ distinct haplotypes within the window. As an example of how features of the OHFS can be used both to identify and distinguish between different kinds of sweeps, consider the methods proposed by \cite{Garud:2015jy} as a means to identify multiple mutation soft sweeps. \cite{Garud:2015jy} define the following set of summary statistics
 \begin{align}
 	H_1 &= \sum_{i=1}^{P}h_{i}^2 \\
 	H_2 &= \sum_{i=2}^P h_{i}^2 \\
 	H_{12} &= \left(h_1 + h_2\right)^2 + \sum_{i=3}^P h_{i}^2 \\
 	H_{123} &= \left(h_1 + h_2 + h_3\right)^2 + \sum_{i=4}^P h_{i}^2	\\
-	&\text{and}
+	&\text{and} \\
+	H_2/H_1 &= \frac{\sum_{i=2}^Ph_i^2}{\sum_{i=1}^Ph_i^2}
 \end{align}
+with the rationale that both hard sweeps are characterized by a single core haplotype at high frequency, whereas soft sweeps are characterized by a small set of core haplotypes, each individually at intermediate frequency, but collectively constituting most of the population.
 
+One of the most easily noticeable factors which distinguishes the OHFS of a standing sweep from that of a hard sweep is that for a window of a given size, $h_1$ will be lower for a standing sweep than for a hard sweep, and there will tend to be more distinct haplotypes for a standing sweep than for a hard sweep. This is purely due to the fact that the there is more time in the genealogy at the selected site for a standing sweep than for a hard sweep of equal strength, giving more opportunity for both recombination events and new mutations to create new haplotypes. Given that a new haplotypes has been created, it is most likely to have been created by budding off from the most frequent haplotype. 
 
-In order to better understand which features of $\mathcal{H}_L$ are useful for identifying and distinguishing between different types of sweeps, 
+The other major distinguishing factor between a standing sweep and a hard sweep is that the genealogy for a hard sweep has most of its branch length near the tips, whereas a standing sweep has a genealogy that more closely resembles the neutral coalescent. As a consequence, there is a large range of $L$ for which values of $h_2 - h_{0.2\times n}$ will tend to be larger for a hard sweep than a soft sweep. Very close to the selected site 
 
 
 Despite our inability to deal with the process analytically, we can use intuition gained from our description of it to make a few predictions regarding features of the haplotype transition scheme and check whether they are born out in simulations. The principal difference in terms of the shape of the genealogy between a hard sweep and a standing sweep is that for a hard sweep nearly all of the branch length in the tree is near the tips (i.e. singleton lineages or branches that subtend small families of lineages), in contrast to a standing sweep, which has internal branch structure similar to the neutral coalescent. This means that in a hard sweep, most new haplotypes are created by budding off of low frequency haplotypes (often singletons) from the dominant core haplotype, whereas under a standing sweep, we expect to more commonly observe one of the few most frequent haplotypes to split into two haplotypes of a more intermediate frequency. 
