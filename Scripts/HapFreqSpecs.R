@@ -354,24 +354,86 @@ dev.off()
 
 
 
-image ( t ( apply ( standing.haps [[ 1 ]] / hard.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13) )
+par ( mfrow = c ( 3,2))
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n")
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n")
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 4 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n")
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n")
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 4 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+#plot ( c ( 0,1), type = "n",bty = "n" ,xaxt ="n",yaxt ="n",xlab = "",ylab ="")
+
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n")
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" )
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 4 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+
+
+
+
+
+
+image ( t ( apply ( standing.haps [[ 1 ]] / hard.haps [[ 1 ]] , 2 , rev) ) , col = heat.colors ( 100 ) , breaks = seq ( 0,5,length.out=101) )
 my.range <- range ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] ,na.rm = T )
-image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
-image ( t ( apply ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13))
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 1000 ), breaks = seq ( 0.24 , 3.5 ,length.out=1001))
+image ( t ( apply ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=101) , col = heat.colors ( 100 ))
 
 
-image ( t ( apply ( standing.haps [[ 1 ]] / neutral.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=13) )
+
+
+
+
+
+
+image ( t ( apply ( standing.haps [[ 1 ]] / neutral.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=101) ,  col = heat.colors ( 100 ) )
 my.range <- range ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] ,na.rm = T )
-image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
-image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,1,length.out=13))
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , 4 ,length.out=101), col = heat.colors ( 100 ))
+image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,1,length.out=101), col = heat.colors ( 100 ))
+
+
+
+
+
+
+image ( t ( apply ( hard.haps [[ 1 ]] / neutral.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,5,length.out=101) ,  col = heat.colors ( 100 ) )
+my.range <- range ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] ,na.rm = T )
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , 4 ,length.out=101), col = heat.colors ( 100 ))
+image ( t ( apply ( hard.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,1,length.out=101), col = heat.colors ( 100 ))
+
 
 
 
 
 image ( t ( apply ( soft.haps [[ 1 ]] / hard.haps [[ 1 ]] , 2 , rev) ) , breaks = seq ( 0,4,length.out=13) )
 my.range <- range ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] ,na.rm = T )
-image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( my.range [1 ] , my.range [ 2 ] ,length.out=13))
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.24 , 3.5 ,length.out=1001),col=heat.colors(1000))
 image ( t ( apply ( soft.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev) ) , breaks = seq ( 0,4,length.out=13))
+
+
+
 
 
 

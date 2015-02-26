@@ -92,6 +92,7 @@ library ( RColorBrewer)
 
 ###### sweeps from a few different freqs
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s01.Rdata")
+load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s05.Rdata")
 
 ## denovo
 stirlings <- StirlingNumbers(10)
@@ -319,7 +320,16 @@ for ( i in seq_along ( my.rs ) ) {
 }
 save ( f07.specs.range.s05 , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07s05N10000n10.Robj")
 
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.range.denovo.s05N10000n10.Robj" )
+f.denovo.specs.range.s05 <- f.specs.range
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef005s05N10000n10.Robj" )
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef01s05N10000n10.Robj" )
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef03s05N10000n10.Robj" )
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05s05N10000n10.Robj" )
+load ( "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07s05N10000n10.Robj" )
 
+
+my.specs.denovo.s05 <- do.call ( rbind , f.denovo.specs.range.s05 )
 my.specs.f005.s05 <- do.call ( rbind , f005.specs.range.s05 )
 my.specs.f01.s05 <- do.call ( rbind , f01.specs.range.s05 )
 my.specs.f03.s05 <- do.call ( rbind , f03.specs.range.s05 )
@@ -328,19 +338,45 @@ my.specs.f07.s05 <- do.call ( rbind , f07.specs.range.s05 )
 
 
 
+load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s05.Rdata")
+sims.denovo.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[1]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f005.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[2]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f01.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[3]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f03.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[4]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f05.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[5]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f07.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[6]] , function ( x ) x [[5]]) ) [ , 1:9 ]
 
+
+
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+sim.rs <- c ( seq ( 0 , 0.001 , length.out = 11 ) , 0.0015 , 0.002 , 0.003 , 0.004 , 0.005 )
 
 par ( mfrow = c ( 2, 3 ) )
-matplot ( my.rs , my.f.specs.denovo  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n"  )
+matplot ( my.rs , my.specs.denovo.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n"  )
+matplot ( sim.rs , sims.denovo.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 1/2N" , side = 3 )
 legend ( "topright" , legend = 1:9 , lty = 1 , col = brewer.pal ( 9 , "Set1" )  , bty = "n" )
+
 matplot ( my.rs , my.specs.f005.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f005.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.005" , side = 3 )
+
+
 matplot ( my.rs , my.specs.f01.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f01.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.01" , side = 3 )
+
+
 matplot ( my.rs , my.specs.f03.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f03.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.03" , side = 3 )
+
+
 matplot ( my.rs , my.specs.f05.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f05.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.05" , side = 3 )
+
+
 matplot ( my.rs , my.specs.f07.s05  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f07.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.07" , side = 3 )
