@@ -90,6 +90,114 @@ save ( EwensHaps10Sim , file = "Sims/EwensHaps10Sim.Robj" )
 source (  "Scripts/freq_spectrum_standing_sweep_coal.R")
 library ( RColorBrewer)
 
+
+### without sweep portion
+
+#load ( "Sims/sim.freq.spec.list.stoch.freq.no.sweep.nocondloss.Rdata" )
+load ( "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
+
+
+
+## f = 0.005
+stirlings <- StirlingNumbers(10)
+neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
+f005.specs.range.nosweep <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+for ( i in seq_along ( my.rs ) ) {
+
+	f005.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.005 , my.StirlingNumbers = stirlings )
+	message ( i )
+}
+save ( f005.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef005nosweepN10000n10.Robj")
+
+
+## f = 0.01 
+stirlings <- StirlingNumbers(10)
+neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
+f01.specs.range.nosweep <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+for ( i in seq_along ( my.rs ) ) {
+
+	f01.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.01 , my.StirlingNumbers = stirlings )
+	message ( i )
+}
+save ( f01.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef01nosweepN10000n10.Robj")
+
+
+
+## f = 0.03
+stirlings <- StirlingNumbers(10)
+neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
+f03.specs.range.nosweep <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+for ( i in seq_along ( my.rs ) ) {
+
+	f03.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.03 , my.StirlingNumbers = stirlings )
+	message ( i )
+}
+save ( f03.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef03nosweepN10000n10.Robj" )
+
+
+
+
+## f = 0.05 
+stirlings <- StirlingNumbers(10)
+neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
+f05.specs.range.nosweep <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+for ( i in seq_along ( my.rs ) ) {
+
+	f05.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , my.StirlingNumbers = stirlings )
+	message ( i )
+}
+save ( f05.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05nosweepN10000n10.Robj")
+
+
+
+## f = 0.07
+stirlings <- StirlingNumbers(10)
+neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
+f07.specs.range.nosweep <- list ()
+my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
+for ( i in seq_along ( my.rs ) ) {
+
+	f07.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.07 , my.StirlingNumbers = stirlings )
+	message ( i )
+}
+save ( f07.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07nosweepN10000n10.Robj")
+
+
+sims.f005.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[1]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f01.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[2]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f03.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[3]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f05.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[4]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+sims.f07.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[5]] , function ( x ) x [[5]]) ) [ , 1:9 ]
+
+
+my.specs.f005.nosweep <- do.call ( rbind , f005.specs.range.nosweep )
+my.specs.f01.nosweep <- do.call ( rbind , f01.specs.range.nosweep )
+my.specs.f03.nosweep <- do.call ( rbind , f03.specs.range.nosweep )
+my.specs.f05.nosweep <- do.call ( rbind , f05.specs.range.nosweep )
+my.specs.f07.nosweep <- do.call ( rbind , f07.specs.range.nosweep )
+
+
+
+sim.rs <- seq ( 0 , 0.002 , length.out = 5 )
+
+matplot ( my.rs , my.specs.f01.nosweep  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f01.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.01" , side = 3 )
+
+
+
+
+
+
+
+
+
+
+
 ###### sweeps from a few different freqs
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s01.Rdata")
 load("/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.s05.Rdata")

@@ -9,7 +9,7 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n)
 	ESF.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
-	if ( my.StirlingNumbers == NULL ) {
+	if ( all ( my.StirlingNumbers == 0 ) ) {
 		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	}
 	expected.t.l<-rep(NA,nsam-1)
@@ -37,7 +37,7 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 		}
 	}
 
-	return(terms.in.sum)
+	return ( colSums ( terms.in.sum , dims = 2 ) )
 }
 
 
@@ -76,7 +76,7 @@ plbarjkn <- function ( l , j , k , n , my.StirlingNumbers ) {
 ####freq. spectrum with rec. during sweeps.
 
 expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.StirlingNumbers = 0 ) {
-	#recover()
+	recover()
 	if ( all ( my.StirlingNumbers == 0 ) ) {
 		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	}
@@ -137,7 +137,7 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 		}
 	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
-	singleton.reweighted.freq.spec <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2*N ) , rep ( 0 , nsam - 2 ) )
+	singleton.reweighted.freq.spec <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N ) , rep ( 0 , nsam - 2 ) )
 	singleton.reweighted.freq.spec <- singleton.reweighted.freq.spec / sum ( singleton.reweighted.freq.spec )
 	this.freq.spec <- numeric ( nsam - 1 )
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {

@@ -33,7 +33,7 @@ run.ms.f <- function ( runs , n.sam = 2  , f , s , N , num.sims = 1 , path , get
 		if ( get.site.density ) { 
 			system ( paste ( path , "Scripts/msseldir/mssel " , n.sam , " 20 0 " , n.sam , " " , path , "Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N, ".traj 0 -t 200. -r 200. 20000 | grep pos | cut -f 2 -d : >> " , my.file , sep = "" ) )
 		}	else	{   ##setup for the mo. to do freq. spectrum
-			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , 1000 , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N,  ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata.fr.spec" , sep = "" ) ) 
+			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam , " Sims/my.standing" , "." , f.lab , "." , s.lab , "." , N,  ".traj 0 -t 200. -r " , recom , " 2 >",path, "Sims/myseqdata.fr.spec" , sep = "" ) ) 
 			
 			spec <- get.freq.spec ( n.sam , num.sims = num.sims, path=path )
 			my.specs[,(1+(counter-1)*num.sims):(counter*num.sims)]<-spec
