@@ -255,21 +255,46 @@ HapFreqs <- function ( hap.counts ) {
 
 
 ### multiple mutations
-blah <- list ()
-while ( length ( blah ) < 1000 ) {
+load ( "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj")
+while ( length ( blah ) < 5000 ) {
 	message ( length ( blah ) )
-	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 200 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
-	seqs <- GetSeqsMultMut ( 100 , 10 , "Sims" ,  3 )
+	system ( paste ( "Scripts/msms/bin/msms -ms 100 5 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 200 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
+	seqs <- GetSeqsMultMut ( 100 , 5 , "Sims" ,  3 )
 	if ( length ( seqs ) == 0 ) next
 	keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
 	seqs <- seqs [ keep ]
 	if ( length ( seqs ) == 0 ) next
-	tmp <- lapply ( seqs , CountHaps , 500000 , 5000 )
+	tmp <- lapply ( seqs , CountHaps , 500000 , 100 )
 	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
-	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+	if ( length ( blah ) %% 1000 == 0 )
+	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj" )
 }
 
 
+
+## one side
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep.n100.N10000.s01 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 100 , both.side = F )
+save ( hard.sweep.n100.N10000.s01 , file = "Sims/HapSims/one.side.hard.n100.denovo.s01.manywindows.Robj" )
+
+
+hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.006 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+hard.sweep.n100.N10000.s006 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.006 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 100 , both.side = F )
+save ( hard.sweep.n100.N10000.s006 , file = "Sims/HapSims/one.side.hard.n100.denovo.s006.manywindows.Robj" )
+
+
+
+standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+standing.sweep.f05.n100.N10000.s01 <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 100 , both.sides = F )
+save ( standing.sweep.f05.n100.N10000.s01 , file = "Sims/HapSims/one.side.standing.n100.f05.s01.manywindows.Robj" )
+
+
+
+
+if ( FALSE ) {
+	
+	
+	
 blah <- list ()
 while ( length ( blah ) < 1000 ) {
 	system ( paste ( "Sims/msms/bin/msms -ms 100 10 -N 10000 -t 200 -r 200 500000 -SAA 2000 -SAa 1000 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
@@ -278,28 +303,14 @@ while ( length ( blah ) < 1000 ) {
 	keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
 	seqs <- seqs [ keep ]
 	if ( length ( seqs ) == 0 ) next
-	tmp <- lapply ( seqs , CountHaps , 500000 , 5000 )
+	tmp <- lapply ( seqs , CountHaps , 500000 , 500 )
 	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
 	message ( length ( blah ) )
 	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s05.Robj" )
-}
+}	
+	
+	
 
-## one side
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 1/20000 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep.n100.N10000.s05 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.05 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 5000 , both.side = F )
-save ( hard.sweep.n100.N10000.s05 , file = "Sims/HapSims/one.side.hard.n100.denovo.s05.Robj" )
-
-
-
-
-standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.05 , f = 0.05 , reps = 1000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep.f05.n100.N10000.s05 <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 10 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 5000 , both.sides = F )
-save ( standing.sweep.f05.n100.N10000.s05 , file = "Sims/HapSims/one.side.standing.n100.f05.s05.Robj" )
-
-
-
-
-if ( FALSE ) {
 ### neutral sims
 blah <- list ()
 for ( i in 1 : 100 ) {
@@ -353,48 +364,48 @@ matplot ( t ( soft.haps [[ 3 ]] ) [ , 1:9 ] , type = "l" , lwd = 2 , lty = 3 , y
 dev.off()
 
 
-
+pdf ( "Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 8 )
 par ( mfrow = c ( 3,2))
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( -0.074 , 0.074 ,length.out = 3) ,xaxt = "n")
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] ) ,na.rm = T )
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2) , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 0.074 , my.range [ 2 ] ,length.out = 101) , add = T )
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( my.range [ 1 ] , -0.074 ,length.out = 101) , add = T )
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
 
 
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( -0.074, 0.074 ,length.out=2), col = "black" , xaxt = "n")
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] ) ,na.rm = T )
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( 0.074 , my.range [ 2 ] ,length.out=101), col = heat.colors ( 100 ),add = T )
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( my.range [ 1 ] , -0.074 ,length.out=101), col = cm.colors ( 100 ), add =T )
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
 
 
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( -0.074 , 0.074 ,length.out = 3) , xaxt = "n")
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] ) ,na.rm = T )
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 0.074 , 2 ,length.out = 101) , add = T )
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( my.range [ 1 ] , -0.074 ,length.out = 101) , add = T )
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
 
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( -0.074 , 0.074 ,length.out=2), col = "black" , xaxt = "n")
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( soft.haps [[ 2 ]] / hard.haps [[ 2 ]] , base = 2 ) , na.rm = T )
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( 0.074 , 2 , length.out = 101 ) , col = heat.colors ( 100 ) , add = T )
-image ( t ( apply ( log ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) , breaks = seq ( my.range [ 1 ] , -0.074 ,length.out=101), col = cm.colors ( 100 ), add =T )
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
 
 #plot ( c ( 0,1), type = "n",bty = "n" ,xaxt ="n",yaxt ="n",xlab = "",ylab ="")
 
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( -0.074 , 0.074 ,length.out = 3) , xaxt = "n")
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , base = 2 ) , na.rm = T)
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 0.074 , 1 ,length.out = 101) , add = T )
-image ( t ( apply ( log ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , base = 2 ) , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( my.range [ 1 ] , -0.074 , length.out = 101) , add = T )
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] / soft.haps [[ 2 ]] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
 
-image ( t ( apply ( log ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 ) , 2 , rev) ) , breaks = seq ( -0.074 , 0.074 ,length.out=2), col = "black" , xaxt = "n" )
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab = expression ( h[i]))
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-my.range <- range ( log ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 ) , na.rm = T )
-image ( t ( apply ( log ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 ) , 2 , rev) ) , breaks = seq ( 0.074 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-image ( t ( apply ( log ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 ) , 2 , rev) ) , breaks = seq ( my.range [ 1 ] , -0.074 ,length.out=101), col = cm.colors ( 100 ), add =T )
-
+axis ( 2 , c ( seq ( 0 , 80 , length.out = 5 ) , 99 )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( hard.haps [[ 2 ]] / neutral.haps [[ 2 ]] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+dev.off()
 
 
 
