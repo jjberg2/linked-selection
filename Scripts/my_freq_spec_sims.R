@@ -6,27 +6,27 @@ options ( scipen = 400 )
 
 
 my.N <- 10000
-my.rs <- seq ( 0 , 0.002 , length.out = 5 )
-s <- 0.2
-my.fs <- c ( 0.005 , 0.01 , 0.03 , 0.05 , 0.07 )
+my.rs <- c ( seq ( 0 , 0.0009 , length.out = 10 ) , seq ( 0.001 , 0.002 , length.out = 5 ) , c ( 0.0025 , 0.003 , 0.004))
+s <- 0.05
+my.fs <- c ( 0.01 , 0.02 , 0.03 , 0.05 , 0.07 )
 sim.freq.spec.list <- list ()
 i <- 1
 for ( f in my.fs ) {
 
-	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = FALSE , cond.on.loss = F , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+	my.runs <-  SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 1000 , no.sweep = TRUE , cond.on.loss = T , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 	sim.freq.spec.list [[ i ]] <- list ()
 	j <- 1
 	for ( r in my.rs ) {
 
 		
-		sim.freq.spec <- run.ms.f ( runs = my.runs [[ 1 ]] , f = f , s = s , n.sam = 10 , N = 10000 , num.sims = 10 , path = "" , get.site.density = FALSE , recom = 4*10000*r )
+		sim.freq.spec <- run.ms.f ( runs = my.runs [[ 1 ]] , f = f , s = s , n.sam = 10 , N = 10000 , num.sims = 30 , path = "" , get.site.density = FALSE , recom = 4*10000*r )
 		sim.freq.spec.list [[ i ]] [[ j ]] <- list ()
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 1 ]] <- r
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 2 ]] <- f
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 3 ]] <- s
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] <- sim.freq.spec
 		sim.freq.spec.list [[ i ]] [[ j ]] [[ 5 ]] <- rowSums ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]] ) / sum ( sim.freq.spec.list [[ i ]] [[ j ]] [[ 4 ]])
-		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.with.sweep.nocondloss.Rdata" )
+		save ( sim.freq.spec.list , file = "Sims/sim.freq.spec.list.stoch.freq.nosweep.condloss.Rdata" )
 		
 		message ( r )
 		message ( f )
@@ -79,8 +79,6 @@ if ( FALSE ) {
 load ( "Sims/sim.freq.spec.list.stoch.freq.no.sweep.nocondloss.Rdata" )
 load ( "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
 load ( "Sims/sim.freq.spec.list.stoch.freq.with.sweep.nocondloss.Rdata" )
-
-
 
 
 

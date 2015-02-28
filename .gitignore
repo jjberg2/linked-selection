@@ -18,7 +18,8 @@ Output/*
 Working/*
 LS\ Notebook/*
 *.DS_Store
-Sims/*
-
+*my.standing*
+*myseqdata*
+*mssel*
 
 seedms

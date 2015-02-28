@@ -8,7 +8,8 @@ source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir 
 expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NULL){
 	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n)
-	ESF.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	ESF.cond.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
 	if ( all ( my.StirlingNumbers == 0 ) ) {
 		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	}
@@ -31,14 +32,59 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
 				p_l_given_k [ k , j , l ] <- stirling.bit*choose(nsam,l)/choose(k,j)
 				terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs[ k , j ]
-				terms.in.sum [ k , j, l  ] <- ESF.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
+				terms.in.sum [ k , j, l  ] <- ESF.cond.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
 		
 			}
 		}
 	}
-
-	return ( colSums ( terms.in.sum , dims = 2 ) )
+	anc.freq.spec <- colSums ( terms.in.sum , dims = 2 )
+	new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
+	my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	return ( my.freq.spec )
 }
+
+
+
+expected.freq.times.standing.anc.only<-function(nsam,N,r,distance,f,my.StirlingNumbers=NULL){
+	#recover()
+	#my.StirlingNumbers<-StirlingNumbers(n)
+	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	ESF.cond.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+	if ( all ( my.StirlingNumbers == 0 ) ) {
+		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	}
+	expected.t.l<-rep(NA,nsam-1)
+	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
+	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
+	for ( i in 2 : nsam ) {
+		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+	}
+	freq.specs <- t ( freq.specs )
+	terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
+	for(l in 1:(nsam-1)){
+	#	recover()
+	#	terms.in.sum<-rep(0,nsam)
+		terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
+		for(k in 2 : nsam ) {
+			##runs from 2 otherwise there are no polymorphism
+
+			for(j in 1:(k-1)){
+				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
+				p_l_given_k [ k , j , l ] <- stirling.bit*choose(nsam,l)/choose(k,j)
+				terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs[ k , j ]
+				terms.in.sum [ k , j, l  ] <- ESF.cond.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
+		
+			}
+		}
+	}
+	anc.freq.spec <- colSums ( terms.in.sum , dims = 2 )
+	# new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
+	# my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	return ( anc.freq.spec )
+}
+
+
+
 
 
 ##### a component function to make the code cleaner

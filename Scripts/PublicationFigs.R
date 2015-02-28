@@ -102,10 +102,12 @@ load ( "Sims/sim.freq.spec.list.stoch.freq.no.sweep.condloss.Rdata" )
 stirlings <- StirlingNumbers(10)
 neutral.f.spec <- 1 / ( 1 : 9 ) / ( sum ( 1 / ( 1:9 ) ) )
 f005.specs.range.nosweep <- list ()
+f005.specs.range.nosweep.anc.only <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
 	f005.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.005 , my.StirlingNumbers = stirlings )
+	f005.specs.range.nosweep.anc.only [[ i ]] <- expected.freq.times.standing.anc.only ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.005 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
 save ( f005.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef005nosweepN10000n10.Robj")
@@ -118,6 +120,7 @@ f01.specs.range.nosweep <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
+	f01.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.01 , my.StirlingNumbers = stirlings )
 	f01.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.01 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
@@ -132,6 +135,7 @@ f03.specs.range.nosweep <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
+	f03.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.03 , my.StirlingNumbers = stirlings )
 	f03.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.03 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
@@ -148,6 +152,7 @@ my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
 	f05.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , my.StirlingNumbers = stirlings )
+	f05.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.05 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
 save ( f05.specs.range.nosweep , file = "Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05nosweepN10000n10.Robj")
@@ -161,6 +166,7 @@ f07.specs.range.nosweep <- list ()
 my.rs <- seq ( 0.0000001 , 0.003 , by = 0.00001 )
 for ( i in seq_along ( my.rs ) ) {
 
+	f07.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.07 , my.StirlingNumbers = stirlings )
 	f07.specs.range.nosweep [[ i ]] <- expected.freq.times.standing ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.07 , my.StirlingNumbers = stirlings )
 	message ( i )
 }
@@ -180,20 +186,89 @@ my.specs.f03.nosweep <- do.call ( rbind , f03.specs.range.nosweep )
 my.specs.f05.nosweep <- do.call ( rbind , f05.specs.range.nosweep )
 my.specs.f07.nosweep <- do.call ( rbind , f07.specs.range.nosweep )
 
-
+neutral <- 1 / ( 1:9 ) / sum ( 1 / ( 1:9 ) )
 
 sim.rs <- seq ( 0 , 0.002 , length.out = 5 )
 
-matplot ( my.rs , my.specs.f01.nosweep  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" )
+
+my.specs.f01.nosweep.relative <- t ( apply ( my.specs.f01.nosweep , 1 , function ( x )  x / neutral ) )
+sims.f01.freq.spec.relative <- t ( apply ( sims.f01.freq.spec , 1 , function ( x ) x / neutral ) )
+
+
+pdf ( "Figures/freq.spec.nosweep.f01.pdf" , height = 5 , width = 16)
+par ( mfrow = c ( 1, 3 ) )
+matplot ( my.rs , my.specs.f01.nosweep  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 0.5 ) )
 matplot ( sim.rs , sims.f01.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+
+
+matplot ( my.rs , my.specs.f01.nosweep.relative  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Deviation from Neutral" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 4 ) )
+matplot ( sim.rs , sims.f01.freq.spec.relative , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 mtext ( "f = 0.01" , side = 3 )
 
 
+matplot ( my.rs , log ( my.specs.f01.nosweep.relative , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n" , ylim = c ( -0.7 , 2 ) )
+matplot ( sim.rs , log ( sims.f01.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+dev.off()
+
+
+my.specs.f03.nosweep.relative <- t ( apply ( my.specs.f03.nosweep , 1 , function ( x )  x / neutral ) )
+sims.f03.freq.spec.relative <- t ( apply ( sims.f03.freq.spec , 1 , function ( x ) x / neutral ) )
+
+pdf ( "Figures/freq.spec.nosweep.f03.pdf" , height = 5 , width = 16)
+par ( mfrow = c ( 1, 3 ) )
+matplot ( my.rs , my.specs.f03.nosweep , 2  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n"  )
+matplot ( sim.rs , sims.f03.freq.spec , 2 , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+
+
+
+matplot ( my.rs , my.specs.f03.nosweep.relative , 2  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Deviation from Neutral" , xlab = "Genetic Distance" , bty = "n"  )
+matplot ( sim.rs , sims.f03.freq.spec.relative , 2 , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.03" , side = 3 )
+
+
+matplot ( my.rs , log ( my.specs.f03.nosweep.relative , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  )
+matplot ( sim.rs , log ( sims.f03.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+dev.off()
 
 
 
 
+my.specs.f05.nosweep.relative <- t ( apply ( my.specs.f05.nosweep , 1 , function ( x )  x / neutral ) )
+sims.f05.freq.spec.relative <- t ( apply ( sims.f05.freq.spec , 1 , function ( x ) x / neutral ) )
 
+pdf ( "Figures/freq.spec.nosweep.f05.pdf" , height = 5 , width = 16)
+par ( mfrow = c ( 1, 3 ) )
+matplot ( my.rs , my.specs.f05.nosweep  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 0.4 ) )
+matplot ( sim.rs , sims.f05.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+
+
+
+matplot ( my.rs , my.specs.f05.nosweep.relative  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Deviation from Neutral" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 4 ) )
+matplot ( sim.rs , sims.f05.freq.spec.relative , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.05" , side = 3 )
+
+matplot ( my.rs , log ( my.specs.f05.nosweep.relative , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , log ( sims.f05.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+dev.off()
+
+
+my.specs.f07.nosweep.relative <- t ( apply ( my.specs.f07.nosweep , 1 , function ( x )  x / neutral ) )
+sims.f07.freq.spec.relative <- t ( apply ( sims.f07.freq.spec , 1 , function ( x ) x / neutral ) )
+
+pdf ( "Figures/freq.spec.nosweep.f07.pdf" , height = 5 , width = 16)
+par ( mfrow = c ( 1, 3 ) )
+matplot ( my.rs , my.specs.f07.nosweep  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Frequency" , xlab = "Genetic Distance" , bty = "n" , ylim = c ( 0 , 0.4 ) )
+matplot ( sim.rs , sims.f07.freq.spec , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.07" , side = 3 )
+
+matplot ( my.rs , my.specs.f07.nosweep.relative  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = "Deviation from Neutral" , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , sims.f07.freq.spec.relative , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.07" , side = 3 )
+
+matplot ( my.rs , log ( my.specs.f07.nosweep.relative , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n" )
+matplot ( sim.rs , log ( sims.f07.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
+mtext ( "f = 0.07" , side = 3 )
+dev.off()
 
 
 

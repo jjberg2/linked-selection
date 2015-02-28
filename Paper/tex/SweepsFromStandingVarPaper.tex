@@ -332,28 +332,6 @@ In \jb{figure BLAH}, we show $\mathbb{E}[h_i^{M1} \mid h_i^{M1} > 0]/\mathbb{E}[
 
 On the basis of these simulation results, we suspect that future methods for identifying and distinguishing different varieties of sweeps will see benefits from incorporating haplotypic information over a range of window sizes surrounding the focal site, and from pushing deeper into the haplotype frequency spectrum, particularly when large samples are available.
 
-
-
-%
-%
-%
-%Despite our inability to deal with the process analytically, we can use intuition gained from our description of it to make a few predictions regarding features of the haplotype transition scheme and check whether they are born out in simulations. The principal difference in terms of the shape of the genealogy between a hard sweep and a standing sweep is that for a hard sweep nearly all of the branch length in the tree is near the tips (i.e. singleton lineages or branches that subtend small families of lineages), in contrast to a standing sweep, which has internal branch structure similar to the neutral coalescent. This means that in a hard sweep, most new haplotypes are created by budding off of low frequency haplotypes (often singletons) from the dominant core haplotype, whereas under a standing sweep, we expect to more commonly observe one of the few most frequent haplotypes to split into two haplotypes of a more intermediate frequency. 
-%
-%
-%
-%
-%
-%
-%
-%
-%Under our approximation, each of our coloured haplotypes represents an independent draw from the haplotypes present before the sweep, such that allelic differences we see between these ancestral haplotypes are the alleles that segregate after the sweep. As such, we should expect LD to be created between variants on the same haplotypic background. As haplotype configurations should extend over distances $\sim 1/(r_{BP} N_e f)$ this LD will extend over distances unusual compared to background LD if $N_e f \ll N_e$. The colored haplotypic patitioning on either side of the selected site is correlated due to the underlying dependence on the genealogy at the selected site, thus there can be LD across the selected site--unlike the full sweep model. But in contrast to the soft sweeps model we have to wait until we get a sufficient distance from the selected site in order for recombination to have occurred, to have variation to observe the LD. We have explored approximating the pairwise LD around the sweep using the coalescent approach of \citet{McVean:2006ke}, however, we found that no simple expressions were forthcoming from that approach (principally because we have not been able to couple two sites together other than by brute force).
-%
-%If $\tau_{f}$ is on the same order as $4N_e f$ then the distances to recombination events in the two phases will be on the same genomic scale, but recombinations in the selected phase occur first moving backward in time and so obscure the patterns of the sample described above (see grey bars in Figure \ref{cartoon_3_kinds}Cii). As before the physical distance along the sequence to each recombination during the selected phase is independently $\sim \exp(r_{BP} \tau_{f}) $, such that the core region swept clean of diversity to be  $\sim \exp \left( R_f T_{tot} + r_{bp} n t_{f} \right)$. The ability to see the colored haplotype structure will depend strongly on the exact magnitude of $\tau_{f}$ as compared to $N_e f$, and is likely to be highly stochastic across replicates.
-%
-%
-%
-%
-
 \begin{figure}
 	\includegraphics[width = 0.8\textwidth]{../Paper_Figures/three_kinds_of_sweep.pdf} \label{cartoon_3_kinds}
 	\caption{caption goes here}
@@ -380,7 +358,15 @@ On the basis of these simulation results, we suspect that future methods for ide
 
 \section{Discussion}
 
+An accurate portrait of the patterns of sequence diversity expected in the presence of recent or ongoing positive selection has proven to be vital for identifying the loci of adaptation. Recent theoretical and empirical work has drawn attention to the fact that adaptation from standing variation may be relatively common, and that patterns of sequence variation produced in such scenarios may differ markedly from those produced under the classical hard sweep model. In this paper, we've focused on developing a tractable model of strong positive selection on a single mutation which was previously segregating (or balanced) at low frequency, showing that the impact of the pre-sweep standing phase of the mutation's history on post-hitchhiking patterns of identity by descent can be approximated via an application of the Ewens Sampling Formula.
 
+
+
+phases of sweeps, improvement still needed regarding intermediate phase of sweep.
+
+time of sampling
+
+multiple populations
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
