@@ -17,24 +17,7 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 		frequencies <- temp [[ 1 ]]
 		if ( no.sweep == FALSE ) {	
 			sweep.start <- temp [[ 2 ]]
-			# sweep.start.forward <- ncol ( frequencies ) - sweep.start 
-			# # if ( nrow ( frequencies ) > 1 ) {
-			# fixation.time <- apply ( frequencies [ , sweep.start.forward : ncol ( frequencies ) ] , 1 , which.max ) + sweep.start.forward - 1
-			# zeros <- apply ( frequencies [ , 1 : sweep.start.forward ] %% 1 == 0 , 1 , which )
-			# entry <- numeric()
-			# for ( i in 1 : length ( zeros ) ){
-				# if ( length ( zeros [[ i ]] ) != 0 ) {
-					# entry [ i ] <- tail ( zeros [[ i ]] , 1 )
-				# } else {
-					# entry [ i ] <- 1
-				# }
-			# }
-			# transit.time <- fixation.time - entry
 			new.freqs <- temp [[ 1 ]]
-			# for ( i in 1 : nrow ( frequencies ) ) {
-				# new.freqs [ i , 1 : ( transit.time [ i ] + 1 ) ] <- frequencies [ i , fixation.time [ i ] : entry [ i ] ]
-			# }
-	
 		} else if ( no.sweep == TRUE ){
 			#recover()
 			new.freqs <- frequencies [ , 1 : ncol ( frequencies ) ]
@@ -106,7 +89,7 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 		hap.dist <- NULL
 		standing.hap.dist <- NULL
 	}
-	return ( list ( coal.times = coal.times , new.freqs = new.freqs , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , standing.hap.dist = standing.hap.dist , T.total = T.total , sim.distance.bp = sim.distance/r) )
+	return ( list ( coal.times = coal.times , new.freqs = new.freqs , sweep.start = sweep.start , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , standing.hap.dist = standing.hap.dist , T.total = T.total , sim.distance.bp = sim.distance/r) )
 }
 
 s_of_u <- function ( u ) {
@@ -901,7 +884,7 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 
 #function to get haplotype distribution plots from function output
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 10 , n.tips = 50 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
 
 
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000 , f = 0.025 , sim.distance = 0.02 )

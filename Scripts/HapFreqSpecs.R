@@ -15,11 +15,11 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 	hap.counts <- list ()
 	hap.counts.no.sing <- list ()
 	window.hap.counts <- list ()
+	my.times1 <- list ()
+	my.times2 <- list ()
 	for ( i in 1:nrow ( runs ) ) {
-		
 		my.freqs <- c ( runs [ i , runs [ i , ] > 0 ] , 0 )
 		my.times <- 0 : ( length ( my.freqs ) - 1 ) / ( 4*N  )
-
 		#recover()
 		header.material <- c ( "1" , "1" , paste ( "n:" , length ( my.times ) ) )
 		traj.file <- paste ( path , "/my.standing" , "." , f.lab , "." , s.lab , "." , N , ".traj" , sep = "" )
@@ -29,20 +29,21 @@ msHapSims <- function ( runs , n.sam = 2  , f , s , N , path , get.site.density 
 		if ( both.sides == FALSE ) {
 			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file ,  " 0 -t " , 2 * N * len.bp * mu.bp , " -r " , 2 * N * len.bp * r.bp , " " , len.bp , " > " , path, "/myseqdata" , sep = "" ) ) 
 			seqs <- GetSeqs ( n.sam , num.sims , path )
+			my.times1 [[ i ]] <- Sys.time ()
 			hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHaps , len.bp , hap.count.interval )
+			my.times2 [[ i ]] <- Sys.time ()
+			time.diff <- my.times2 [[ i ]] - my.times1 [[ i ]]
+			message ( time.diff )
 			#hap.counts.no.sing [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs , CountHapsNoSing , len.bp , hap.count.interval )
-			marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
-		
 		} else {
 		
 			system ( paste ( "Scripts/msseldir/mssel " , n.sam , " " , num.sims , " 0 " , n.sam ,  " " , traj.file , " " , len.bp/2 , " -r " , 2 * N * len.bp * r.bp , " " , len.bp ," -t " , 2 * N * len.bp * mu.bp  , " " , " > " , path, "/myseqdata" , sep = "" ) ) 
 			seqs <- GetSeqs ( n.sam , num.sims , path )
 			window.hap.counts [ ( i - 1 ) * num.sims + 1:num.sims ] <- lapply ( seqs  , TwoSideCountHaps , len.bp , hap.count.interval )
 			marginal.hap.freqs <- Reduce ( "+" , window.hap.counts ) / length ( window.hap.counts )
-		
 		}
 	}
-	
+	marginal.hap.freqs <- Reduce ( "+" , hap.counts ) / length ( hap.counts )
 	return ( list ( marginal.hap.freqs , hap.counts ) )
 }
 
@@ -254,33 +255,33 @@ HapFreqs <- function ( hap.counts ) {
 }
 
 
-### multiple mutations
-load ( "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj")
-while ( length ( blah ) < 5000 ) {
-	message ( length ( blah ) )
-	system ( paste ( "Scripts/msms/bin/msms -ms 100 5 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 200 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
-	seqs <- GetSeqsMultMut ( 100 , 5 , "Sims" ,  3 )
-	if ( length ( seqs ) == 0 ) next
-	keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
-	seqs <- seqs [ keep ]
-	if ( length ( seqs ) == 0 ) next
-	tmp <- lapply ( seqs , CountHaps , 500000 , 100 )
-	blah [ length ( blah ) + 1 : length ( tmp ) ] <- tmp
-	if ( length ( blah ) %% 1000 == 0 )
-	save ( blah , file = "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj" )
-}
+# ### multiple mutations
+# soft.sweep.n100.N10000.s01 <- list ()
+# while ( length ( soft.sweep.n100.N10000.s01 ) < 5000 ) {
+	# message ( length ( soft.sweep.n100.N10000.s01 ) )
+	# system ( paste ( "Scripts/msms/bin/msms -ms 100 5 -N 10000 -t 200 -r 200 500000 -SAA 400 -SAa 200 -Smu 0.4 -Sp 0 -oOC -SF 0 -Smark  > Sims/myseqdata.mult.mut" , sep = "" ) )
+	# seqs <- GetSeqsMultMut ( 100 , 5 , "Sims" ,  3 )
+	# if ( length ( seqs ) == 0 ) next
+	# keep <- which ( unlist ( lapply ( seqs , function ( x ) length ( unique ( x[[2]][,1] ) ) == 3 ) ) )
+	# seqs <- seqs [ keep ]
+	# if ( length ( seqs ) == 0 ) next
+	# tmp <- lapply ( seqs , CountHaps , 500000 , 100 )
+	# soft.sweep.n100.N10000.s01 [ length ( soft.sweep.n100.N10000.s01 ) + 1 : length ( tmp ) ] <- tmp
+	# if ( length ( soft.sweep.n100.N10000.s01 ) %% 1000 == 0 )
+	# save ( soft.sweep.n100.N10000.s01 , file = "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj" )
+# }
 
 
 
-## one side
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep.n100.N10000.s01 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 100 , both.side = F )
-save ( hard.sweep.n100.N10000.s01 , file = "Sims/HapSims/one.side.hard.n100.denovo.s01.manywindows.Robj" )
+# ## one side
+# hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+# hard.sweep.n100.N10000.s01 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "out" , hap.count.interval = 100 , both.side = F )
+# save ( hard.sweep.n100.N10000.s01 , file = "Sims/HapSims/one.side.hard.n100.denovo.s01.manywindows.Robj" )
 
 
-hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.006 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-hard.sweep.n100.N10000.s006 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.006 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 100 , both.side = F )
-save ( hard.sweep.n100.N10000.s006 , file = "Sims/HapSims/one.side.hard.n100.denovo.s006.manywindows.Robj" )
+# hard.runs <- SweepFromStandingSim ( N = 10000 , s = 0.006 , f = 1/20000 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+# hard.sweep.n100.N10000.s006 <- msHapSims ( hard.runs [[ 1 ]] , n.sam = 100 , f = 1/20000 , s = 0.006 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , ext = "hapSims" , hap.count.interval = 100 , both.side = F )
+# save ( hard.sweep.n100.N10000.s006 , file = "Sims/HapSims/one.side.hard.n100.denovo.s006.manywindows.Robj" )
 
 
 

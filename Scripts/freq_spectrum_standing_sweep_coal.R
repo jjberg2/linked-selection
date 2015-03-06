@@ -39,8 +39,13 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 	}
 	anc.freq.spec <- colSums ( terms.in.sum , dims = 2 )
 	new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
-	my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
-	return ( my.freq.spec )
+	times <- sapply ( 1 : ( nsam - 1 ) , function ( x ) sum ( 1 / ( 1:x ) ) )
+	new <- ESF.prob.k [ nsam , 1 ] * 4 * f * sum ( 1 / ( 1 : 1 : ( nsam - 1 ) ) )
+	old <- ESF.prob.k [ nsam , 2:(nsam) ] * times
+	p.new.seg <- new / ( new + sum ( old ) )
+	adj.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	my.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	return ( list ( my.freq.spec , adj.freq.spec ) )
 }
 
 
