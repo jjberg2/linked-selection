@@ -194,7 +194,23 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
 		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) + dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
 	}
-
+	my.branch.sums <- cumsum ( 1 / ( 1 : nsam ) )
+	num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam ]
+	other <- 0
+	P_R <- 1 - P_NR
+	for ( j in 2 : nsam ) {
+		for ( k in 0 : j ) {
+			for ( i in 0 : (j - k) ) {
+				if ( i < 0 | (k + i) < 1 ) { next }
+				
+				old.other <- other
+				tmp <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k ] * my.branch.sums [ j ]
+				if ( length ( old.other + tmp ) == 0 )
+				other <- old.other + tmp
+			}
+		}
+	}
+	
 	return ( this.freq.spec )
 }
 
