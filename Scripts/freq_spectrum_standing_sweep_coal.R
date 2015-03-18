@@ -43,8 +43,8 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 	new <- ESF.prob.k [ nsam , 1 ] * 4 * f * sum ( 1 / ( 1 : 1 : ( nsam - 1 ) ) )
 	old <- ESF.prob.k [ nsam , 2:(nsam) ] * times
 	p.new.seg <- new / ( new + sum ( old ) )
-	adj.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
-	my.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	adj.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
 	return ( list ( my.freq.spec , adj.freq.spec ) )
 }
 
@@ -127,7 +127,7 @@ plbarjkn <- function ( l , j , k , n , my.StirlingNumbers ) {
 ####freq. spectrum with rec. during sweeps.
 
 expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.StirlingNumbers = 0 ) {
-	recover()
+	#recover()
 	if ( all ( my.StirlingNumbers == 0 ) ) {
 		my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
 	}
@@ -192,26 +192,29 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 	singleton.reweighted.freq.spec <- singleton.reweighted.freq.spec / sum ( singleton.reweighted.freq.spec )
 	this.freq.spec <- numeric ( nsam - 1 )
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
-		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) + dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
+		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) #+ dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
 	}
 	my.branch.sums <- cumsum ( 1 / ( 1 : nsam ) )
 	num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam ]
-	other <- 0
+	other <- numeric(1)
 	P_R <- 1 - P_NR
+	t <- 1
 	for ( j in 2 : nsam ) {
 		for ( k in 0 : j ) {
-			for ( i in 0 : (j - k) ) {
-				if ( i < 0 | (k + i) < 1 ) { next }
+			for ( i in 0 : ( j - k ) ) {
+				if ( i < 0 | (k + i) <= 1 ) { next }
 				
-				old.other <- other
-				tmp <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k ] * my.branch.sums [ j ]
-				if ( length ( old.other + tmp ) == 0 )
-				other <- old.other + tmp
+				other [ t ] <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k + 1 ] * my.branch.sums [ j ]
+				t <- t + 1
 			}
 		}
 	}
+	p_new <- num / ( num + sum ( other ) )
 	
-	return ( this.freq.spec )
+	final.freq.spec <- p_new * singleton.reweighted.freq.spec + ( 1 - p_new ) * this.freq.spec
+	
+	return ( final.freq.spec )
+	
 }
 
 
