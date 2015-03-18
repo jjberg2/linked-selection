@@ -330,9 +330,9 @@ save ( neutral , file = "Sims/HapSims/neutral.n100.Robj" )
 
 
 
-load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
-load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
-load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.manywindows.Robj" )
+load ( "Sims/HapSims/one.side.standing.n100.f05.s01.manywindows.Robj" )
+load ( "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj" )
 soft.sweep <- blah
 load ( "Sims/HapSims/neutral.n100.Robj" )
 ## neutral <- Reduce ( "+" , blah ) / length ( blah)
@@ -340,7 +340,7 @@ load ( "Sims/HapSims/neutral.n100.Robj" )
 
 soft.haps <- HapFreqs ( soft.sweep )
 standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
-hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
+hard.haps <- HapFreqs ( hard.sweep.n100.N10000.s01 [[ 2 ]] )
 neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
 
