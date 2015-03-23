@@ -285,9 +285,9 @@ HapFreqs <- function ( hap.counts ) {
 
 
 
-standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
-standing.sweep.f05.n100.N10000.s01 <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 100 , both.sides = F )
-save ( standing.sweep.f05.n100.N10000.s01 , file = "Sims/HapSims/one.side.standing.n100.f05.s01.manywindows.Robj" )
+# standing.runs <- SweepFromStandingSim ( N = 10000 , s = 0.01 , f = 0.05 , reps = 2000 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE  , display.rep.count = TRUE , time.factor = 1  )
+# standing.sweep.f05.n100.N10000.s01 <- msHapSims ( standing.runs [[ 1 ]] , n.sam = 100 , f = 0.05 , s = 0.01 , N = 10000 , path = "Sims/HapSims" , num.sims = 5 , len.bp = 500000 , r.bp = 10^-8 , mu.bp = 10^-8 , hap.count.interval = 100 , both.sides = F )
+# save ( standing.sweep.f05.n100.N10000.s01 , file = "Sims/HapSims/one.side.standing.n100.f05.s01.manywindows.Robj" )
 
 
 
@@ -330,14 +330,12 @@ save ( neutral , file = "Sims/HapSims/neutral.n100.Robj" )
 
 
 
-load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.manywindows.Robj" )
-load ( "Sims/HapSims/one.side.standing.n100.f05.s01.manywindows.Robj" )
-load ( "Sims/HapSims/one.side.soft.n100.k3.s01.manywindows.Robj" )
+load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
+load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
 soft.sweep <- blah
 load ( "Sims/HapSims/neutral.n100.Robj" )
 ## neutral <- Reduce ( "+" , blah ) / length ( blah)
-
-
 soft.haps <- HapFreqs ( soft.sweep )
 standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
 hard.haps <- HapFreqs ( hard.sweep.n100.N10000.s01 [[ 2 ]] )
