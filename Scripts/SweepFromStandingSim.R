@@ -19,7 +19,7 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 			sweep.start <- temp [[ 2 ]]
 			new.freqs <- temp [[ 1 ]]
 		} else if ( no.sweep == TRUE ){
-			#recover()
+			sweep.start <- temp [[ 2 ]]
 			new.freqs <- frequencies [ , 1 : ncol ( frequencies ) ]
 			fixation.time <- rep ( 0 , reps )
 		}
@@ -224,15 +224,10 @@ SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no
 		for ( i in seq_len ( nrow ( freq.trajectories ) ) ) {
 			freq.trajectories [ i , 1 : length ( freq.traj.list [[ i ]] ) ] <- freq.traj.list [[ i ]]
 		}
-		#freq.trajectories <- cbind ( neutral.freq.matrix [ , ncol ( neutral.freq.matrix ) : 2 ] , sweep.freq.matrix [ , 1 : ncol ( sweep.freq.matrix ) ] )
+		return ( list ( freq.trajectories , sweep.start ) )		
 	} else {
-		return ( list ( neutral.freq.matrix , 0 ) )
+		return ( list ( neutral.freq.matrix , sweep.start = 0 ) )
 	}
-	# temp1 <- apply ( freq.trajectories , 1 , function ( x ) rev ( x[x !=1] ) )
-	# add.zeros <- max ( unlist ( lapply ( temp1 , length) ) ) - unlist ( lapply ( temp1 , length) )
-	# temp2 <- mapply ( function ( x , y ) c ( rev ( c ( x , rep ( 0 , y ) ) ) , 1 ) , x = temp1 , y = add.zeros , SIMPLIFY = FALSE )
-	# freq.trajectories <- do.call ( rbind , temp2 )
-	return ( list ( freq.trajectories , sweep.start ) )	
 }
 
 
@@ -884,8 +879,10 @@ temp <- apply ( fands , 1 , function ( x ) StructuredCoalescentSweep ( N = 10000
 
 #function to get haplotype distribution plots from function output
 
-temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
+temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = T , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
 
+sweep.coals <- rowSums ( temp$coal.times < temp$sweep.start )
+when <- mapply ( function ( x , y ) y [ seq ( 0 , x ) ] , x = sweep.coals , y = split ( temp$coal.times , 1 : 1000 ) )
 
 MakeHapPlots ( temp$hap.dist$hap.count.freqs.by.interval , N = 10000 , f = 0.025 , sim.distance = 0.02 )
 

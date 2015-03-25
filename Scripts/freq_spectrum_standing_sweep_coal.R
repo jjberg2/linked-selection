@@ -133,8 +133,8 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 	}
 	ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
 	ESF.prob.k <- rbind ( c ( 1 , rep ( 0 , nsam ) ) , cbind ( rep ( 0 , nsam ) , ESF.prob.k ) )
-	#ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
-	#ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
+	ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
 	T_f <- log ( (2*N -1 ) * ( 1 - f ) / f ) / s
 	my.logistic <- function ( x ) 1 / (2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 ) )
 	T_sf <- integrate ( my.logistic , 0 , T_f )$value
@@ -174,11 +174,11 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 						cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- freq.specs [ k + nsam - i , j ] * H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] * p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 						
 						if ( g > 0 | i != nsam ) {
-							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.prob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 						
 						} else{
 							my.list [[ z ]] <- c ( k + 1 , j + 1 , g + 1 , i + 1 , l + 1 )
-							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.prob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 							#my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 							z <- z + 1
 						}
@@ -188,18 +188,18 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 		}
 	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
-	singleton.reweighted.freq.spec <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N ) , rep ( 0 , nsam - 2 ) )
-	singleton.reweighted.freq.spec <- singleton.reweighted.freq.spec / sum ( singleton.reweighted.freq.spec )
+	singleton.reweighted.times <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N ) , rep ( 0 , nsam - 2 ) )
+	singleton.reweighted.freq.spec <- singleton.reweighted.times / sum ( singleton.reweighted.times )
 	this.freq.spec <- numeric ( nsam - 1 )
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
 		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) #+ dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
 	}
-	my.branch.sums <- cumsum ( 1 / ( 1 : nsam ) )
-	num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam ]
-	other <- numeric(1)
+	my.branch.sums <- cumsum ( singleton.reweighted.times )
+	num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam - 1 ]
+	other <- numeric()
 	P_R <- 1 - P_NR
 	t <- 1
-	for ( j in 2 : nsam ) {
+	for ( j in 2 : ( nsam - 1 ) ) {
 		for ( k in 0 : j ) {
 			for ( i in 0 : ( j - k ) ) {
 				if ( i < 0 | (k + i) <= 1 ) { next }
@@ -210,7 +210,6 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 		}
 	}
 	p_new <- num / ( num + sum ( other ) )
-	
 	final.freq.spec <- p_new * singleton.reweighted.freq.spec + ( 1 - p_new ) * this.freq.spec
 	
 	return ( final.freq.spec )
