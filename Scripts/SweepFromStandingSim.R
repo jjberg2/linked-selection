@@ -728,9 +728,8 @@ SingHapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interv
 
 
 MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE,do.legend=FALSE) {
-	
-	#par ( mfrow = c ( 2 , 1 ) )
-	#matplot ( t ( cum.probs ) , type = "l" , lty = 1 , lwd = 0.7 , col = "black" , ylab = "Cumulative Probability" , xlab = "kb" , main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , bty = "n")
+	library ( wesanderson)
+	#recover()
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
 	n.tips <- max ( as.numeric ( rownames(hap.count.freqs.by.interval ) ) )
@@ -764,7 +763,7 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 		lty = 1 , 
 		lwd = 0.7 , 
 		col = "black" , 
-		ylab = "Cumulative Probability" , 
+		ylab = "Probability" , 
 		xlab = "kb" , 
 		#main = paste ( n.tips , "Lineages in a Sweep from f =" , f , "at s =" , s , "," , reps , "Reps" ) , 
 		bty = "n" ,
@@ -773,8 +772,10 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	)
 	axis ( 1 , seq ( 1 , ncol ( ewens.dist.matrix ) , by = 10e5/interval.width ) , 4*N*r * 1000*seq ( 0 , max ( intervals , 1 )/1000  , by = 1000 )  )  # seq ( 0 , tail ( intervals , 1 ) / 1000 , by = 1000 )  )
 	#recover()
-	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-	if(do.legend) legend("topright", legend=paste("j=",1:n.tips), lty=1,col= col.vect,lwd=2)
+	#col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
+	#col.vect <- brewer.pal ( 10 , "Set3" )
+	col.vect <- wes_palette ( "FantasticFox" , 10 , type = "continuous")
+	if(do.legend) legend("topright", legend=1:n.tips, lty=1,col= col.vect,lwd=2, bty = "n")
 	for ( i in  ( nrow ( cum.probs ) - 1 ):1 ) {
 			#i = i + 1
 			X.ax <- 1:ncol ( cum.probs ) #which ( cum.probs [ i , ] != cum.probs [ i + 1 , ] )
