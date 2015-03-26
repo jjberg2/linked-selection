@@ -5,6 +5,93 @@ source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
 options ( scipen = 400 )
 
 
+
+#################
+## extra functions ##
+#################
+
+
+# MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 )  )
+
+MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 2*  N ) * exp(s * x ) / ( 1 + 1 / ( 2 * N  ) * ( exp ( s * x )  - 1 )  )
+
+
+#################
+
+#################
+
+
+
+##### trajectories vs approx
+f <- 0.01
+s <- 0.01
+# my.freq.trajs <- SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
+# save ( my.freq.trajs , file = "Sims/10trajectoriesForTrajFigure.Robj")
+load ( file = "Sims/10trajectoriesForTrajFigure.Robj")
+freqs <- t ( my.freq.trajs[[1]] )
+freqs <- apply ( freqs , 2 , rev )
+#freqs <- freqs [ seq ( nrow ( freqs ) - 2000 , nrow ( freqs ) ) , ]
+mid.points <- apply ( freqs , 2 , function ( x ) which.min ( abs ( x - 0.5 ) ) )
+diff <- max ( mid.points ) - mid.points 
+
+new.freqs <- list()
+for ( i in 1 : ncol ( freqs ) ) {	
+	
+	new.freqs [[ i ]] <- c ( rep ( 1 , diff [ i ] ) , freqs [ , i ]  )
+	
+}
+
+my.lengths <- sapply ( new.freqs , length )
+new.diff <- max ( my.lengths ) - my.lengths 
+for ( i in 1 : length ( new.freqs ) ) {
+	
+	new.freqs [[ i ]] <- c ( new.freqs [[ i ]] , rep ( 0 , new.diff [ i ] ) )
+	
+}
+my.freqs <- do.call ( cbind , lapply ( new.freqs , rev ) )
+
+i <- 1
+det.freqs <- 1 / ( 20000 )
+while ( det.freqs [ i ] < ( 1 - f ) ) {	
+	det.freqs [ i + 1 ] <- MyLogistic ( i , N = 10000 , s = s)
+	i <- i + 1 
+}
+det.freqs <- c ( rep ( f , nrow ( my.freqs) - length ( det.freqs ) ) , rev ( 1 - det.freqs ) )
+A <- length ( det.freqs ) - which.min ( abs ( det.freqs - 0.5 ) )
+B <- length ( det.freqs ) - which.min ( abs ( my.freqs[,1] - 0.5 ) )
+det.freqs <- c ( rep ( f , (A-B) ) , det.freqs [ - seq ( length ( det.freqs ) - (A-B) , length ( det.freqs ) ) ] )
+
+
+
+
+pdf ( "Paper/Paper_Figures/TrajectoryFigure.pdf" , width = 7 , height = 4 )
+matplot ( my.freqs [ 1000:3617 ,  ] , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
+lines ( det.freqs [ 1000:3617 ] , lwd = 1.7 )
+my.at <- seq ( 2617 , 0 , -500)
+axis ( 1 , at = my.at , labels = seq ( 0 , 2617 , 500) )
+dev.off()
+
+new.freqs <- matrix ( 0 , nrow = max ( my.freq.trajs [[ 2 ]] ) - my.freq.trajs [[ 2 ]] [ which ( my.freq.trajs [[ 1 ]] [ , ncol ( my.freq.trajs [[ 1 ]] ) ] != 0 ) ] + ncol ( my.freq.trajs [[ 1 ]] ) , ncol = nrow ( my.freq.trajs [[ 1 ]] ) )
+
+for ( i in 1 : nrow ( my.freq.trajs [[ 1 ]] ) ) {
+	temp <- c ( rep ( 1 , max ( my.freq.trajs [[ 2 ]] ) -  my.freq.trajs [[ 2 ]] [ i ] ) , my.freq.trajs [[ 1 ]] [ i , ]  )
+	if ( length ( temp ) > nrow ( new.freqs ) ) {
+		new.freqs [ , i ] <- rev ( temp [ 1 : nrow ( new.freqs ) ] )
+	 } else { 
+	 	new.freqs [ , i ] <- rev ( c ( temp , rep ( 0 , nrow ( new.freqs ) - length ( temp ) ) ) )
+	 }
+}
+
+matplot ( new.freqs , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
+lines ( det.freqs , lwd = 2 )
+
+
+
+
+
+
+
+
 ##################
 #### Pairwise pi ####
 ##################
@@ -126,59 +213,6 @@ dev.off()
 
 
 
-#################
-## extra functions ##
-#################
-
-
-# MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 )  )
-
-MyLogistic <- function ( x , N = 10000 , s  ) 1 / ( 5 * N * s ) * exp(s * x ) / ( 1 + 1 / ( 5 * N * s  ) * ( exp ( s * x )  - 1 )  )
-
-
-#################
-#################
-
-
-
-##### trajectories vs approx
-f <- 0.01
-s <- 0.01
-# my.freq.trajs <- SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
-# save ( my.freq.trajs , file = "Sims/10trajectoriesForTrajFigure.Robj")
-load ( file = "Sims/10trajectoriesForTrajFigure.Robj")
-freqs <- t ( my.freq.trajs[[1]] )
-freqs <- apply ( freqs , 2 , rev )
-
-i <- 1
-det.freqs <- 1 / ( 20000 * 0.01 )
-while ( det.freqs [ i ] < ( 1 - f ) ) {	
-	det.freqs [ i + 1 ] <- MyLogistic ( i , N = 10000 , s = s)
-	i <- i + 1 
-}
-det.freqs <- c ( rep ( f , nrow ( freqs) - length ( det.freqs ) ) , rev ( 1 - det.freqs ) )
-matplot ( freqs , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
-lines ( det.freqs , lwd = 2 )
-
-my.at <- length ( det.freqs ) - seq ( 0 , 3500 , 500)
-axis ( 1 , at = my.at , labels = seq ( 0 , 3500 , 500) )
-
-
-new.freqs <- matrix ( 0 , nrow = max ( my.freq.trajs [[ 2 ]] ) - my.freq.trajs [[ 2 ]] [ which ( my.freq.trajs [[ 1 ]] [ , ncol ( my.freq.trajs [[ 1 ]] ) ] != 0 ) ] + ncol ( my.freq.trajs [[ 1 ]] ) , ncol = nrow ( my.freq.trajs [[ 1 ]] ) )
-
-for ( i in 1 : nrow ( my.freq.trajs [[ 1 ]] ) ) {
-	temp <- c ( rep ( 1 , max ( my.freq.trajs [[ 2 ]] ) -  my.freq.trajs [[ 2 ]] [ i ] ) , my.freq.trajs [[ 1 ]] [ i , ]  )
-	if ( length ( temp ) > nrow ( new.freqs ) ) {
-		new.freqs [ , i ] <- rev ( temp [ 1 : nrow ( new.freqs ) ] )
-	 } else { 
-	 	new.freqs [ , i ] <- rev ( c ( temp , rep ( 0 , nrow ( new.freqs ) - length ( temp ) ) ) )
-	 }
-}
-
-matplot ( new.freqs , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
-lines ( det.freqs , lwd = 2 )
-
-
 
 ##### num haps
 # EwensHaps40Sim <- StructuredCoalescentSweep ( N = 10000 , s = 0.01 , dominance = FALSE , f = 0.025 , reps = 1000 , n.tips = 40 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = TRUE , display.rep.count = TRUE ,  time.factor = 2 )
@@ -213,6 +247,7 @@ source (  "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Scripts/freq_spe
 library ( RColorBrewer)
 
 
+if ( FALSE ) {
 
 
 ### without sweep portion
@@ -255,6 +290,12 @@ for ( i in seq_along ( my.rs ) ) {
 }
 save ( f07.specs.range.nosweep , file = "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07nosweepN10000n10.Robj")
 
+}
+
+load ( "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef02nosweepN10000n10.Robj" )
+load ( "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef05nosweepN10000n10.Robj" )
+load ( "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef07nosweepN10000n10.Robj" )
+
 load ( "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Sims/sim.freq.spec.list.stoch.freq.nosweep.condloss.Rdata" )
 # sims.f005.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[1]] , function ( x ) x [[5]]) ) [ , 1:9 ]
 sims.f01.freq.spec <- do.call ( rbind , lapply ( sim.freq.spec.list[[1]] , function ( x ) x [[5]]) ) [ , 1:9 ]
@@ -294,28 +335,6 @@ my.specs.f07.nosweep.adj <- do.call ( rbind , lapply ( f07.specs.range.nosweep ,
 my.specs.f02.nosweep.relative.adj <- t ( apply ( my.specs.f02.nosweep.adj , 1 , function ( x )  x / neutral ) )
 my.specs.f05.nosweep.relative.adj <- t ( apply ( my.specs.f05.nosweep.adj , 1 , function ( x )  x / neutral ) )
 my.specs.f07.nosweep.relative.adj <- t ( apply ( my.specs.f07.nosweep.adj , 1 , function ( x )  x / neutral ) )
-
-
-
-
-pdf ( "Figures/freq.spec.nosweep.logfold.threepanel.020507.pdf" , height = 5 , width = 16)
-par ( mfrow = c ( 1, 3 ) )
-matplot ( my.rs/2 , log ( my.specs.f02.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -0.8 , 2 ))
-matplot ( sim.rs , log ( sims.f02.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
-mtext ( "f = 0.02" , side = 3 )
-
-
-matplot ( my.rs/2 , log ( my.specs.f05.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n" , ylim = c ( -0.8 , 2 ))
-matplot ( sim.rs , log ( sims.f05.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
-mtext ( "f = 0.05" , side = 3 )
-
-
-matplot ( my.rs/2 , log ( my.specs.f07.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n" , ylim = c ( -0.8 , 2 ))
-matplot ( sim.rs , log ( sims.f07.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
-mtext ( "f = 0.07" , side = 3 )
-dev.off()
-
-
 
 
 
@@ -394,7 +413,7 @@ sims.f07.freq.spec.w.sweep.relative <- t ( apply ( sims.f07.freq.spec.w.sweep , 
 
 
 # six panel theory and sims
-pdf ( "Paper/Paper_Figures/freq.spec.nosweep.logfold.sixpanel.020507.pdf" , height = 10 , width = 16)
+pdf ( "Paper/Paper_Figures/freq_spec_nosweep_logfold_sixpanel_020507.pdf" , height = 10 , width = 16)
 par ( mfrow = c ( 2, 3 ) )
 matplot ( my.rs/2 , log ( my.specs.f02.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -0.8 , 2 ))
 matplot ( sim.rs , log ( sims.f02.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
@@ -413,16 +432,16 @@ mtext ( "f = 0.07" , side = 3 )
 
 
 
-matplot ( my.rs/2 , log ( my.specs.f02.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -2 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f02.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 matplot ( sim.rs , log ( sims.f02.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 
 
-matplot ( my.rs/2 , log ( my.specs.f05.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -2 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f05.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 matplot ( sim.rs , log ( sims.f05.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 
-matplot ( my.rs/2 , log ( my.specs.f07.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -2 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f07.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 matplot ( sim.rs , log ( sims.f07.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 dev.off()
@@ -432,7 +451,7 @@ dev.off()
 
 
 
-pdf ( "Paper/Paper_Figures/freq.spec.nosweep.logfold.sixpanel.020507.theory.only.pdf" , height = 10 , width = 16)
+pdf ( "Paper/Paper_Figures/freq_spec_nosweep_logfold_sixpanel_020507_theory_only.pdf" , height = 10 , width = 16)
 par ( mfrow = c ( 2, 3 ) )
 matplot ( my.rs/2 , log ( my.specs.f02.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -0.8 , 2 ))
 #matplot ( sim.rs , log ( sims.f02.freq.spec.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
@@ -451,16 +470,16 @@ mtext ( "f = 0.07" , side = 3 )
 
 
 
-matplot ( my.rs/2 , log ( my.specs.f02.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -4 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f02.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 #matplot ( sim.rs , log ( sims.f02.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 
 
-matplot ( my.rs/2 , log ( my.specs.f05.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -4 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f05.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 #matplot ( sim.rs , log ( sims.f05.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 
-matplot ( my.rs/2 , log ( my.specs.f07.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -4 , 2 ))
+matplot ( my.rs/2 , log ( my.specs.f07.w.sweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -1.3 , 2.4 ))
 #matplot ( sim.rs , log ( sims.f07.freq.spec.w.sweep.relative , 2 ) , type = "p" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , add = T )
 #mtext ( "f = 0.02" , side = 3 )
 dev.off()
@@ -468,7 +487,7 @@ dev.off()
 
 
 
-pdf ( "Paper/Paper_Figures/freq.spec.nosweep.logfold.sixpanel.020507.sims.only.pdf" , height = 10 , width = 16)
+pdf ( "Paper/Paper_Figures/freq_spec_nosweep_logfold_sixpanel_020507_sims_only.pdf" , height = 10 , width = 16)
 par ( mfrow = c ( 2, 3 ) )
 #matplot ( my.rs/2 , log ( my.specs.f02.nosweep.relative.adj , 2 )  , type = "l"  , lty = 1 , col = brewer.pal ( 9 , "Set1" ) , ylab = expression ( paste ( log[2] , "(Deviation from Neutral)" , sep = " " ) ) , xlab = "Genetic Distance" , bty = "n"  , ylim = c ( -0.8 , 2 ))
 matplot ( sim.rs , log ( sims.f02.freq.spec.relative , 2 ) , type = "b" , pch = 20 , col = brewer.pal ( 9 , "Set1" ) , ylim = c ( -0.8 , 2 ) , lty = 1 , lwd = 0.7 )
@@ -502,6 +521,83 @@ matplot ( sim.rs , log ( sims.f07.freq.spec.w.sweep.relative , 2 ) , type = "b" 
 dev.off()
 
 
+
+
+
+
+
+##### haplotype spectrum
+
+source (  "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Scripts/HapFreqSpecs.R")
+
+load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
+load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
+load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
+soft.sweep <- blah
+load ( "Sims/HapSims/neutral.n100.Robj" )
+## neutral <- Reduce ( "+" , blah ) / length ( blah)
+soft.haps <- HapFreqs ( soft.sweep )
+standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
+hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
+neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
+
+
+
+
+pdf ( "Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
+par ( mfrow = c ( 3,2))
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = expression ( h[i]))
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = expression ( h[i]))
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = expression ( h[i]))
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = expression ( h[i]))
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab = expression ( h[i]))
+axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+dev.off()
 
 
 
