@@ -351,7 +351,7 @@ for ( i in seq_along ( my.rs ) ) {
 	f02.specs.range.w.sweep [[ i ]] <- expected.freq.times.standing.w.sweep ( nsam = 10 , N = 10000 , r = my.rs [ i ] , f = 0.02 , s = 0.05 ,  my.StirlingNumbers = stirlings )
 	message ( i )
 }
-save ( f02.specs.range.w.sweep , file = "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef02wsweepN10000n10.Robj")
+save ( f02.specs.range.w.sweep , file = "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Paper/Paper_Figures/Data_and_Robjs/f.specs.rangef02wsweepN10000n10.Robj" )
 
 
 
@@ -544,7 +544,7 @@ neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
 
 
-pdf ( "Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
+pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
 par ( mfrow = c ( 3,2))
 image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
@@ -605,9 +605,42 @@ dev.off()
 
 
 
+###################
+#### Supplement ####
+###################
+
+
+### effective s
+N <- 10000
+my.r <- seq ( 10^-8 , 0.005 , by = 10^-6)
+my.fs <- c ( 0.005 , 0.01 , 0.02 , 0.03 , 0.04 , 0.05 )
+s <- 0.01
+
+pi.reductions <- list()
+pi.reductions.approx <- list()
+eff.s <- sapply ( my.fs , function ( x ) EffectiveS ( N = N , s = s , x ) )
+for ( i in 1 : length ( my.fs ) ) {
+	
+	pi.reductions [[ i ]] <- 1 - exp ( - my.r * log ( 1/ my.fs [ i ] ) / s ) / ( 1 + 4 * N * my.r * my.fs [ i ] * ( 1 - my.fs [ i ] ) )
+	pi.reductions.approx [[ i ]] <- 1 - exp ( - my.r * log ( 2 * N * eff.s [ i ] ) / eff.s [ i ] )
+
+}
+
+
+
+plot ( my.r , pi.reductions [[ 1 ]] , type = "l" , lwd = 2 )
+lines ( my.r , pi.reductions.approx [[ 1 ]] , col = "red" , lty = 5 )
+
+lines ( my.r , pi.reductions [[ 2 ]] , type = "l" , lwd = 2 )
+lines ( my.r , pi.reductions.approx [[ 2 ]] , type = "l" , col = "red" , lty = 2 )
+
+
+lines ( my.r , pi.reductions [[ 3 ]] , type = "l" , lwd = 2 )
+lines ( my.r , pi.reductions.approx [[ 3 ]] , type = "l" , col = "red" , lty = 2 )
+
+
 
 ##### coal events before reach standing phase
-
 temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 10000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
 probs <- colSums ( temp$coal.times-temp$sweep.start<0 )/10000
 

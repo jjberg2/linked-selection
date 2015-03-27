@@ -101,10 +101,7 @@ P_{NR} = \prod_{t=0}^{\tau_{f}} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \i
 \end{equation}
 for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau_{f}}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep from frequency $f$ can be written simply as $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If the effect of our beneficial allele on relative fitness is strictly additive, such that heterozygotes enjoy a selective advantage of $s/2$ and homozygotes an advantage of $s$, then the trajectory of the beneficial allele through the population can be approximated deterministically by the logistic function, such that 
 \begin{equation}
-	\begin{aligned}
-		\mathcal{T}_{\left(s,f\right)} 	&= \frac{ln\left(\frac{N_e - 1}{f}-N_e + 1\right)}{s} \\
-								& \approx ln\left(\frac{N_e}{f}\right) \frac{1}{s}
-	\end{aligned}
+		\mathcal{T}_{\left(s,f\right)} \approx ln\left(\frac{1}{f}\right) \frac{1}{s}
 \end{equation}
 
 We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage either recombines off the beneficial background, or fails to do so, independently of all other lineages. The probability that $i$ out of $n$ lineages fail to escape off the sweeping background is then
@@ -190,7 +187,7 @@ and the expected number of segregating sites can be found by multiplying this qu
 \end{equation}
 Given the exponential form of $P_{NR}$, and the fact that $\frac{1}{1+R_f}$ can be approximated as $e^{-R_f}$ for small values of $R_f$, one can show that the reduction in diversity of a sweep starting from a frequency $f$ and with selection coefficient $s$ is approximately equivalent to a classic hard sweep with a selection coefficient
 \begin{equation}
-	\hat{s} = s \frac{W\left(\frac{4N_e sf^2 - 4N_e s f + ln\left( f \right) - ln \left( 2 N_e \right)}{2Ns}\right)}{4N_e s f^2 - 4N_e sf + ln\left(f\right) - ln\left(2N_e\right)}
+	\hat{s} = \frac{exp^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right) } }{2N_e}
 \end{equation}
 where $W\left(z\right)$ is Lambert's W function and the expression for the reduction in diversity under a classic hard sweep is
 \begin{equation}
