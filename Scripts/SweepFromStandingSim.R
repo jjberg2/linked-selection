@@ -871,6 +871,14 @@ MakeHapsPretty <- function ( seqs ) {
 }
 
 
+EffectiveS <- function ( N , s , f ) {
+	
+	exp ( - lambertW_base ( ( 4*N*s*f^2 - 4*N*s*f - log ( 1/f ) ) / ( 2*N * s ) ) ) / (2 * N) 
+	
+}
+
+
+
 if(FALSE){
 fs <- c ( 1/20000  , 0.01 , 0.05 , 0.1 )
 ss <- c ( 0.001 , 0.01 , 0.05 )

@@ -101,10 +101,7 @@ P_{NR} = \prod_{t=0}^{\tau_{f}} 1-r\left(1-X(t)\right)  \approx \exp \left(-r \i
 \end{equation}
 for $r \ll 1$. We set  $\mathcal{T}_{\left(s,f\right)} = \int_0^{\tau_{f}}(1-X\left(t\right))\mathrm{d}t$, so that the probability that a lineage manages to recombine off the selected background during the course of the sweep from frequency $f$ can be written simply as $e^{-r\mathcal{T}_{\left(s,f\right)}}$. If the effect of our beneficial allele on relative fitness is strictly additive, such that heterozygotes enjoy a selective advantage of $s/2$ and homozygotes an advantage of $s$, then the trajectory of the beneficial allele through the population can be approximated deterministically by the logistic function, such that 
 \begin{equation}
-	\begin{aligned}
-		\mathcal{T}_{\left(s,f\right)} 	&= \frac{ln\left(\frac{N_e - 1}{f}-N_e + 1\right)}{s} \\
-								& \approx ln\left(\frac{N_e}{f}\right) \frac{1}{s}
-	\end{aligned}
+		\mathcal{T}_{\left(s,f\right)} \approx ln\left(\frac{1}{f}\right) \frac{1}{s}
 \end{equation}
 
 We assume that the sweep occurs fast enough that the probability of coalescence during the sweep is essentially zero. Therefore, each lineage either recombines off the beneficial background, or fails to do so, independently of all other lineages. The probability that $i$ out of $n$ lineages fail to escape off the sweeping background is then
@@ -190,12 +187,13 @@ and the expected number of segregating sites can be found by multiplying this qu
 \end{equation}
 Given the exponential form of $P_{NR}$, and the fact that $\frac{1}{1+R_f}$ can be approximated as $e^{-R_f}$ for small values of $R_f$, one can show that the reduction in diversity of a sweep starting from a frequency $f$ and with selection coefficient $s$ is approximately equivalent to a classic hard sweep with a selection coefficient
 \begin{equation}
-	\hat{s} = s \frac{W\left(\frac{4N_e sf^2 - 4N_e s f + ln\left( f \right) - ln \left( 2 N_e \right)}{2Ns}\right)}{4N_e s f^2 - 4N_e sf + ln\left(f\right) - ln\left(2N_e\right)}
+	\hat{s} = \frac{exp^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right) } }{2N_e}
 \end{equation}
 where $W\left(z\right)$ is Lambert's W function and the expression for the reduction in diversity under a classic hard sweep is
 \begin{equation}
-	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1- e^{-\frac{r}{\hat{s}}ln\left(2N_e \hat{s}\right)} \right).
+	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1- e^{-\frac{r}{\hat{s}}ln\left(2N_e \hat{s}\right)} \right)
 \end{equation}
+\citep{Pennings2006} \jb{a little bit weird trying to figure out who to cite here actually; Pennings and Hermisson claim this result ``coincides with that of Etheridge et al and Neilsen et al'', but as far as I can tell, Neilsen use $ln(2N)/s$, and while presumably this result emerges from somewhere in Etheridge's paper, I haven't actually found it yet; also having a little weirdness trying to implement this; maybe get's saved for resubmit if causes problems}.
 
 \paragraph{The Frequency Spectrum} We can also use our approximation to obtain an expression for the full frequency spectrum at sites surrounding a sweep from standing variation. To break the problem into approachable components, we first consider the frequency spectrum of an allele that is polymorphic within the set of lineages which do not recombine during the sweep (ignoring it's frequency in the sweep phase recombinants), and we condition on a fixed number $k$ recombinant families from the standing phase. Borrowing from \cite{Pennings2006} (equation 14 of their paper), if we condition on $j$ out of these $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $i$ sampled lineages carry the derived allele by summing over all possible partitions of the $i$ lineages into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day
 \begin{equation}
