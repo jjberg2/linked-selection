@@ -8,9 +8,6 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 	#options ( error = recover )
 	
 	
-	
-	
-	
 	if ( constant.freq == FALSE ) {
 	
 		temp <- SweepFromStandingSim ( N = N , s = s , h = h , dominance = dominance , f = f , time.factor = time.factor , reps = reps , no.sweep = no.sweep, cond.on.loss=cond.on.loss , cond.on.fix = cond.on.fix , display.rep.count )
@@ -89,7 +86,8 @@ StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps
 		hap.dist <- NULL
 		standing.hap.dist <- NULL
 	}
-	return ( list ( coal.times = coal.times , new.freqs = new.freqs , sweep.start = sweep.start , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , standing.hap.dist = standing.hap.dist , T.total = T.total , sim.distance.bp = sim.distance/r) )
+	return ( list ( coal.times = coal.times , new.freqs = new.freqs , sweep.start = sweep.start , mean.coalescence.times = mean.coalescence.times , sd.coalescence.times = sd.coalescence.times , trees = trees , hap.dist = hap.dist , standing.hap.dist = standing.hap.dist , T.total = T.total , sim.distance.bp = sim.distance/r ) )
+
 }
 
 s_of_u <- function ( u ) {
@@ -106,7 +104,6 @@ s_of_u <- function ( u ) {
 
 SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no.sweep, cond.on.loss , cond.on.fix , display.rep.count , time.factor = 1  ) {
 	#options ( error = recover )
-	#recover()
 	delta.T <- 1 / ( time.factor * 2 * N )
 	sweep.freq.matrix <- list ( rep ( f , reps ) )
 	neutral.freq.matrix <- list ( rep ( f , reps ) )
@@ -226,6 +223,7 @@ SweepFromStandingSim <- function ( N , s , h , dominance = FALSE , f , reps , no
 		}
 		return ( list ( freq.trajectories , sweep.start ) )		
 	} else {
+		
 		return ( list ( neutral.freq.matrix , sweep.start = 0 ) )
 	}
 }
@@ -878,6 +876,12 @@ EffectiveS <- function ( N , s , f ) {
 }
 
 
+EffectiveS2 <- function ( N , s , f ) {
+	
+	s*log ( 2*N ) / ( log ( 1 / f ) - 4 * ( f - 1 ) *f * N * s )
+	
+}
+
 
 if(FALSE){
 fs <- c ( 1/20000  , 0.01 , 0.05 , 0.1 )
@@ -941,41 +945,3 @@ if ( FALSE) SequenceIBDPlots ( temp$trees[[1]] )
 par ( mfrow = c ( 3 ,2 ) )
 for ( i in 1 : 6 ) SequenceIBDPlots ( temp$trees[[i]] )
 
-
-s.vect <- c ( 0.0001 , 0.001 , seq ( 0.01 , 0.2 , by = 0.003 ) )
-f.vect <- seq ( 1/20000 , 0.05 , 1e-4 )
-fs.grid <- expand.grid ( s.vect , f.vect )
-for ( i in 1 : length ( coal.times ) ) {
-	log.likes[[i]] <- lapply ( 1:nrow(coal.times[[i]]) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( coal.times[[i]] [ y , ] , x , 20000 ) ) )
-	print ( i )
-}
-#log.likes <- lapply ( coal.times , function ( z ) lapply ( 1:nrow(z) , function ( y ) apply ( fs.grid , 1 , function ( x ) LikelihoodFunction ( z [ y , ] , x , 20000 ) ) )  )
-temp <- lapply ( log.likes , function ( x ) x [ 1:2 , which.max ( x [3,] ) ] )
-max.like <- do.call ( rbind , temp )
-my.means <- colMeans ( max.like )
-margin.s <- lapply ( log.likes , function ( x )  tapply ( exp(t ( x ) [,3]), t ( x ) [,1],mean))
-margin.f <- lapply ( log.likes , function ( x )  tapply ( exp(t ( x ) [,3]), t ( x ) [,2],mean))
-hist ( f.vect [unlist ( lapply ( margin.f , which.max)) ],breaks = 50)
-hist ( s.vect [unlist ( lapply ( margin.s , which.max)) ],breaks = 50)
-
-
-LikelihoodFunction ( my.times , c ( 0.05, 0.05) , 20000 )
-plot ( NA , xlim = c ( 0,0.2),ylim = c ( 0, 0.05),type ="n",bty="n")
-lapply ( 1:200 , function ( x ) points ( temp[[x]][1] , temp[[x]][2] , cex=0.7,pch=20))
-points (my.means[1] , my.means[2] , pch = 3 , col = "red" )
-
-InferenceFunction <- function ( coal.times ) {
-		
-	recover()	
-	
-}
-}
-# InferenceFunction ( seqs = my.seqs )
-
-# i = 1
-# par(mfrow=c(2,1))
-# plot ( temp$trees[[i]]$freqs , type = "l" , xlim = c ( length ( temp$trees[[i]][[3]] ) - max ( temp$trees[[i]][[2]] ) , length ( temp$trees[[i]][[3]] ) ) )
-# plot ( temp$trees[[i]][[1]] , x.lim = c ( 0 , max ( temp$trees[[i]][[2]] ) ) )
-# temp$trees[[i]][[5]]; i = i + 1
-
-# }

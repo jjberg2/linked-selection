@@ -183,11 +183,13 @@ Allowing for all possible numbers of singleton recombinants during the sweep pha
 (note that we have taken $p_{ESF}\left(0 \mid R_f,0\right)=1$, and $p_{ESF}\left(0 \mid R_f,i\right)=0\ \forall\ i > 0$; whereas it is typically impossible to obtain a sample with zero alleles, in our case we must define these probabilities to accommodate the case in which all $n$ lineages recombine out during the sweep phase)
 and the expected number of segregating sites can be found by multiplying this quantity by the mutation rate. For a sample of $n = 2$, this simplifies considerably, and we can obtain a simple expression for the expected reduction in pairwise diversity relative to the neutral expectation as
 \begin{equation}
-	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1-\frac{1}{1 + R_f} P_{NR}^2  \right)
+	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1-\frac{1}{1 + R_f} P_{NR}^2  \right) \label{pi_reduc}
 \end{equation}
-Given the exponential form of $P_{NR}$, and the fact that $\frac{1}{1+R_f}$ can be approximated as $e^{-R_f}$ for small values of $R_f$, one can show that the reduction in diversity of a sweep starting from a frequency $f$ and with selection coefficient $s$ is approximately equivalent to a classic hard sweep with a selection coefficient
+Given the exponential form of $P_{NR}$, and the fact that $\frac{1}{1+R_f}$ can be approximated as $e^{-R_f}$ for small values of $R_f$, we can further approximate \eqref{pi_reduc} as $1- e^{-r\bigl(\frac{log\left(\frac{1}{f}\right)}{s} + 4Nf(1-f)\bigr)}$. Recalling that the reduction in diversity for a classic hard sweep with strong selection can be approximated as $1- e^{-r\bigl(\frac{log\left(2N_e \hat{s}\right)}{\hat{s}}\bigr)}$, it is tempting to suppose that there may exist a choice of $\hat{s}$
+
+one can show that the reduction in diversity of a sweep starting from a frequency $f$ and with selection coefficient $s$ is approximately equivalent to a classic hard sweep with a selection coefficient
 \begin{equation}
-	\hat{s} = \frac{exp^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right) } }{2N_e}
+	\hat{s} = \frac{1}{2N_e} e^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right)}
 \end{equation}
 where $W\left(z\right)$ is Lambert's W function and the expression for the reduction in diversity under a classic hard sweep is
 \begin{equation}
