@@ -194,8 +194,9 @@ Given the exponential form of $P_{NR}$, and the fact that $\frac{1}{1+R_f}$ can 
 \end{equation}
 where $W\left(z\right)$ is Lambert's W function and the expression for the reduction in diversity under a classic hard sweep is
 \begin{equation}
-	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1- e^{-\frac{r}{\hat{s}}ln\left(2N_e \hat{s}\right)} \right).
+	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1- e^{-\frac{r}{\hat{s}}ln\left(2N_e \hat{s}\right)} \right)
 \end{equation}
+\citep{Pennings2006} \jb{a little bit weird trying to figure out who to cite here actually; Pennings and Hermisson claim this result ``coincides with that of Etheridge et al and Neilsen et al'', but as far as I can tell, Neilsen use $ln(2N)/s$, and while presumably this result emerges from somewhere in Etheridge's paper, I haven't actually found it yet; also having a little weirdness trying to implement this; maybe get's saved for resubmit if causes problems}.
 
 \paragraph{The Frequency Spectrum} We can also use our approximation to obtain an expression for the full frequency spectrum at sites surrounding a sweep from standing variation. To break the problem into approachable components, we first consider the frequency spectrum of an allele that is polymorphic within the set of lineages which do not recombine during the sweep (ignoring it's frequency in the sweep phase recombinants), and we condition on a fixed number $k$ recombinant families from the standing phase. Borrowing from \cite{Pennings2006} (equation 14 of their paper), if we condition on $j$ out of these $k$ recombinant lineages carrying a derived allele, then we can obtain the probability that $l$ of the $i$ sampled lineages carry the derived allele by summing over all possible partitions of the $i$ lineages into $k$ families such that the $j$ recombinant ancestors carrying the derived mutation have exactly $l$ descendants in the present day
 \begin{equation}
