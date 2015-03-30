@@ -1,4 +1,4 @@
-setwd("~/Documents/Academics/StandingSweeps")
+setwd(directory)
 source ( "Scripts/SweepFromStandingSim.R")
 
 
@@ -537,5 +537,4 @@ save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.s01.Ro
 
 
 }
-
 
