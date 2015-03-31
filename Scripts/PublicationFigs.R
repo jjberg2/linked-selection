@@ -543,6 +543,7 @@ standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
 hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
 neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
+library("colorRamps")
 coop.cols<-matlab.like(201)
  ramp1<-coop.cols[102:201]
  ramp2<- coop.cols[1:100] #rev(coop.cols[1:100]) 
