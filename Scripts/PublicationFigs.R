@@ -527,8 +527,10 @@ dev.off()
 
 
 ##### haplotype spectrum
+directory="~/Documents/Academics/StandingSweeps"
+# directory="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/"
 
-source (  "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Scripts/HapFreqSpecs.R")
+source (  paste(directory,"/Scripts/HapFreqSpecs.R",sep=""))
 
 load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
@@ -541,63 +543,137 @@ standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
 hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
 neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
-
-
-
+coop.cols<-matlab.like(201)
+ ramp1<-coop.cols[102:201]
+ ramp2<- coop.cols[1:100] #rev(coop.cols[1:100]) 
+ bland<-coop.cols[101]
+ 
+ 
+upper.breaks <- c(2^(seq(log2(1.05),log2(5),length=100)),10^6)  #seq ( 1.05 , 2 ,length.out = 101)
+lower.breaks<- c(0,2^seq(log2(1/5),log2(1/1.05),length=100))   # seq ( 0 , 0.95 ,length.out = 101)  
+ 
 pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
-par ( mfrow = c ( 3,2))
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
+
+layout(matrix( c(1,1,2,3,4,5,6,7) , nrow=4,ncol=2,byrow=TRUE), heights=c(0.5,3,3,3))  
+
+my.z<-c(lower.breaks,1,upper.breaks )
+
+par(mar=c(2,10,1,10))
+image(x= c(.00001,(my.z[-1])), z=cbind(my.z,my.z),col=c(ramp2,bland,bland,ramp1),breaks=c(lower.breaks,1,upper.breaks) ,xlim=(c(.2,5)),log="x",axes=FALSE)
+axis(side=1)
+
+#par ( mfrow = c ( 3,2))
+par(mar=c(3,3.5,1.5,1.2))
+
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( bland , bland ) , breaks = seq ( 1/1.05 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+#mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
 mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = ramp1 , breaks = upper.breaks , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = ramp2 , breaks = lower.breaks, add = T )
 
 
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = expression ( h[i]))
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1/1.05, 1.05 ,length.out=2), col = bland , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = "")
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+#mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+#mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = upper.breaks, col = ramp1,add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = lower.breaks, col = ramp2, add =T )
 
 
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = expression ( h[i]))
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( bland , bland ) , breaks = seq ( 1/1.05 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = "")
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+#mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
 mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = ramp1 , breaks = upper.breaks , add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = ramp2 , breaks =lower.breaks , add = T )
 
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = expression ( h[i]))
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1/1.05, 1.05 ,length.out=2), col = bland , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = "")
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+#mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+#mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = upper.breaks, col = ramp1,add = T )
+image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = lower.breaks, col = ramp2, add =T )
 
 
-
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = expression ( h[i]))
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( bland , bland ) , breaks = seq ( 1/1.05 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = "")
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( "Window Size (cM)" , side = 1 , line = 2 , cex = 0.8)
 mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = ramp1 , breaks = upper.breaks , add = T )
+image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = ramp2 , breaks = lower.breaks, add = T )
 
-image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab = expression ( h[i]))
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1/1.05, 1.05 ,length.out=2), col = bland , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab ="")
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+mtext ( "Window Size (cM)" , side = 1 , line = 2 , cex = 0.8)
+#mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = upper.breaks, col = ramp1,add = T )
+image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = lower.breaks, col = ramp2, add =T )
 dev.off()
+
+
+
+
+# pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
+# par ( mfrow = c ( 3,2))
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = expression ( h[i]))
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = expression ( h[i]))
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = expression ( h[i]))
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+
+
+
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = expression ( h[i]))
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
+# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
+
+# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab = expression ( h[i]))
+# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
+# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
+# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
+# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
+# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
+# dev.off()
 
 
 
