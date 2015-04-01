@@ -883,6 +883,16 @@ EffectiveS2 <- function ( N , s , f ) {
 }
 
 
+GetTermInExp <- function ( sims ) {
+	recover ( )
+	sims
+	
+	
+	
+}
+
+
+
 if(FALSE){
 fs <- c ( 1/20000  , 0.01 , 0.05 , 0.1 )
 ss <- c ( 0.001 , 0.01 , 0.05 )
@@ -941,7 +951,21 @@ SequenceIBDPlots <- function ( trees ) {
 	abline ( v = 0 )
 }
 
-if ( FALSE) SequenceIBDPlots ( temp$trees[[1]] )
-par ( mfrow = c ( 3 ,2 ) )
-for ( i in 1 : 6 ) SequenceIBDPlots ( temp$trees[[i]] )
+
+my.s <- 1:20 / 10000
+my.sims <- list ()
+for ( i in 1:length ( my.s ) ) {
+	my.sims [[ i ]] <- StructuredCoalescentSweep ( N = 10000 , s = my.s [ i ] , dominance = FALSE , f = 1/20000 , reps = 1000 , n.tips = 2 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
+	message ( i )
+
+}
+save ( my.sims  , file = "Sims/hard.sweep.equiv.sims.Robj" )
+
+GetTermInExp ( my.sims [[ 1 ]] )
+
+
+}
+
+
+
 
