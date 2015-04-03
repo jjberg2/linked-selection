@@ -1,5 +1,6 @@
 ##install.packages("randtoolbox")
 ##install.packages("ape")
+setwd ( "~/Documents/Academics/StandingSweeps/" )
 library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
@@ -884,11 +885,15 @@ EffectiveS2 <- function ( N , s , f ) {
 
 
 GetTermInExp <- function ( sims ) {
-	recover ( )
-	sims
-	
-	
-	
+
+	my.exp <- numeric ()
+	for ( i in 1 : nrow ( sims$coal.times ) ) {
+		
+		my.exp [ i ] <- 2*sum ( 1-sims$new.freqs [ 1 , 1 : sims$coal.times [ i , ] ] )
+		
+	}
+	mean ( my.exp )
+		
 }
 
 
@@ -951,21 +956,21 @@ SequenceIBDPlots <- function ( trees ) {
 	abline ( v = 0 )
 }
 
+}
 
+setwd ( "~/Documents/Academics/StandingSweeps/" )
 my.s <- 1:20 / 10000
 my.sims <- list ()
+term.in.exp <- list()
 for ( i in 1:length ( my.s ) ) {
-	my.sims [[ i ]] <- StructuredCoalescentSweep ( N = 10000 , s = my.s [ i ] , dominance = FALSE , f = 1/20000 , reps = 1000 , n.tips = 2 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
-	message ( i )
-
+	term.in.exp [[ i ]] <- numeric(20)
+	for ( j in 1 : 20 ) {	
+		my.sims <- StructuredCoalescentSweep ( N = 10000 , s = my.s [ i ] , dominance = FALSE , f = 1/20000 , reps = 1000 , n.tips = 2 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
+		term.in.exp [[ i ]] [ j ] <- GetTermInExp ( my.sims )
+		rm ( my.sims )
+		gc ( )
+		message ( i )
+		message ( j )
+	}
 }
-save ( my.sims  , file = "Sims/hard.sweep.equiv.sims.Robj" )
-
-GetTermInExp ( my.sims [[ 1 ]] )
-
-
-}
-
-
-
-
+save ( term.in.exp , "Sims/term.in.exp.Robj")
