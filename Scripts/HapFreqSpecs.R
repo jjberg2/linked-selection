@@ -1,4 +1,4 @@
-setwd(directory)
+setwd("~/Documents/Academics/StandingSweeps")
 source ( "Scripts/SweepFromStandingSim.R")
 
 
@@ -244,13 +244,25 @@ TwoSideCountHaps <- function ( these.seqs , len.bp , hap.count.interval ) {
 
 HapFreqs <- function ( hap.counts ) {
 	
+	#recover ( )
 	sum.counts <- Reduce ( "+" , hap.counts )
 	expect.freqs <- sum.counts / length ( hap.counts )
 	exist.counts <- Reduce ( "+" , lapply ( hap.counts , function ( x ) x > 0 ) )
+	hap.numbers <- lapply ( hap.counts , function ( x ) apply ( x , 2 , function ( y ) sum ( sum ( y > 0 ) ) ) )
+	hap.numbers.mat <- matrix ( 0 , nrow = nrow ( hap.counts [[ 1 ]] ) , ncol = ncol ( hap.counts [[ 2 ]] ) )
+	for ( i in 1 : length ( hap.numbers ) ) {
+		
+		for ( j in 1 : nrow ( hap.counts [[ 1 ]] ) ) {
+			
+			hap.numbers.mat [ hap.numbers [[ i ]] [ j ] , j ] <- hap.numbers.mat [ hap.numbers [[ i ]] [ j ] , j ] + 1
+			
+		}
+		
+	}
 	expect.freqs.cond.exist <- sum.counts / exist.counts
 	prob.exist <- exist.counts / length ( hap.counts )
-	
-	return ( list ( expect.freqs , expect.freqs.cond.exist , prob.exist ) )
+	hap.numbers.mat <- hap.numbers.mat / length ( hap.numbers )
+	return ( list ( expect.freqs , expect.freqs.cond.exist , prob.exist , hap.numbers.mat ) )
 	
 }
 
@@ -338,7 +350,7 @@ load ( "Sims/HapSims/neutral.n100.Robj" )
 ## neutral <- Reduce ( "+" , blah ) / length ( blah)
 soft.haps <- HapFreqs ( soft.sweep )
 standing.haps <- HapFreqs ( standing.sweep [[ 2 ]] )
-hard.haps <- HapFreqs ( hard.sweep.n100.N10000.s01 [[ 2 ]] )
+hard.haps <- HapFreqs ( hard.sweep [[ 2 ]] )
 neutral.haps <- HapFreqs ( neutral [[ 2 ]] )
 
 
@@ -537,4 +549,5 @@ save ( standing.sweep , file = "Sims/HapSims/both.sides.standing.n100.f05.s01.Ro
 
 
 }
+
 
