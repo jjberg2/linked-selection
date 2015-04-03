@@ -247,7 +247,7 @@ source (  "/Users/JeremyBerg/Documents/Academics/StandingSweeps/Scripts/freq_spe
 library ( RColorBrewer)
 
 
-if ( FALSE ) {
+if ( TRUE ) {
 
 
 ### without sweep portion
@@ -531,7 +531,6 @@ directory="~/Documents/Academics/StandingSweeps"
 # directory="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/"
 
 source (  paste(directory,"/Scripts/HapFreqSpecs.R",sep=""))
-
 load ( "Sims/HapSims/one.side.hard.n100.denovo.s01.Robj" )
 load ( "Sims/HapSims/one.side.standing.n100.f05.s01.Robj" )
 load ( "Sims/HapSims/one.side.soft.n100.k3.s01.Robj" )
@@ -620,6 +619,7 @@ dev.off()
 
 
 
+pdf ( "Paper/Paper_Figures/HapFreqsExistProb.pdf" , height = 5 , width = 7.874 )
 upper.breaks <- c( 2^( seq ( log2 ( 1.05 ) , log2 ( 5 ) , length = 100 ) ),10^6 )
 lower.breaks <- c(0,2^seq(log2(0.2),log2(1/1.05),length=100))   # seq ( 0 , 0.95 ,length.out = 101)  
 my.z<-c(lower.breaks,1,upper.breaks )
@@ -638,7 +638,7 @@ axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 
 #mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
 mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
 
-image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" ) 
+image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neutral ) , yaxt = "n" , ylab = "" ) 
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
 dev.off()
