@@ -972,5 +972,5 @@ for ( i in 1:length ( my.s ) ) {
 		message ( i )
 		message ( j )
 	}
+	save ( term.in.exp , file = "Sims/term.in.exp.Robj")
 }
-save ( term.in.exp , "Sims/term.in.exp.Robj")

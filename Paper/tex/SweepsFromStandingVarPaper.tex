@@ -341,8 +341,8 @@ We can make an improvement upon equation \eqref{rearrange-anc-freq-spec} in a si
 \begin{equation}
 	q_{new}(l \mid k, i, n) =
 	\begin{cases} 
-		\theta f + \mu n\tau_f, 	& \text{if } i = n, k = 1, l=1 \\
-		\mu i\tau_f,			& \text{if } i < n, k = 1, l =1 \\
+		\theta f + \mu n\frac{\tau_f}{2}, 	& \text{if } i = n, k = 1, l=1 \\
+		\mu i\frac{\tau_f}{2},			& \text{if } i < n, k = 1, l =1 \\
 		\frac{\theta f}{l},		& \text{if } i = n, k = 1, l > 1\\
 		0, 				& \text{otherwise}.
 	\end{cases}
@@ -351,7 +351,7 @@ In other words, we allow new mutations to occur during the standing phase provid
 
 \begin{multline}
 		p(l \mid n ) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} p_{ESF}(k \mid R_f,n-i) \\
-		\sum_{j=1}^{\text{min}\left(k+n-i-1,\ell\right)} \left(q_{anc}(j\mid k+n-i)\sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , \ell , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(\ell-g \mid j-g,k,i) + q_{new}(l \mid k,i,n)\right) 
+		\sum_{j=1}^{\text{min}\left(k+n-i-1,\ell\right)} \left(q_{new}(l \mid k,i,n) + q_{anc}(j\mid k+n-i)\sum_{g = \text{max} \left( j - k , 0 \right) }^{\text{min} \left( j , \ell , \left(n-i\right) \right)} H(g \mid j,k,n-i) p(\ell-g \mid j-g,k,i)\right) 
 \end{multline}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgements}
