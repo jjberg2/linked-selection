@@ -5,6 +5,54 @@ source('~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R', chdir 
 
 ####freq. spectrum w. no rec. during sweeps.
 
+# expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NULL){
+	# #recover()
+	# #my.StirlingNumbers<-StirlingNumbers(n)
+	# ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	# ESF.cond.prob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f) # ,stirling.numbers=my.StirlingNumbers)    ### is of form [n,k]
+	# if ( all ( my.StirlingNumbers == 0 ) ) {
+		# my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	# }
+	# expected.t.l<-rep(NA,nsam-1)
+	# p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
+	# freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
+	# for ( i in 2 : nsam ) {
+		# freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+	# }
+	# freq.specs <- t ( freq.specs )
+	# terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
+	# for(l in 1:(nsam-1)){
+	# #	recover()
+	# #	terms.in.sum<-rep(0,nsam)
+		# terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
+		# for(k in 2 : nsam ) {
+			# ##runs from 2 otherwise there are no polymorphism
+
+			# for(j in 1:(k-1)){
+				# stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
+				# p_l_given_k [ k , j , l ] <- stirling.bit*choose(nsam,l)/choose(k,j)
+				# terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs[ k , j ]
+				# terms.in.sum [ k , j, l  ] <- ESF.cond.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
+		
+			# }
+		# }
+	# }
+	# anc.freq.spec <- colSums ( terms.in.sum , dims = 2 )
+	# new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
+	# times <- sapply ( 1 : ( nsam - 1 ) , function ( x ) sum ( 1 / ( 1:x ) ) )
+	# new <- ESF.prob.k [ nsam , 1 ] * 4 * f * sum ( 1 / ( 1 : 1 : ( nsam - 1 ) ) )
+	# old <- ESF.prob.k [ nsam , 2:(nsam) ] * times
+	# p.new.seg <- new / ( new + sum ( old ) )
+	# my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	# adj.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	# return ( list ( my.freq.spec , adj.freq.spec ) )
+# }
+
+
+
+
+### doing new mutations the correct way
+
 expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NULL){
 	#recover()
 	#my.StirlingNumbers<-StirlingNumbers(n)
@@ -15,38 +63,52 @@ expected.freq.times.standing<-function(nsam,N,r,distance,f,my.StirlingNumbers=NU
 	}
 	expected.t.l<-rep(NA,nsam-1)
 	p_l_given_k <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
-	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
+	freq.specs.anc <- matrix ( 0 , nrow = nsam , ncol = nsam )
 	for ( i in 2 : nsam ) {
-		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+		freq.specs.anc [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) )
 	}
-	freq.specs <- t ( freq.specs )
+	freq.specs.anc <- t ( freq.specs.anc )	
 	terms.in.sum <- array ( 0 , dim = c ( nsam , nsam , nsam ) )
 	for(l in 1:(nsam-1)){
 	#	recover()
 	#	terms.in.sum<-rep(0,nsam)
 		terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
-		for(k in 2 : nsam ) {
+		for(k in 1 : nsam ) {
 			##runs from 2 otherwise there are no polymorphism
 
 			for(j in 1:(k-1)){
 				stirling.bit <- my.StirlingNumbers[l,j] * my.StirlingNumbers[nsam-l,k-j]  / my.StirlingNumbers[nsam,k]
-				p_l_given_k [ k , j , l ] <- stirling.bit*choose(nsam,l)/choose(k,j)
-				terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs[ k , j ]
-				terms.in.sum [ k , j, l  ] <- ESF.cond.prob.k [ nsam , k ] * p_l_given_k [ k , j , l ] * freq.specs [ k , j ]
+				
+				p_l_given_k [ k , j , l ] <- ifelse ( 
+																	k > 1 ,
+																	stirling.bit*choose(nsam,l)/choose(k,j) ,
+																	0
+																)
+				#terms.given.j [ j , k ] <- p_l_given_k [ k , j , l ]*freq.specs.anc[ k , j ]
+				new.freq <- ifelse ( i == nsam & k == 1 , f / l , 0 )
+				terms.in.sum [ k , j, l ] <- ESF.prob.k [ nsam , k ] * ( p_l_given_k [ k , j , l ] * freq.specs.anc [ k , j ] + new.freq )
 		
 			}
 		}
 	}
-	anc.freq.spec <- colSums ( terms.in.sum , dims = 2 )
-	new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
-	times <- sapply ( 1 : ( nsam - 1 ) , function ( x ) sum ( 1 / ( 1:x ) ) )
-	new <- ESF.prob.k [ nsam , 1 ] * 4 * f * sum ( 1 / ( 1 : 1 : ( nsam - 1 ) ) )
-	old <- ESF.prob.k [ nsam , 2:(nsam) ] * times
-	p.new.seg <- new / ( new + sum ( old ) )
-	my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
-	adj.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
-	return ( list ( my.freq.spec , adj.freq.spec ) )
+	temp <- colSums ( terms.in.sum , dims = 2 )
+	freq.spec <- temp [ 1 : ( length ( temp ) - 1 ) ] / sum ( temp )
+	# new.freq.spec <- 1 / ( 1 : ( nsam - 1 ) ) /  sum  ( 1 / ( 1 : ( nsam - 1 ) ) )
+	# times <- sapply ( 1 : ( nsam - 1 ) , function ( x ) sum ( 1 / ( 1:x ) ) )
+	# new <- ESF.prob.k [ nsam , 1 ] * 4 * f * sum ( 1 / ( 1 : 1 : ( nsam - 1 ) ) )
+	# old <- ESF.prob.k [ nsam , 2:(nsam) ] * times
+	# p.new.seg <- new / ( new + sum ( old ) )
+	# my.freq.spec <- ESF.prob.k [ nsam , 1 ] * new.freq.spec + ( 1 -ESF.prob.k [ nsam , 1 ] ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	# adj.freq.spec <- p.new.seg * new.freq.spec + ( 1 - p.new.seg ) * anc.freq.spec [ - length ( anc.freq.spec ) ]
+	return ( list ( 0 , freq.spec ) )
 }
+
+
+
+
+
+
+
 
 
 
@@ -126,6 +188,101 @@ plbarjkn <- function ( l , j , k , n , my.StirlingNumbers ) {
 
 ####freq. spectrum with rec. during sweeps.
 
+# expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.StirlingNumbers = 0 ) {
+	# #recover()
+	# if ( all ( my.StirlingNumbers == 0 ) ) {
+		# my.StirlingNumbers<-StirlingNumbers(nsam)    ##Usigned Stirling numbers of 1st kind. ma
+	# }
+	# ESF.prob.k <- EwensDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	# ESF.prob.k <- rbind ( c ( 1 , rep ( 0 , nsam ) ) , cbind ( rep ( 0 , nsam ) , ESF.prob.k ) )
+	# ESF.condprob.k<-EwensCondDist( n=nsam , N =N, r=r , distance=1 , f=f)
+	# ESF.condprob.k <- rbind ( c ( rep ( 0 , nsam + 1 ) ) , cbind ( rep ( 0 , nsam ) , ESF.condprob.k ) )
+	# T_f <- log ( (2*N -1 ) * ( 1 - f ) / f ) / s
+	# my.logistic <- function ( x ) 1 / (2 * N  ) * exp(s * x ) / ( 1 + 1 / (2 * N  ) * ( exp(s * x )  - 1 ) )
+	# T_sf <- integrate ( my.logistic , 0 , T_f )$value
+	# P_NR <- exp ( - r * T_sf )
+	# expected.t.l<-rep(NA,nsam-1)
+	# p_l_given_k <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	# H <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	# cond.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	# freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
+	# for ( i in 2 : nsam ) {
+		# freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+	# }
+	# freq.specs <- t ( freq.specs )
+	# my.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
+	# z <- 1
+	# my.list <- list ()
+	# for ( l in 1 : ( nsam - 1 ) ) {
+	# #	recover()
+	# #	terms.in.sum<-rep(0,nsam)
+		# for ( i in 0 : nsam ) {
+			
+			# for ( k in min ( 1 , i ) : i ) {
+				# terms.given.j <- matrix ( 0 , ncol = nsam , nrow = nsam )
+				# for ( j in 1 : min ( k + nsam - i , l ) ) {
+					# if ( max ( 0 , ( j - k ) ) > min ( l , nsam - i , j ) ) next
+					# g.sec <- seq ( max ( 0 , ( j - k ) ) ,  min ( l , nsam - i , j ) , 1 )
+					# for ( g in g.sec ) {
+						# # if the number of lineages sitting under the beneficial mutatation is smaller than the number we need to get to l, the prob is zero
+						# if ( i < ( l - g ) ) next
+						
+						
+						# p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- plbarjkn ( l - g , j - g , k , i , my.StirlingNumbers )
+						
+
+						# H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
+						
+						# cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- freq.specs [ k + nsam - i , j ] * H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] * p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+						
+						# if ( g > 0 | i != nsam ) {
+							# my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+						
+						# } else{
+							# my.list [[ z ]] <- c ( k + 1 , j + 1 , g + 1 , i + 1 , l + 1 )
+							# my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+							# #my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+							# z <- z + 1
+						# }
+					# }
+				# }
+			# }
+		# }
+	# #	expected.t.l[l]<-sum(terms.in.sum)
+	# }
+	# singleton.reweighted.times <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N * f ) , rep ( 0 , nsam - 2 ) )
+	# singleton.reweighted.freq.spec <- singleton.reweighted.times / sum ( singleton.reweighted.times )
+	# this.freq.spec <- numeric ( nsam - 1 )
+	# for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
+		# this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) #+ dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
+	# }
+	# my.branch.sums <- cumsum ( singleton.reweighted.times )
+	# num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam - 1 ]
+	# other <- numeric()
+	# P_R <- 1 - P_NR
+	# t <- 1
+	# for ( j in 2 : ( nsam - 1 ) ) {
+		# for ( k in 0 : j ) {
+			# for ( i in 0 : ( j - k ) ) {
+				# if ( i < 0 | (k + i) <= 1 ) { next }
+				
+				# other [ t ] <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k + 1 ] * my.branch.sums [ j ]
+				# t <- t + 1
+			# }
+		# }
+	# }
+	# p_new <- num / ( num + sum ( other ) )
+	# final.freq.spec <- p_new * singleton.reweighted.freq.spec + ( 1 - p_new ) * this.freq.spec
+	
+	# return ( final.freq.spec )
+	
+# }
+
+
+
+
+### new mutations during sweep correct way
+
 expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.StirlingNumbers = 0 ) {
 	#recover()
 	if ( all ( my.StirlingNumbers == 0 ) ) {
@@ -145,7 +302,7 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 	cond.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
 	freq.specs <- matrix ( 0 , nrow = nsam , ncol = nsam )
 	for ( i in 2 : nsam ) {
-		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) / ( sum ( 1 / ( 1 : ( i - 1  )  ) ) )
+		freq.specs [ 1 : ( i - 1 ) , i ] <- ( 1 / ( 1 : ( i - 1 ) ) ) 
 	}
 	freq.specs <- t ( freq.specs )
 	my.freq.specs <- array ( 0 , dim = c ( nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 , nsam + 1 ) )
@@ -170,17 +327,23 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 						
 
 						H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- choose ( nsam - i , g ) * choose ( k , j - g ) / choose ( k + nsam - i , j )
+						if ( i == nsam & k == 1 & l == 1) {
+							new.freqs <- f + 1/(2*N)*nsam * T_f/2
+						} else if ( i < nsam & k == 1 & l == 1 ) {
+							new.freqs <- 1/(2*N)*nsam * T_f/2
+						} else if ( i == nsam & k == 1 & l > 1 ) {
+							new.freqs <- f / l
+						} else {
+							new.freqs <- 0
+						}
 						
-						cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- freq.specs [ k + nsam - i , j ] * H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] * p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+						cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- freq.specs [ k + nsam - i , j ] * H [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] * p_l_given_k [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] + new.freqs
 						
 						if ( g > 0 | i != nsam ) {
-							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.prob.k [ i + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 						
 						} else{
-							my.list [[ z ]] <- c ( k + 1 , j + 1 , g + 1 , i + 1 , l + 1 )
-							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
-							#my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.condprob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
-							z <- z + 1
+							my.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ] <- dbinom ( i , nsam , P_NR ) * ESF.prob.k [ i  + 1 , k + 1 ] * cond.freq.specs [ k + 1 , j + 1 , g + 1 , i + 1 , l + 1 ]
 						}
 					}
 				}
@@ -188,33 +351,40 @@ expected.freq.times.standing.w.sweep <- function ( nsam , N , r , f , s , my.Sti
 		}
 	#	expected.t.l[l]<-sum(terms.in.sum)
 	}
-	singleton.reweighted.times <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N * f ) , rep ( 0 , nsam - 2 ) )
-	singleton.reweighted.freq.spec <- singleton.reweighted.times / sum ( singleton.reweighted.times )
+	# singleton.reweighted.times <- 1/(1:(nsam-1)) + c ( nsam * T_f / ( 2 * N * f ) , rep ( 0 , nsam - 2 ) )
+	# singleton.reweighted.freq.spec <- singleton.reweighted.times / sum ( singleton.reweighted.times )
 	this.freq.spec <- numeric ( nsam - 1 )
 	for ( l in 2 : ( dim ( my.freq.specs ) [ 5 ] - 1 ) ) {
 		this.freq.spec [ l - 1 ] <- sum ( my.freq.specs [ , , , , l ] ) #+ dbinom ( nsam , nsam , P_NR ) * ESF.prob.k [ nsam +1 , 2 ] * singleton.reweighted.freq.spec [  l - 1 ]
 	}
-	my.branch.sums <- cumsum ( singleton.reweighted.times )
-	num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam - 1 ]
-	other <- numeric()
-	P_R <- 1 - P_NR
-	t <- 1
-	for ( j in 2 : ( nsam - 1 ) ) {
-		for ( k in 0 : j ) {
-			for ( i in 0 : ( j - k ) ) {
-				if ( i < 0 | (k + i) <= 1 ) { next }
+	final.freq.spec <- this.freq.spec / sum ( this.freq.spec )
+	# my.branch.sums <- cumsum ( singleton.reweighted.times )
+	# num <- ESF.prob.k [ nsam + 1 , 2 ] * dbinom ( 10 , 10 , P_NR ) * f * my.branch.sums [ nsam - 1 ]
+	# other <- numeric()
+	# P_R <- 1 - P_NR
+	# t <- 1
+	# for ( j in 2 : ( nsam - 1 ) ) {
+		# for ( k in 0 : j ) {
+			# for ( i in 0 : ( j - k ) ) {
+				# if ( i < 0 | (k + i) <= 1 ) { next }
 				
-				other [ t ] <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k + 1 ] * my.branch.sums [ j ]
-				t <- t + 1
-			}
-		}
-	}
-	p_new <- num / ( num + sum ( other ) )
-	final.freq.spec <- p_new * singleton.reweighted.freq.spec + ( 1 - p_new ) * this.freq.spec
+				# other [ t ] <- dbinom ( i , nsam , P_R ) * ESF.prob.k [ nsam - i + 1  , k + 1 ] * my.branch.sums [ j ]
+				# t <- t + 1
+			# }
+		# }
+	# }
+	# p_new <- num / ( num + sum ( other ) )
+	# final.freq.spec <- p_new * singleton.reweighted.freq.spec + ( 1 - p_new ) * this.freq.spec
 	
 	return ( final.freq.spec )
 	
 }
+
+
+
+
+
+
 
 
 
