@@ -956,7 +956,7 @@ SequenceIBDPlots <- function ( trees ) {
 	abline ( v = 0 )
 }
 
-}
+
 
 setwd ( "~/Documents/Academics/StandingSweeps/" )
 my.s <- 1:20 / 10000
@@ -973,4 +973,5 @@ for ( i in 1:length ( my.s ) ) {
 		message ( j )
 	}
 	save ( term.in.exp , file = "Sims/term.in.exp.Robj")
+}
 }
