@@ -549,18 +549,18 @@ coop.cols<-matlab.like(201)
  bland<-coop.cols[101]
  
  
-upper.breaks <- c(2^(seq(log2(1.05),log2(5),length=100)),10^6)  #seq ( 1.05 , 2 ,length.out = 101)
-lower.breaks<- c(0,2^seq(log2(1/5),log2(1/1.05),length=100))   # seq ( 0 , 0.95 ,length.out = 101)  
+upper.breaks <- c(2^(seq(log2(1.05),log2(2),length=100)),10^6)  #seq ( 1.05 , 2 ,length.out = 101)
+lower.breaks<- c(0,2^seq(log2(1/2),log2(1/1.05),length=100))   # seq ( 0 , 0.95 ,length.out = 101)  
  
 pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
 
-layout ( matrix ( c ( 1,1,2,3,4,5,6,7) , nrow = 4 , ncol = 2 , byrow = TRUE ) , heights = c ( 0.5 , 3 , 3 , 3 ) )
+layout(matrix( c(1,1,2,3,4,5,6,7) , nrow=4,ncol=2,byrow=TRUE), heights=c(0.5,3,3,3))  
 
 my.z<-c(lower.breaks,1,upper.breaks )
 
 par(mar=c(2,10,1,10))
-image(x= c(.00001,(my.z[-1])), z=cbind(my.z,my.z),col=c(ramp2,bland,bland,ramp1),breaks=c(lower.breaks,1,upper.breaks) ,xlim=(c(.2,5)),log="x",axes=FALSE)
-axis(side=1)
+image(x= c(.00001,(my.z[-1])), z=cbind(my.z,my.z),col=c(ramp2,bland,bland,ramp1),breaks=c(lower.breaks,1,upper.breaks) ,xlim=(c(.5,2)),log="x",axes=FALSE)
+axis(side=1, at=c(0.5,.75,1,1.25,1.5),labels=c("<0.5","0.75","1","0.25",">0.5"))
 
 #par ( mfrow = c ( 3,2))
 par(mar=c(3,3.5,1.5,1.2))
@@ -642,6 +642,7 @@ image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev ) ) ,
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
 dev.off()
+
 
 # pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
 # par ( mfrow = c ( 3,2))
