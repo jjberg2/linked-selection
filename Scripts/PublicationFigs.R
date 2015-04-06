@@ -560,7 +560,7 @@ my.z<-c(lower.breaks,1,upper.breaks )
 
 par(mar=c(2,10,1,10))
 image(x= c(.00001,(my.z[-1])), z=cbind(my.z,my.z),col=c(ramp2,bland,bland,ramp1),breaks=c(lower.breaks,1,upper.breaks) ,xlim=(c(.5,2)),log="x",axes=FALSE)
-axis(side=1, at=c(0.5,.75,1,1.25,1.5),labels=c("<0.5","0.75","1","0.25",">0.5"))
+axis(side=1, at=c(0.5,.75,1,1.5,2),labels=c("<0.5","0.75","1","1.5",">2"))
 
 #par ( mfrow = c ( 3,2))
 par(mar=c(3,3.5,1.5,1.2))

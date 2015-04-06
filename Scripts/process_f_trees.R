@@ -1,4 +1,19 @@
 
+f.index=seq(0.01,0.1,length=10)
+
+hap.counts<-lapply(1:10,function(i){0})
+coal.times<-lapply(1:10,function(i){numeric()})
+	 for(f.index in 1:10){
+	for(iter in 1:5){
+		tmp<-try(StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = fs[i] , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , 		constant.freq = FALSE , cond.on.loss = TRUE))
+		hap.counts[[f.index]]<- hap.counts[[f.index]]+ 
+	 							tmp$hap.dist$hap.count.freqs.by.interval
+		coal.times[[f.index]]<-rbind(coal.times[[f.index]],tmp$coal.times)
+		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,worked,coal.times)
+
+		}
+}
+
 
 ##extract multiple runs results
 worked<-numeric()
@@ -16,7 +31,7 @@ for(run in 1:15){
 	 		coal.times[[f.index]]<-rbind(coal.times[[f.index]],my.runs[[f.index]]$coal.times)
 	 		}
 	 }
-	 print(colSums(wosrked))
+	 print(colSums(worked))
 	} 
 worked<-colSums(worked)	 
 	 

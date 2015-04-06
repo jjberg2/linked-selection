@@ -1,6 +1,7 @@
 ##install.packages("randtoolbox")
 ##install.packages("ape")
-setwd ( "~/Documents/Academics/StandingSweeps/" )
+#setwd ( "~/Documents/Academics/StandingSweeps/" )
+
 library("randtoolbox")
 library("ape")
 turn.on.recovers=FALSE
