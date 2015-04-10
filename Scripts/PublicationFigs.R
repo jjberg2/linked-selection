@@ -89,6 +89,21 @@ lines ( det.freqs , lwd = 2 )
 
 
 
+show(load(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
+
+pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/Prob_hap_distribution.pdf",width=8,height=6)
+layout(t(1:2))
+par(mar=c(3,3,1,1))
+MakeHapPlots ( hap.counts[[2]]/max(colSums(hap.counts[[2]])), N = 10000, f = fs[2], sim.distance = 0.02,plot.cumulative=FALSE);
+mtext(side=3,line=1,"f=",fs[2]);
+mtext(side=2,line=2,"Prob.")
+mtext(side=1,line=2,"Recom.")
+MakeHapPlots ( hap.counts[[5]]/max(colSums(hap.counts[[5]])) , N = 10000, f = fs[5], sim.distance = 0.02,plot.cumulative=FALSE,do.legend=TRUE);
+mtext(side=3,line=1,"f=",fs[5]);
+mtext(side=1,line=2,"Recom.")
+dev.off()
+
+
 
 
 
@@ -644,60 +659,7 @@ axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 
 dev.off()
 
 
-# pdf ( "Paper/Paper_Figures/HapFreqRatiosCondExist.pdf" , height = 10 , width = 7.874 )
-# par ( mfrow = c ( 3,2))
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) ,xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1:50 , ] / hard.haps [[ 2 ]] [ 1:50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
 
-
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neut ) ,yaxt = "n", ylab = expression ( h[i]))
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
-
-
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^soft/h[i]^hard ) ,yaxt = "n" , ylab = expression ( h[i]))
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / hard.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
-
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n", main = expression ( h[i]^soft/h[i]^neut ) ,yaxt = "n" , ylab = expression ( h[i]))
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-# image ( t ( apply ( soft.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
-
-
-
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = c ( "black" , "black" ) , breaks = seq ( 0.95 , 1.05 ,length.out = 3) , xaxt = "n", main = expression ( h[i]^stand/h[i]^soft ) , yaxt = "n" , ylab = expression ( h[i]))
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = heat.colors ( 100 ) , breaks = seq ( 1.05 , 2 ,length.out = 101) , add = T )
-# image ( t ( apply ( standing.haps [[ 2 ]] [ 1 : 50 , ] / soft.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) ,  col = cm.colors ( 100 ) , breaks = seq ( 0 , 0.95 ,length.out = 101) , add = T )
-
-# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0.95, 1.05 ,length.out=2), col = "black" , xaxt = "n" , main = expression ( h[i]^hard/h[i]^neut ) , yaxt = "n" , ylab = expression ( h[i]))
-# axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
-# axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 50 , 10 , length.out = 5 ) , 1 ) )
-# mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
-# mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
-# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 1.05 , 2 ,length.out=101), col = heat.colors ( 100 ),add = T )
-# image ( t ( apply ( hard.haps [[ 2 ]] [ 1 : 50 , ] / neutral.haps [[ 2 ]] [ 1 : 50 , ] , 2 , rev) ) , breaks = seq ( 0 , 0.95 ,length.out=101), col = cm.colors ( 100 ), add =T )
-# dev.off()
 
 
 
@@ -744,6 +706,76 @@ lines ( my.r , pi.reductions.approx [[ 3 ]] , type = "l" , col = "red" , lty = 2
 temp <- StructuredCoalescentSweep ( N = 10000 , s = 0.05 , dominance = FALSE , f = 0.05 , reps = 10000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = F , constant.freq = FALSE , cond.on.loss = TRUE , build.seq = FALSE , display.rep.count = TRUE ,   standing.haps = FALSE , time.factor = 1 )
 probs <- colSums ( temp$coal.times-temp$sweep.start<0 )/10000
 
+
+
+####Comparing coalescent to our approximation
+fs=seq(0.01,0.1,length=10)
+if(FALSE){
+hap.counts<-lapply(1:10,function(i){0})
+coal.times<-lapply(1:10,function(i){numeric()})
+	 for(f.index in 1:10){
+#	for(iter in 1:5){
+		tmp<-try(StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = fs[f.index] , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE ,constant.freq = FALSE , cond.on.loss = TRUE))
+		hap.counts[[f.index]]<- hap.counts[[f.index]]+ 
+	 							tmp$hap.dist$hap.count.freqs.by.interval
+		coal.times[[f.index]]<-rbind(coal.times[[f.index]],tmp$coal.times)
+		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,coal.times)
+
+#		}
+}}
+
+show(load(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
+	 
+my.mean<- numeric()
+coeff.var<-numeric()
+for(i in 1:10){
+	coal.diffs<-apply(cbind(0,coal.times[[i]]),1,diff)
+	my.std.dev<-apply(coal.diffs,1,sd)/(2*10000)
+	my.mean<-rbind(my.mean,apply(coal.diffs,1,mean)/(2*10000))
+	coeff.var<-rbind(coeff.var,my.std.dev/my.mean[i,])
+
+}
+
+	my.cols<- rainbow(10)
+	
+fs<-(1:10)/100
+	pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/mean_coal_times_derived.pdf")
+plot(range(fs),c(0,.1),type="n",xlab="f",ylab="Expected time while k lineages")
+expect.times<-sapply(fs,function(f){j<-10:2;(f*2/(j*(j-1)))})
+sapply(1:9,function(i){lines(y=expect.times[i,],x=fs,col=my.cols[i])})
+	sapply(1:9,function(i){points(fs,my.mean[,i],bg=my.cols[i],type="p",pch=21)})
+legend("topleft",legend=paste("k=",10:2),pch=21,pt.bg=my.cols)
+dev.off()
+
+	
+	  pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/coeff_var_coal_times.pdf")
+	plot(range(fs),c(0.8,3.5),type="n",xlab="f",ylab="Coeff. of var. of time while k lineages")
+	sapply(1:9,function(i){points(fs[1:nrow(coeff.var)],coeff.var[,i],bg=my.cols[i],type="b",pch=21)})
+abline(h=1)
+legend("topright",legend=paste("k=",10:2),pch=21,pt.bg=my.cols) 
+dev.off()
+
+
+pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/n_two_coal_time.pdf")
+g<-function(f,x){x/(f*(x+(1-x)*f))*(2-f+2*(1-f)*log(1-f)/f) }
+
+x<-seq(0,.1,length=100); 
+plot(x,sapply(x,function(x){2*integrate(g,0,1,x=x)$value}),ylim=c(0,.1),lwd=2,type="l",xlab="f",ylab="Expected pairwise coal. time")
+k<-10:2
+prob.coal.when.i<-c(1,cumprod((1-1/(choose(k[-length(k)],2)))))*1/(choose(k,2))
+for(i in 1:nrow(my.mean)){
+	coal.cum.sum<-cumsum(my.mean[i,])
+	points(fs[i],sum(coal.cum.sum*prob.coal.when.i),bg="red",pch=21)
+	}
+abline(0,1,lty=2)
+dev.off()
+
+
+
+#for(i in 1:10){
+#		 pdf(file=paste("Ewens_vs_Jeremy_many_runs_cond_on_loss_f_",i,".pdf",sep="")); 
+#	 MakeHapPlots ( hap.counts[[i]] , N = 10000, f = fs[i], sim.distance = 0.02,plot.cumulative=FALSE);title=paste("f=",fs[i]); dev.off()}
+#	 }
 
 
 

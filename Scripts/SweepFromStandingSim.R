@@ -4,6 +4,8 @@
 
 library("randtoolbox")
 library("ape")
+library("wesanderson")
+library("colorRamps")
 turn.on.recovers=FALSE
 
 StructuredCoalescentSweep <- function ( N , s , h , dominance = FALSE , f , reps , n.tips , r , sim.distance , interval.width , no.sweep = FALSE , constant.freq = FALSE, cond.on.loss = TRUE , cond.on.fix = TRUE , make.plot = FALSE , build.seq = TRUE , standing.haps = TRUE , display.rep.count = TRUE , time.factor = 1 ) {
@@ -772,9 +774,11 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	)
 	axis ( 1 , seq ( 1 , ncol ( ewens.dist.matrix ) , by = 10e5/interval.width ) , 4*N*r * 1000*seq ( 0 , max ( intervals , 1 )/1000  , by = 1000 )  )  # seq ( 0 , tail ( intervals , 1 ) / 1000 , by = 1000 )  )
 	#recover()
-	#col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-	#col.vect <- brewer.pal ( 10 , "Set3" )
-	col.vect <- wes_palette ( "FantasticFox" , 10 , type = "continuous")
+#	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
+	col.vect <- brewer.pal ( 10 , "Set3" )
+#	col.vect <- primary.colors(10)
+   #brewer.pal ( 10 , "Set3" )
+#	col.vect <- wes_palette ( "FantasticFox" , 10 , type = "continuous")
 	if(do.legend) legend("topright", legend=1:n.tips, lty=1,col= col.vect,lwd=2, bty = "n")
 	for ( i in  ( nrow ( cum.probs ) - 1 ):1 ) {
 			#i = i + 1
@@ -794,7 +798,6 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 		ewens.cum.probs <- ewens.cum.probs [ - nrow ( ewens.cum.probs ) , ]
 		apply ( ewens.cum.probs , 1 , function ( x ) lines ( x , lty = 1 , lwd = 0.8 ) )
 	}
-
 
 }
 

@@ -1,17 +1,17 @@
 
-f.index=seq(0.01,0.1,length=10)
+fs=seq(0.01,0.1,length=10)
 
 hap.counts<-lapply(1:10,function(i){0})
 coal.times<-lapply(1:10,function(i){numeric()})
 	 for(f.index in 1:10){
-	for(iter in 1:5){
-		tmp<-try(StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = fs[i] , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE , 		constant.freq = FALSE , cond.on.loss = TRUE))
+#	for(iter in 1:5){
+		tmp<-try(StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = fs[f.index] , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE ,constant.freq = FALSE , cond.on.loss = TRUE))
 		hap.counts[[f.index]]<- hap.counts[[f.index]]+ 
 	 							tmp$hap.dist$hap.count.freqs.by.interval
 		coal.times[[f.index]]<-rbind(coal.times[[f.index]],tmp$coal.times)
-		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,worked,coal.times)
+		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,coal.times)
 
-		}
+#		}
 }
 
 
@@ -40,14 +40,15 @@ worked<-colSums(worked)
 	 pdf(file="Ewens_vs_Jeremy_many_runs_cond_on_loss.pdf"); for(i in 1:10){ MakeHapPlots ( hap.counts[[i]]/worked[i] , N = 10000, f = fs[i], sim.distance = 0.02,plot.cumulative=FALSE);title=paste("f=",fs[i])}
 	 
 	 
+	 show(load(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
 	 
-	my.mean<- numeric()
-	coeff.var<-numeric()
+my.mean<- numeric()
+coeff.var<-numeric()
 for(i in 1:10){
-coal.diffs<-apply(cbind(0,coal.times[[i]]),1,diff)
-my.std.dev<-apply(coal.diffs,1,sd)/(2*10000)
-my.mean<-rbind(my.mean,apply(coal.diffs,1,mean)/(2*10000))
-coeff.var<-rbind(coeff.var,my.std.dev/my.mean[i,])
+	coal.diffs<-apply(cbind(0,coal.times[[i]]),1,diff)
+	my.std.dev<-apply(coal.diffs,1,sd)/(2*10000)
+	my.mean<-rbind(my.mean,apply(coal.diffs,1,mean)/(2*10000))
+	coeff.var<-rbind(coeff.var,my.std.dev/my.mean[i,])
 
 }
 
@@ -55,17 +56,17 @@ coeff.var<-rbind(coeff.var,my.std.dev/my.mean[i,])
 	
 fs<-(1:10)/100
 	pdf(file="mean_coal_times_derived.pdf")
-	plot(range(fs),c(0,.1),type="n",xlab="f",ylab="Expected time while k lineages")
-	sapply(1:9,function(i){points(fs,my.mean[,i],bg=my.cols[i],type="b",pch=21)})
+plot(range(fs),c(0,.1),type="n",xlab="f",ylab="Expected time while k lineages")
 expect.times<-sapply(fs,function(f){j<-10:2;(f*2/(j*(j-1)))})
-apply(expect.times,1,lines,x=fs)
-legend("topleft",legend=paste("k=",10:2),pch=21,pt.bg=my.cols) 
+sapply(1:9,function(i){lines(y=expect.times[i,],x=fs,col=my.cols[i])})
+	sapply(1:9,function(i){points(fs,my.mean[,i],bg=my.cols[i],type="p",pch=21)})
+legend("topleft",legend=paste("k=",10:2),pch=21,pt.bg=my.cols)
 dev.off()
 
 	
 	  pdf(file="coeff_var_coal_times.pdf")
-	plot(range(fs),c(0.8,3),type="n",xlab="f",ylab="Coeff. of var. of time while k lineages")
-	sapply(1:9,function(i){points(fs,coeff.var[,i],bg=my.cols[i],type="b",pch=21)})
+	plot(range(fs),c(0.8,3.5),type="n",xlab="f",ylab="Coeff. of var. of time while k lineages")
+	sapply(1:9,function(i){points(fs[1:nrow(coeff.var)],coeff.var[,i],bg=my.cols[i],type="b",pch=21)})
 abline(h=1)
 legend("topright",legend=paste("k=",10:2),pch=21,pt.bg=my.cols) 
 dev.off()
@@ -78,7 +79,7 @@ x<-seq(0,.1,length=100);
 plot(x,sapply(x,function(x){2*integrate(g,0,1,x=x)$value}),ylim=c(0,.1),lwd=2,type="l",xlab="f",ylab="Expected pairwise coal. time")
 k<-10:2
 prob.coal.when.i<-c(1,cumprod((1-1/(choose(k[-length(k)],2)))))*1/(choose(k,2))
-for(i in 1:10){
+for(i in 1:nrow(my.mean)){
 	coal.cum.sum<-cumsum(my.mean[i,])
 	points(fs[i],sum(coal.cum.sum*prob.coal.when.i),bg="red",pch=21)
 	}
@@ -87,7 +88,7 @@ dev.off()
 
 for(i in 1:10){
 		 pdf(file=paste("Ewens_vs_Jeremy_many_runs_cond_on_loss_f_",i,".pdf",sep="")); 
-	 MakeHapPlots ( hap.counts[[i]]/worked[i] , N = 10000, f = fs[i], sim.distance = 0.02,plot.cumulative=FALSE);title=paste("f=",fs[i]); dev.off()}
+	 MakeHapPlots ( hap.counts[[i]] , N = 10000, f = fs[i], sim.distance = 0.02,plot.cumulative=FALSE);title=paste("f=",fs[i]); dev.off()}
 	 }
 
 
