@@ -329,10 +329,41 @@ A more hopefully approach to selection on standing variation may be to use data 
 
 
 \section{Simulation Details}
+In order to check our analytical results, we wrote a program to simulate allele frequency trajectories under our model, and then ran either custom written structured coalescent simulations (\jb{Figures blah blah and blah}) or handed these trajectories to \textit{mssel} in order to generate the appropriate data for comparison. 
 
+\subsection*{Frequency Trajectories}
+We simulate frequency trajectories under a similar discretized approximation to the diffusion as that used by \cite{Przeworski2005}. In order to simulate trajectories conditional on selection having begun when the allele was at frequency $f$, we set $X\left(0\right) = f$, and simulate allele frequency change forward in time according to
 \begin{equation}
-	p_{t+1} \sim N \left( \mu_{t} , \sigma_{t} \right)
+	X\left({t+1}\right) \sim N \left( \mu_S\left(X\left(t\right)\right)\Delta t , \sigma\left(X\left(t\right)\right) \right)
 \end{equation}
+where
+\begin{align}
+	\mu_S\left(X\left(t\right)\right) &= \frac{2NsX\left(t\right)\left(1-X\left(t\right)\right)}{\textrm{tanh}\left(2NsX\left(t\right)\right)} \\
+	\sigma\left(X\left(t\right)\right) &= X\left(t\right)\left(1-X\left(t\right)\right)
+\end{align}
+where we take $\Delta t = \frac{1}{2N}$ so that one time step is equivalent to the duration of one generation in the discrete time Wright-Fisher model, and we have conditioned on the eventual fixation of the allele. To simulate the neutral portion of the frequency trajectory prior to the onset of selection, conditional on the allele having been derived, we take advantage of the time reversibility property of the diffusion process, which dictates that the distribution on the prior history of an allele conditional on being derived and being found at frequency $f$ is the same as the trajectory of an allele that is at frequency $f$ and destined to be lost from the population. This allows us to simulate from
+\begin{equation}
+	X\left(t-1\right) \sim N\left(\mu_N\left(X\left(t\right)\right) \Delta t, \sigma \left( X\left(t\right) \right)\right)
+\end{equation}
+where
+\begin{equation}
+	\mu_N\left(X\left(t\right)\right) = - X\left(t\right).
+\end{equation}
+We simply then paste these two trajectories together to give a frequency trajectory that is conditioned on a sweep beginning when the allele is at frequency $f$ without any unnatural conditioning on the sweep beginning the \textit{first} time the allele reaches frequency $f$. For simulations intended to check out standing phase calculation independent of the sweep phase, we simply discard the sweep portion of the simulation and retain only the neutral trajectory.
+
+\subsection*{Genealogy and Recombination Histories}
+
+We simulate the genealogy at the locus of the beneficial allele by choosing a single pair of lineages to coalesce in generation $t$ with probability $\frac{{n\left(t\right) \choose 2}}{2NX\left(t\right)}$, where $n\left(t\right)$ gives the number of lineages existing in generation $t$. Coalescent times obtained from these simulations are then used to generate \jb{Figures blah}. We then simulate the history of recombination events which move lineages off of the beneficial background as follows:
+
+We calculate the total time in the genealogy, $T$, and simulate an $\exp\left(-rT\right)$ distance to the first recombination event. A position on the tree (i.e. a branch and a specific generation for the event to occur in) is chosen uniformly at random. This event is accepted with probability $1-X\left(t_{rec}\right)$, where $t_{rec}$ gives the generation in which the event occurred, otherwise it is ignored. This process is repeated outward away from the focal site until the end of the sequence is reached, and the physical position along the sequence, branch, and generation of each recombination event is recorded.
+
+We then generate haplotype identities (i.e. the colorings of Figure \ref{cartoon_fig_2} \jb{WTF? This should say Figure 1, not 2?}) as follows. We begin at the root of the tree, and assign each sequence to have the same identity over their entire length. We then move forward in time, from one recombination event to the next, and for each recombination event we assign the chromosomes which subtend it a unique new identity extending from the position where that event occurred out the end of the sequence, overwriting whatever identity previously existed there. We iterate this procedure all the way until the present day, at which point each position on a given chromosome will have an identity specified by the most recent recombination event which falls in between it and the focal site. These haplotype identities are what we use to generate \jb{Figure blah}
+
+\subsection*{Simulated Sequence Data}
+
+To simulate sequence data, we simply hand the trajectories simulated as described above to the program \textit{mssel} \jb{reference?}. Whereas our simulations of haplotype identity above still represents a somewhat heuristic approximation to the true process, in that it ignores recombination events which do not result in transitions to the alternate background, these simulations of sequence data are exact under the structured coalescent with recombination for our model (i.e. they generate a full ancestral recombination graph), up the discretization of the diffusion process used for the selected allele. These simulations are used to generate Figures \jb{blah blah and blah}.
+
+\paragraph{Code Availability:} All simulation code was written in R and is available for download with no warranty \jb{blah blah blah} at \jb{github}
 
 \section{Appendix}
 
