@@ -88,7 +88,7 @@ Our general approach is to break the history of the standing sweep into two peri
 
 \begin{figure}
 	\includegraphics[width = 0.8\textwidth]{../Paper_Figures/SchematicFig1.pdf} \label{cartoon_fig_2}
-	\caption{caption goes here}
+	\caption{A schematic depiction of our model. (A) Grey lines represent 10 simulated sweeps with $s=0.01$ and $f=0.01$ in a population of $N=10000$. The solid black line represents the frequency trajectory assumed for our analytical calculations. (B and C) The genealogy, history of recombination events, and sequence associated with a sample of nine chromomsomes taken at the moment of fixation. The red dot (on both the genealogy and the sequence) represents the mutation responsible for the beneficial allele. The tree subtending this mutation in panel B is the genealogy at the locus of this mutation. Solid lines represent the genealogy experienced by a neutral site located at the position of the vertical orange bar in panel C, with lineages that escape coalescence under the red mutation coalescing on a longer timescale off the left side of the figure. Stars on the genealogy in panel B represent the recombination events falling between the beneficial mutation and the orange bar in panel C, and are responsible for changes in along the sequence. Short dashed lines represent components of genealogies in between the red mutation and the orange bar which are not experienced at the position of the orange bar, while long dashed lines represent movement from the selected to the non-selected background via recombination. At the distance marked by the orange bar, there are three sweep phase recombinants, and the remaining six sequences are partitioned into three haplotypes of frequencies three, two and one, according to the infinite alleles process described in the main text.}
 \end{figure}
 
 \section{Analysis and Results}
@@ -154,7 +154,7 @@ Note that this does not depend on $R_f$, which gives the classic result that the
 
 \begin{figure}
 	\includegraphics[width = \textwidth]{../Paper_Figures/Prob_hap_distribution.pdf}
-\caption{The probability that a sample of 10 lineages taken on the background of an allele at frequency 1\% (panel A) or 5\% (panel B) coalesce into k families before exiting the background, as a function of population-scaled genetic distance ($4Nr$) from the conditioned site. The solid lines give the proportion of 1000 coalescent simulations, with a explicit stochastic frequency trajectory simulated backward from a frequency $f$, in which $k$ families of lineages recombined off of the sweep at distance $4Nr$.  The dotted lines give our approximation under the Ewens Sampling Formula (eqn \eqref{ESF1}) with $R_f=4Nrf(1-f)$. } \label{Prob_hap_distribution}
+\caption{The probability that a sample of 10 lineages taken on the background of an allele at frequency 1\% (panel A) or 5\% (panel B) coalesce into k families before exiting the background, as a function of population-scaled genetic distance ($4Nr$) from the conditioned site. The solid lines give the proportion of 1000 coalescent simulations, with an explicit stochastic frequency trajectory (as describe in the Simulation Details section), in which $k$ families of lineages recombined off of the sweep at distance $4Nr$.  The dotted lines give our approximation under the Ewens Sampling Formula (eqn \eqref{ESF1}) with $R_f=4Nrf(1-f)$. } \label{Prob_hap_distribution}
 \end{figure}
 
 
@@ -164,6 +164,7 @@ This approximate model of the coalescent for a sweep from standing variation all
 
 \begin{figure}
 	\includegraphics[width = \textwidth]{../Paper_Figures/pi_and_S_density.pdf} \label{pi_plot}
+	\caption{A comparison of our approximations for the reduction in pairwise diveristy (A) and the number of segregating sites (B) for a sweep with $s=0.05$ and $N=10000$ starting from a variety of different frequencies. The approximations are generally accurate so long as the sweep begins from a frequency greater than $5/2Ns$, which is in this case $0.005$.}
 \end{figure}
 
 
@@ -233,7 +234,7 @@ Once again, this expression is accurate far from the selected site, but in error
 
 \begin{figure}
 	\includegraphics[width = \textwidth]{../Paper_Figures/freq_spec_nosweep_logfold_sixpanel_020507.pdf} \label{freq_spec}
-	\caption{Frequency Spectrum}
+	\caption{The frequency spectrum, in a sample of n = 10, for a neutral allele sampled on the background of the beneficial allele either immediately before it sweeps (A,B,C) or immediately after fixation (D,E,F). Results are shown as the log ratio of the normalized frequency relative to its expectation under the standard neutral coalescent.}
 \end{figure}
 
 \subsection*{Patterns of Haplotype Variation and Routes to Inference}
@@ -277,7 +278,7 @@ One simple prediction on the basis of our analytical investigation above is that
 
 \begin{figure}
 		\includegraphics[width = \textwidth]{../Paper_Figures/HapFreqsExistProb.pdf} \label{hap-exist-probs}
-	\caption{}
+	\caption{The ratio of the probability that there are at least $i$ haplotypes in a one sided window extending away from the selected site for the standing sweep model relative to the hard sweep model (A) and the neutral model (B).}
 \end{figure}
 
 Alternately, we may hope to use to OHFS to obtain information about the shape of the genealogy at the focal site, which should hopefully be less confounded by a change in selection coefficient. This information should primarily be found in differences in the relative frequencies of certain haplotypes between the different models, rather than in the total number of haplotypes. Specifically, that if there are multiple haplotypes present close to the selection site,  they should be more common under the sweeps from standing variation model than the full sweep model. In other words, there should be a window near the selected site where $\mathbb{E}[h_i^{stand} \mid h_i^{stand} > 0] > \mathbb{E}[h_i^{hard} \mid h_i^{hard} > 0]$ for $1 < i \ll n$, owing to recombinations occurring on internal branches of the genealogy from the standing phase. 
