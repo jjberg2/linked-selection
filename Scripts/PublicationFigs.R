@@ -1,6 +1,6 @@
 #### plot of pi and segregating sites
 setwd ( "~/Documents/Academics/StandingSweeps/Sims" )
-source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R')
+source('~/Documents/Academics/StandingSweeps/Scripts/SweepFromStandingSim.R')  ##source('~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/SweepFromStandingSim.R')
 source ( "~/Documents/Academics/StandingSweeps/Scripts/run.ms.functions.R")
 options ( scipen = 400 )
 
@@ -88,19 +88,19 @@ lines ( det.freqs , lwd = 2 )
 
 
 
-
+library("RColorBrewer")
 show(load(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
-
-pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/Prob_hap_distribution.pdf",width=8,height=6)
+fs=seq(0.01,0.1,length=10)
+pdf(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Paper/Paper_Figures/Prob_hap_distribution.pdf",width=12,height=6)
 layout(t(1:2))
-par(mar=c(3,3,1,1))
+par(mar=c(3,3,1,0.5))
 MakeHapPlots ( hap.counts[[2]]/max(colSums(hap.counts[[2]])), N = 10000, f = fs[2], sim.distance = 0.02,plot.cumulative=FALSE);
 mtext(side=3,line=1,"f=",fs[2]);
 mtext(side=2,line=2,"Prob.")
-mtext(side=1,line=2,"Recom.")
+mtext(side=1,line=2,"4Nr")
 MakeHapPlots ( hap.counts[[5]]/max(colSums(hap.counts[[5]])) , N = 10000, f = fs[5], sim.distance = 0.02,plot.cumulative=FALSE,do.legend=TRUE);
 mtext(side=3,line=1,"f=",fs[5]);
-mtext(side=1,line=2,"Recom.")
+mtext(side=1,line=2,"4Nr")
 dev.off()
 
 
@@ -711,18 +711,18 @@ probs <- colSums ( temp$coal.times-temp$sweep.start<0 )/10000
 ####Comparing coalescent to our approximation
 fs=seq(0.01,0.1,length=10)
 if(FALSE){
-hap.counts<-lapply(1:10,function(i){0})
-coal.times<-lapply(1:10,function(i){numeric()})
+#hap.counts<-lapply(1:10,function(i){0})
+#coal.times<-lapply(1:10,function(i){numeric()})
 	 for(f.index in 1:10){
 #	for(iter in 1:5){
 		tmp<-try(StructuredCoalescentSweep ( N = 10000 , s = 0.5 , f = fs[f.index] , reps = 1000 , n.tips = 10 , r = 10^-8 , sim.distance = 0.02 , interval.width = 1000 , no.sweep = TRUE ,constant.freq = FALSE , cond.on.loss = TRUE))
 		hap.counts[[f.index]]<- hap.counts[[f.index]]+ 
 	 							tmp$hap.dist$hap.count.freqs.by.interval
 		coal.times[[f.index]]<-rbind(coal.times[[f.index]],tmp$coal.times)
-		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,coal.times)
+#		save(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj",hap.counts,coal.times)
 
 #		}
-}}
+}
 
 show(load(file="~/Dropbox/Linked_selection_models/Soft_sweeps_coal/LinkedSelection/Scripts/Coal_Sims_w_traj.Robj"))
 	 
