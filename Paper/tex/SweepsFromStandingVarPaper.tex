@@ -336,7 +336,7 @@ A more hopefully approach to selection on standing variation may be to use data 
 
 \section*{Simulation Details}
 
-In order to check our analytical results, we wrote a program to simulate allele frequency trajectories under our model, and then ran either custom written structured coalescent simulations (Figures \ref{Prob_hap_distribution}, \ref{n_2_supp_plot}, \ref{mean_coal_times_supp_plot} and \ref{coeff_var_coal_times_supp_plot}) \jb{supp figure citations not working} or handed these trajectories to \textit{mssel} in order to generate sequence data (Figures \ref{pi_plot}, \ref{freq_spec}, \ref{hap-exist-probs} and \ref{hap-freq-ratios}).
+In order to check our analytical results, we wrote a program to simulate allele frequency trajectories under our model, and then ran either custom written structured coalescent simulations (Figures \ref{Prob_hap_distribution}, \ref{n_2_supp_plot}, \ref{mean_coal_times_supp_plot} and \ref{coeff_var_coal_times_supp_plot}) or handed these trajectories to \textit{mssel} in order to generate sequence data (Figures \ref{pi_plot}, \ref{freq_spec}, \ref{hap-exist-probs} and \ref{hap-freq-ratios}).
 
 \subsection*{Frequency Trajectories}
 We simulate frequency trajectories under a similar discretized approximation to the diffusion as that used by \cite{Przeworski2005}. In order to simulate trajectories conditional on selection having begun when the allele was at frequency $f$, we set $X\left(0\right) = f$, and simulate allele frequency change forward in time according to
@@ -364,7 +364,7 @@ We simulate the genealogy at the locus of the beneficial allele by choosing a si
 
 We calculate the total time in the genealogy, $T$, and simulate an $\exp\left(-rT\right)$ distance to the first recombination event. A position on the tree (i.e. a branch and a specific generation for the event to occur in) is chosen uniformly at random. This event is accepted with probability $1-X\left(t_{rec}\right)$, where $t_{rec}$ gives the generation in which the event occurred, otherwise it is ignored. This process is repeated outward away from the focal site until the end of the sequence is reached, and the physical position along the sequence, the branch, and the generation of each recombination event is recorded.
 
-We then generate haplotype identities (i.e. the colorings of Figure \ref{cartoon_fig_2} \jb{WTF? This should say Figure 1}) as follows. We begin at the root of the tree, and assign each sequence to have the same identity over their entire length. We then move forward in time, from one recombination event to the next, and for each recombination event we assign the chromosomes which subtend it a unique new identity extending from the position where that event occurred out the end of the sequence, overwriting whatever identity previously existed there. We iterate this procedure all the way until the present day, at which point each position on a given chromosome will have an identity specified by the most recent recombination event which falls in between it and the focal site. These haplotype identities are what we use to generate \jb{Figure blah}
+We then generate haplotype identities (i.e. the colorings of Figure \ref{cartoon_fig_2}) as follows. We begin at the root of the tree, and assign each sequence to have the same identity over their entire length. We then move forward in time, from one recombination event to the next, and for each recombination event we assign the chromosomes which subtend it a unique new identity extending from the position where that event occurred out the end of the sequence, overwriting whatever identity previously existed there. We iterate this procedure all the way until the present day, at which point each position on a given chromosome will have an identity specified by the most recent recombination event which falls in between it and the focal site. These haplotype identities are what we use to generate \jb{Figure blah}
 
 \subsection*{Simulated Sequence Data}
 
@@ -433,9 +433,10 @@ In other words, we allow new mutations to occur during the standing phase provid
 
 
 \begin{figure}
-	\includegraphics[width = \textwidth]{../Paper_Figures/n_two_coal_time.pdf} \label{n_2_supp_plot}
+	\includegraphics[width = \textwidth]{../Paper_Figures/n_two_coal_time.pdf} 
 \caption{The expected pairwise coalescent time, in units of $2N$ generation, on the background of a derived neutral allele with frequency $f$ in the population.  The dashed $x=y$ line shows our approximation $\mathbb{E}  [T_2]=2Nf$. The red dots show the mean of our pairwise coalescent simulations featuring an explicit stochastic trajectories. The solid line shows the analytical expectation from XXXX  
 $\mathbb{E} [T_2] \int_0^1 x/(f (x+(1-x)f))(2-f+2(1-f) \log(1-f)/f) dx $.}
+\label{n_2_supp_plot}
 \end{figure}   %%Made by process_f_trees.R
 
 \begin{figure}
@@ -443,11 +444,13 @@ $\mathbb{E} [T_2] \int_0^1 x/(f (x+(1-x)f))(2-f+2(1-f) \log(1-f)/f) dx $.}
 \caption{Expected inter-coalescent time intervals for $10$ lineages sampled in the current day on the background of a derived neutral allele with frequency $f$ in the population. 
 The colored dots give means of $T_k$ from our simulations using stochastic trajectories. The solid lines show the expected coalescent times 
 under our approximation $ \mathbb{E} [T_k] = 2Nf/{k \choose 2}$. Note the good agreement except for $k=2$. Presumably our approximation over estimates this time as it fails to acknowledge that the allele is derived, and hence is decreasing in frequency backward in time. }
+\label{mean_coal_times_supp_plot}
 \end{figure} %%Made by process_f_trees.R
 
 \begin{figure}
-	\includegraphics[width = \textwidth]{../Paper_Figures/coeff_var_coal_times.pdf} \label{coeff_var_coal_times_supp_plot}
+	\includegraphics[width = \textwidth]{../Paper_Figures/coeff_var_coal_times.pdf} 
 \caption{The coefficient of variation (CV) of the inter-coalescent time intervals for $10$ lineages sampled in the current day on the background of a derived neutral allele with frequency $f$ in the population. The colored dots give the CVs of $T_k$ from our simulations using stochastic trajectories. Under our approximation the coalescent time intervals are exponential, and so have CV=1. The deeper coalescent time-intervals (low $k$s) are more variable than our predictions presumably because neutral trajectories are highly variable so increasing the variance of the coalescent times. More recent time-intervals (high k) are in better agreement with our approximation, as the trajectory with not have strayed far from a frequency $f$ a short way back in time. }
+\label{coeff_var_coal_times_supp_plot}
 \end{figure} %%Made by process_f_trees.R
 
 \end{document}

@@ -111,6 +111,9 @@ dev.off()
 #### Pairwise pi ####
 ##################
 
+
+
+
 N = 10000
 s = 0.05
 real.fs <- c ( 1 / 20000 , 0.001 , 0.02 , 0.05 , 0.1 )
@@ -186,8 +189,8 @@ for ( j in 1 : length ( r ) ) {
 
 
 
-
-
+library ( RColorBrewer)
+my.cols <- brewer.pal ( 5 , "Set1" )
 pdf ("../Paper/Paper_Figures/pi_and_S_density.pdf" , width = 7.874 , height = 5  )
 par ( mfrow = c ( 1 , 2 ) )
 plot ( c ( 0 , 200 ) , c ( 0 , 1 ) , type = "n" , xlab = "4NR" , ylab = "" , cex.lab = 1.5 , bty = "n" )
@@ -196,18 +199,18 @@ for ( i in 1 : length ( real.fs ) ) {
 		#run.ms.f(f.index)
 		# mut.density <- get.mut.density ( file = paste ( "mssel_f2" , f.index , ".out" , sep = "" ) )
 		# pi.over.f [[ f.index ]] <- mut.density
-		lines ( pi.over.f [[ i ]]$x  , pi.over.f [[ i ]]$y/(1000*20) , col = i )
+		lines ( pi.over.f [[ i ]]$x  , pi.over.f [[ i ]]$y/(1000*20) , col = my.cols [ i ] )
 }
 R <- 1:200
 r <- R / ( 4*N )
 for ( i in 2 : length ( real.fs ) ) {
 		
-	lines ( R , 1 - exp ( - 2 * r * Tsf [ i ]  ) / ( 1 + R * real.fs [ i ] * ( 1 - real.fs [ i ] ) ) , lty = 2 , lwd = 2 , col = i )
+	lines ( R , 1 - exp ( - 2 * r * Tsf [ i ]  ) / ( 1 + R * real.fs [ i ] * ( 1 - real.fs [ i ] ) ) , lty = 2 , lwd = 2 , col = my.cols [ i ] )
 	
 }
-lines ( R , 1 - exp ( - 2 * r * log ( 2 * N * s ) / s ) , lty = 3 , lwd = 2 , col = 1 )
-legend ( x = 125 , y = 0.35 , legend = c ( "1/2N" , real.fs [ 2 : length ( real.fs ) ] ) , col = 1 : 8 , lty = 1 , lwd = 1.5 , bty = "n")
-legend ( x =20 , y = 0.2 , legend = c ( "Standard" , "Ours" , "Simulation") , lty = c ( 3 , 2 , 1 ) , lwd = 1.5 , bty = "n")
+lines ( R , 1 - exp ( - 2 * r * log ( 2 * N * s ) / s ) , lty = 3 , lwd = 2 , col = my.cols [ 1 ] )
+legend ( x = 125 , y = 0.35 , legend = c ( "1/2N" , real.fs [ 2 : length ( real.fs ) ] ) , col = my.cols , lty = 1 , lwd = 1.5 , bty = "n")
+legend ( x =20 , y = 0.2 , legend = c ( "Standard" , "Ours" , "Simulation") , lty = c ( 3 , 2 , 1 ) , lwd = 1.5 , bty = "n" )
 
 plot ( c ( 0 , 200 ) , c ( 0 , 1 ) , type = "n" , xlab = "4NR" , ylab = "" , cex.lab = 1.5 , bty = "n" )
 mtext ( expression ( S [ R ] / S [ 0 ] ) , side = 2 , line = 2 , cex = 1.5 )
@@ -216,10 +219,10 @@ for ( i in 1 : length ( real.fs ) ) {
 		# s.lab <- strsplit ( as.character ( s ) , "\\." ) [[ 1 ]][ 2 ]
 		# mut.density <- get.mut.density ( file = paste ( "mssel_f20" , f.lab , s.lab , N , ".out" , sep = "" ) )
 		# S.over.f [[ i ]] <- mut.density
-		lines ( S.over.f [[ i ]]$x  , S.over.f [[ i ]]$y/(1000*20*sum ( 1/(1:19))) , col = i )
+		lines ( S.over.f [[ i ]]$x  , S.over.f [[ i ]]$y/(1000*20*sum ( 1/(1:19))) , col =my.cols [ i ] )
 }
 for ( i in 2 : length ( real.fs ) ) {
-	lines ( R , my.time [[ i ]] , lty = 2 , lwd = 2 , col = i )
+	lines ( R , my.time [[ i ]] , lty = 2 , lwd = 2 , col = my.cols [ i ] )
 }
 dev.off()
 
@@ -646,16 +649,17 @@ par(mar=c(2,10,1,10))
 image ( x = c ( .00001 , ( my.z [ -1 ] ) ) , z = cbind ( my.z , my.z ) , col = c ( ramp2 , bland , bland , ramp1 ) , breaks = c ( lower.breaks,1,upper.breaks ) , xlim=(c(0.2,5)),log="x", axes = FALSE )
 axis ( 1 )
 
-par(mar=c(3,3.5,1.5,1.2))
-image ( t ( apply ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks  , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression ( h[i]^stand/h[i]^hard ) , yaxt = "n" , ylab = "" )
+par(mar=c(3.3,3.5,1.5,1.2))
+image ( t ( apply ( standing.haps [[ 3 ]] / hard.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks  , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression (  P( H[L]^stand > i )/P(H[L]^hard > i ) )  , yaxt = "n" , ylab = "" )
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
-#mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
 mtext ( expression ( h[i]) , side = 2 , line = 2 , cex = 0.8 )
 
-image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression ( h[i]^stand/h[i]^neutral ) , yaxt = "n" , ylab = "" ) 
+image ( t ( apply ( standing.haps [[ 3 ]] / neutral.haps [[ 3 ]] , 2 , rev ) ) , breaks = c ( lower.breaks , upper.breaks ) , col = c ( ramp2 , bland , ramp1 ) , xaxt = "n" , main = expression ( P( H[L]^stand > i )/P(H[L]^neutral > i ) ) , yaxt = "n" , ylab = "" ) 
 axis ( 1 , seq ( 0 , 1, length.out = 5 ) , seq ( 0 , 0.005 , length.out = 5 ))
 axis ( 2 , c ( 1 , seq ( 20 , 100 , length.out = 5 ) )/100 , labels = c ( seq ( 100 , 20 , length.out = 5 ) , 1 ) )
+mtext ( "Window Size (cM)" , side = 1 , line = 2.3 , cex = 0.8)
 dev.off()
 
 
