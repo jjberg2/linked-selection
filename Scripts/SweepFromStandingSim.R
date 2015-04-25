@@ -730,7 +730,7 @@ SingHapCountDistribution <- function ( input , r = 10^-8 , sim.distance , interv
 
 
 MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , r = 10^-8 , interval.width = 1000,plot.cumulative=TRUE,do.legend=FALSE) {
-	library ( wesanderson)
+#	library ( wesanderson)
 	#recover()
 	sim.distance.bp <- sim.distance / r 
 	intervals <- seq ( 0 , sim.distance.bp , interval.width )
@@ -775,7 +775,8 @@ MakeHapPlots <- function ( hap.count.freqs.by.interval , N , f , sim.distance , 
 	axis ( 1 , seq ( 1 , ncol ( ewens.dist.matrix ) , by = 10e5/interval.width ) , 4*N*r * 1000*seq ( 0 , max ( intervals , 1 )/1000  , by = 1000 )  )  # seq ( 0 , tail ( intervals , 1 ) / 1000 , by = 1000 )  )
 	#recover()
 #	col.vect <- rainbow ( n.tips , s = 0.8  , v = 1 , start = 1/40 , end = 4/6  )
-	col.vect <- brewer.pal ( 10 , "Set3" )
+	col.vect <- brewer.pal ( 11 , "Set3" )   #brewer.pal ( 10 , "Set3" )
+	col.vect <-c(col.vect[1],col.vect[3:11]) ###skipping horrible yellow
 #	col.vect <- primary.colors(10)
    #brewer.pal ( 10 , "Set3" )
 #	col.vect <- wes_palette ( "FantasticFox" , 10 , type = "continuous")
