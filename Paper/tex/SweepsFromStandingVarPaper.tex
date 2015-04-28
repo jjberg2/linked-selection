@@ -366,7 +366,7 @@ We then generate haplotype identities (i.e. the colorings of Figure \ref{cartoon
 
 \subsection*{Simulated Sequence Data}
 
-To simulate sequence data, we simply hand the trajectories simulated as described above to the program \textit{mssel} \jb{reference?}. Whereas our simulations of haplotype identity above still represents a somewhat heuristic approximation to the true process, in that it ignores recombination events which do not result in transitions to the alternate background, these simulations of sequence data are exact under the structured coalescent with recombination for our model (i.e. they generate a full ancestral recombination graph), up the discretization of the diffusion process used for the selected allele. These simulations are used to generate Figures \jb{blah blah and blah}.
+To simulate sequence data, we simply hand the trajectories simulated as described above to the program \textit{mssel} \jb{reference?}. Whereas our simulations of haplotype identity above still represents a somewhat heuristic approximation to the true process, in that it ignores recombination events which do not result in transitions to the alternate background, these simulations of sequence data are exact under the structured coalescent with recombination for our model (i.e. they generate a full ancestral recombination graph), up the discretization of the diffusion process used for the selected allele. These simulations are used to generate Figures \ref{pi_plot}, \ref{freq_spec}, \ref{hap-exist-probs} and \ref{hap-freq-ratios}.
 
 \paragraph{Code Availability:} All simulation code was written by JB in R and is available for download with no warranty \jb{blah blah blah} at \jb{github}
 
@@ -374,15 +374,11 @@ To simulate sequence data, we simply hand the trajectories simulated as describe
 
 \subsection*{Incompatibility of Standing Sweep and Classic Strong Selection Models}
 
-One can show that the reduction in diversity of a sweep starting from a frequency $f$ and with selection coefficient $s$ is approximately equivalent to a classic hard sweep with a selection coefficient
+Consider the small $r$ approximation $\exp\left( -r \left(\frac{1}{s}ln\left(\frac{1}{f}\right) + 4Nf\left(1-f\right)\right) \right)$ for the probability of failing to recombine before coalescing under our standing sweep model, and $\exp\left( - \frac{r}{\hat{s}}ln\left(2N\hat{s}\right) \right)$ for the same probability under the hard sweep model. We can set these two expressions equal to one another and solve for $\hat{s}$, yielding
 \begin{equation}
 	\hat{s} = \frac{1}{2N_e} e^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right)}
 \end{equation}
-where $W\left(z\right)$ is Lambert's W function and the expression for the reduction in diversity under a classic hard sweep is
-\begin{equation}
-	\mathbb{E}\left(\frac{\pi_R}{\pi_0}\right) \approx \left(1- e^{-\frac{r}{\hat{s}}ln\left(2N_e \hat{s}\right)} \right)
-\end{equation}
-\citep{Pennings2006}
+where $W\left(z\right)$ is Lambert's W function.
 
 \subsection*{Inclusion of New Mutations in Frequency Spectrum}
 In the main text, we defined $q(j \mid k)$ as the probability that a segregating allele was present on $j$ out of $k$ ancestral lineages. Here, we briefly switch to working with the unnormalized frequency spectrum, and define $q_{anc}(j \mid k) = \frac{\theta}{j}$ as the number of ancestral mutations which were present at a frequency $j$ out of the $k$ ancestral lineages on the \textbf{b} background. We then define 
