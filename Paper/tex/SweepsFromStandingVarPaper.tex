@@ -368,8 +368,7 @@ We then generate haplotype identities (i.e. the colorings of Figure \ref{cartoon
 
 To simulate sequence data, we simply hand the trajectories simulated as described above to the program \textit{mssel} \jb{reference?}. Whereas our simulations of haplotype identity above still represents a somewhat heuristic approximation to the true process, in that it ignores recombination events which do not result in transitions to the alternate background, these simulations of sequence data are exact under the structured coalescent with recombination for our model (i.e. they generate a full ancestral recombination graph), up the discretization of the diffusion process used for the selected allele. These simulations are used to generate Figures \ref{pi_plot}, \ref{freq_spec}, \ref{hap-exist-probs} and \ref{hap-freq-ratios}.
 
-\paragraph{Code Availability:} All simulation code was written by JB in R and is available for download with no warranty \jb{blah blah blah} at \jb{github}
-
+\paragraph{Code Availability:} All custom simulation code was written by JB in R and is provided in Supplementary File 1.
 \section*{Appendix}
 
 \subsection*{Incompatibility of Standing Sweep and Classic Strong Selection Models}
@@ -378,10 +377,10 @@ Consider the small $r$ approximation $\exp\left( -r \left(\frac{1}{s}ln\left(\fr
 \begin{equation}
 	\hat{s} = \frac{1}{2N_e} e^{-W\left(\frac{4N_e sf^2 - 4N_e s f  - ln \left( \frac{1}{f} \right)}{2N_es}\right)}
 \end{equation}
-where $W\left(z\right)$ is Lambert's W function.
+where $W\left(z\right)$ is Lambert's W function. 
 
 \subsection*{Inclusion of New Mutations in Frequency Spectrum}
-In the main text, we defined $q(j \mid k)$ as the probability that a segregating allele was present on $j$ out of $k$ ancestral lineages. Here, we briefly switch to working with the unnormalized frequency spectrum, and define $q_{anc}(j \mid k) = \frac{\theta}{j}$ as the number of ancestral mutations which were present at a frequency $j$ out of the $k$ ancestral lineages on the \textbf{b} background. We then define 
+In the main text, we defined $q(j \mid k)$ as the expected number of segregating mutations present on $j$ out of $k$ ancestral lineages. Here, we introduce a subscript $q_{anc}(j \mid k) = \frac{\theta}{j}$ and then define 
 \begin{equation}
 	q_{new}(l \mid k, i, n) =
 	\begin{cases} 
@@ -405,7 +404,7 @@ We can make an improvement upon equation \eqref{rearrange-anc-freq-spec} in a si
 		0, 				& \text{otherwise}.
 	\end{cases}
 \end{equation}
-In other words, we allow new mutations to occur during the standing phase provided that there have been no recombination events during the standing phase, and we also allow new mutations during the sweep phase on all lineages which do not recombine during the sweep phase. Obtaining an improvement over equation \eqref{rearrange-anc-freq-spec} is then once again simply a matter of replacing $q(j \mid k)$ with $\left(q_{anc}(j\mid k+n-i) + q_{new}(l \mid k,i,n)\right)$, yielding
+In other words, we allow new mutations to occur during the standing phase provided that there have been no recombination events during this phase, and we also allow new mutations during the sweep phase on all lineages which do not recombine during the sweep phase. Obtaining an improvement over equation \eqref{rearrange-anc-freq-spec} is then once again simply a matter of adding the term for new mutations into the previous expression
 
 \begin{multline}
 		p(l \mid n ) = \sum_{i=0}^n P_{NR}(i\mid  n) \sum_{k=1}^{i} p_{ESF}(k \mid R_f,n-i) \\
