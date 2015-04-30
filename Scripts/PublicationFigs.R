@@ -27,9 +27,9 @@ f <- 0.01
 s <- 0.01
 # my.freq.trajs <- SweepFromStandingSim ( N = 10000 , s = s , f = f , reps = 10 , no.sweep = FALSE , cond.on.loss = TRUE , cond.on.fix = TRUE , time.factor = 1 , display.rep.count = T )
 # save ( my.freq.trajs , file = "Sims/10trajectoriesForTrajFigure.Robj")
-load ( file = "Sims/10trajectoriesForTrajFigure.Robj")
+load ( file = "10trajectoriesForTrajFigure.Robj")
 freqs <- t ( my.freq.trajs[[1]] )
-freqs <- apply ( freqs , 2 , rev )
+#freqs <- apply ( freqs , 2 , rev )
 #freqs <- freqs [ seq ( nrow ( freqs ) - 2000 , nrow ( freqs ) ) , ]
 mid.points <- apply ( freqs , 2 , function ( x ) which.min ( abs ( x - 0.5 ) ) )
 diff <- max ( mid.points ) - mid.points 
@@ -65,10 +65,10 @@ det.freqs <- c ( rep ( f , (A-B) ) , det.freqs [ - seq ( length ( det.freqs ) - 
 
 
 pdf ( "Paper/Paper_Figures/TrajectoryFigure.pdf" , width = 7 , height = 4 )
-matplot ( my.freqs [ 1000:3617 ,  ] , type = "l" , lwd = 0.7 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
-lines ( det.freqs [ 1000:3617 ] , lwd = 1.7 )
-my.at <- seq ( 2617 , 0 , -500)
-axis ( 1 , at = my.at , labels = seq ( 0 , 2617 , 500) )
+matplot ( my.freqs [ 200:3617 , ] , type = "l" , lwd = 0.9 , col = "grey" , lty = 1 , bty = "n" , ylab = "Frequency" , xlab = "Generations" , xaxt = "n" )
+lines ( det.freqs [ 200:3617 ] , lwd = 1.2 )
+my.at <- seq ( 3417 , 0 , -500)
+axis ( 1 , at = my.at , labels = seq ( 0 , 3417 , 500) )
 dev.off()
 
 new.freqs <- matrix ( 0 , nrow = max ( my.freq.trajs [[ 2 ]] ) - my.freq.trajs [[ 2 ]] [ which ( my.freq.trajs [[ 1 ]] [ , ncol ( my.freq.trajs [[ 1 ]] ) ] != 0 ) ] + ncol ( my.freq.trajs [[ 1 ]] ) , ncol = nrow ( my.freq.trajs [[ 1 ]] ) )
